@@ -1,8 +1,14 @@
 from fastapi import FastAPI
+from app.solver.models.input import Input
 
 app = FastAPI()
 
 
-@app.get("/student-groups")
-async def root():
-    return {"message": "student groups"}
+@app.post("/run-solver")
+async def run_solver(solver_input: Input):
+    return {"message": "started solving"}
+
+
+@app.get("/results")
+async def get_results():
+    return {"message": "results"}
