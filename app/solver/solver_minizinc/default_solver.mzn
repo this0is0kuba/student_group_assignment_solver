@@ -3,6 +3,7 @@ include "globals.mzn";
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% INPUT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Basic info about classes
+% --------------------------------------------------
 int: number_students;
 int: number_instructors;
 int: number_subjects;
@@ -13,6 +14,7 @@ int: number_classes;
 set of int: Student = 1..number_students;
 set of int: Instructor = 1..number_instructors;
 set of int: Subject = 1..number_subjects;
+set of int: SubjectSquare = 1..number_subjects*number_subjects;
 set of int: ClassType = 1..number_class_types;
 set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
@@ -27,8 +29,11 @@ array[Class] of int: class_time_h;
 
 array[ClassType] of int: class_type_min_students;
 array[ClassType] of int: class_type_max_students;
+% --------------------------------------------------
+
 
 % Info about science club, science research, and more constraints
+% --------------------------------------------------
 int: science_club_ects;
 int: science_research_ects;
 int: science_club_section;
@@ -40,9 +45,12 @@ array[Student] of bool: student_science_research;
 array[Instructor] of int: instructor_max_h;
 array[Section] of int: section_min_ects;
 array[Section] of int: section_max_ects;
+% --------------------------------------------------
 
 % Preferences
-array[Student, Subject] of Subject: student_preferences;
+% --------------------------------------------------
+array[Student, Subject] of SubjectSquare: student_preferences;
+% --------------------------------------------------
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,7 +112,7 @@ constraint forall(c in Class, g in Group where g > number_of_groups_in_class[c])
 
 % Sum of students in each group is within the appropriate range.
 % --------------------------------------------------
-constraint forall(c in Class, g in Group where g <= number_of_groups_in_class[c] /\ g != 0) (
+constraint forall(c in Class, g in Group where g != 0 /\ g <= number_of_groups_in_class[c]) (
   number_of_students_in_group[c, g] <= class_type_max_students[class_type[c]]
   /\
   number_of_students_in_group[c, g] >= class_type_min_students[class_type[c]]
@@ -157,23 +165,39 @@ constraint forall(st in Student, sc in Section) (
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-var int: obj = sum(st in Student, sb in Subject) (student_preferences[st, sb] * student_subject[st, sb]);
-solve minimize obj;
+% Students' sadness is equal to sum of the subject's positions in the student ranking which were chosen by system. The numbers of positions were earlier modified by function: f(x) = x^2.
+% --------------------------------------------------
+var int: students_sadness = sum(st in Student, sb in Subject) (student_preferences[st, sb] * student_subject[st, sb]);
+% --------------------------------------------------
+
+
+% We want to minimize the number of groups that have students in common. It's easier to set a schedule when more groups are disjoint.
+% --------------------------------------------------
+function var set of int: get_intersection_of_groups(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
+  {s1 | s1 in Student where student_group[s1, c1] == g1}
+        intersect
+  {s2 | s2 in Student where student_group[s2, c2] == g2};
+
+function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
+    card(get_intersection_of_groups(c1, g1, c2, g2)) > 0;
+
+
+var int: violation_of_condition_magic_number = 
+            sum(c1 in Class, g1 in Group 
+                  where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
+                c2 in Class
+                  where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
+                g2 in Group
+                  where g2 != 0 /\ g2 <= number_of_groups_in_class[c2])
+            (bool2int(are_groups_have_students_in_common(c1, g1, c2, g2)));
+% --------------------------------------------------
+
+solve minimize students_sadness + violation_of_condition_magic_number;
 
 output
-["obj: ", show(obj), ";\n"] ++
-["student_subject: ", show(student_subject), ";\n"] ++
-[";\n"] ++
-["student_group[1, 1]: ", show(student_group[1, 1]), ";\n"] ++
-["student_group[2, 1]: ", show(student_group[2, 1]), ";\n"] ++
-["student_group[3, 1]: ", show(student_group[3, 1]), ";\n"] ++
-["student_group[4, 1]: ", show(student_group[4, 1]), ";\n"] ++
-[";\n"] ++
-["student_group[1, 4]: ", show(student_group[1, 4]), ";\n"] ++
-["student_group[2, 4]: ", show(student_group[2, 4]), ";\n"] ++
-["student_group[3, 4]: ", show(student_group[3, 4]), ";\n"] ++
-["student_group[4, 4]: ", show(student_group[4, 4]), ";\n"];
-
+["students_sadness: ", show(students_sadness), ";\n"] ++
+["violation_number: ", show(violation_of_condition_magic_number), ";\n"] ++
+["student_subject: ", show(student_subject), ";\n"];
 
 
 
