@@ -104,7 +104,7 @@ constraint forall(c in Class, g in Group where g > number_of_groups_in_class[c])
 
 % Sum of students in each group is within the appropriate range.
 % --------------------------------------------------
-constraint forall(c in Class, g in Group where g <= number_of_groups_in_class[c]) (
+constraint forall(c in Class, g in Group where g <= number_of_groups_in_class[c] /\ g != 0) (
   number_of_students_in_group[c, g] <= class_type_max_students[class_type[c]]
   /\
   number_of_students_in_group[c, g] >= class_type_min_students[class_type[c]]
