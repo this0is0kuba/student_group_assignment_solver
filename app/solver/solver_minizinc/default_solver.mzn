@@ -148,9 +148,9 @@ constraint forall(st in Student, sc in Section) (
 % Each student has appropriate number of ECTS in each section.
 % --------------------------------------------------
 constraint forall(st in Student, sc in Section) (
-  sum_student_ects_in_section[st, sc] <= section_min_ects[sc]
+  sum_student_ects_in_section[st, sc] <= section_max_ects[sc]
   /\
-  sum_student_ects_in_section[st, sc] >= section_max_ects[sc]
+  sum_student_ects_in_section[st, sc] >= section_min_ects[sc]
 );
 % --------------------------------------------------
 
