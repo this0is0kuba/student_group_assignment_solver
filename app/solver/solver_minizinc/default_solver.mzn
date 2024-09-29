@@ -157,12 +157,22 @@ constraint forall(st in Student, sc in Section) (
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-var int: obj = 20;
+var int: obj = sum(st in Student, sb in Subject) (student_preferences[st, sb] * student_subject[st, sb]);
 solve minimize obj;
 
 output
 ["obj: ", show(obj), ";\n"] ++
-["student_subject: ", show(student_subject), ";\n"]
+["student_subject: ", show(student_subject), ";\n"] ++
+[";\n"] ++
+["student_group[1, 1]: ", show(student_group[1, 1]), ";\n"] ++
+["student_group[2, 1]: ", show(student_group[2, 1]), ";\n"] ++
+["student_group[3, 1]: ", show(student_group[3, 1]), ";\n"] ++
+["student_group[4, 1]: ", show(student_group[4, 1]), ";\n"] ++
+[";\n"] ++
+["student_group[1, 4]: ", show(student_group[1, 4]), ";\n"] ++
+["student_group[2, 4]: ", show(student_group[2, 4]), ";\n"] ++
+["student_group[3, 4]: ", show(student_group[3, 4]), ";\n"] ++
+["student_group[4, 4]: ", show(student_group[4, 4]), ";\n"];
 
 
 
