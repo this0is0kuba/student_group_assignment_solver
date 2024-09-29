@@ -27,11 +27,11 @@ class Information(BaseModel):
 
     class ScienceClubAndResearch(BaseModel):
         student_science_club: list[bool]
-        student_conduct_research: list[bool]
+        student_science_research: list[bool]
         science_club_ects: int
-        conduct_research_ects: int
+        science_research_ects: int
         science_club_section: int
-        conduct_research_section: int
+        science_research_section: int
 
     basic_info: BasicInfo
     class_info: ClassInfo

@@ -19,12 +19,12 @@ class_type_max_students = [4, 4];
 
 % Info about science club, science research, and more constraints
 science_club_ects = 1;
-conduct_research_ects = 1;
+science_research_ects = 1;
 science_club_section = 1;
-conduct_research_section = 1;
+science_research_section = 1;
 
 student_science_club = [false, false, false, false];
-student_conduct_research = [false, false, false, false];
+student_science_research = [false, false, false, false];
 
 instructor_max_h = [100, 100, 100];
 section_min_ects = [1];
