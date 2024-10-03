@@ -19,6 +19,7 @@ set of int: ClassType = 1..number_class_types;
 set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
 
+array[Student] of float: student_average;
 array[Subject] of int: subject_ects;
 array[Subject] of Section: subject_section;
 
@@ -163,40 +164,27 @@ constraint forall(st in Student, sc in Section) (
 % --------------------------------------------------
 
 
+% If two students have subjects on the same ranking positions and only one can have it then the one with higher average should get it.  
+% --------------------------------------------------
+constraint forall(s1 in Student,
+                  s2 in Student where s1 < s2 /\ student_average[s1] > student_average[s2], 
+                  sb in Subject where student_preferences[s1, sb] >= student_preferences[s2, sb]) (
+                  
+              student_subject[s1, sb] \/ not student_subject[s2, sb]
+);
+% --------------------------------------------------
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Students' sadness is equal to sum of the subject's positions in the student ranking which were chosen by system. The numbers of positions were earlier modified by function: f(x) = x^2.
+% Students' sadness is equal to sum of the subject's positions in the student ranking which were chosen by solver.
 % --------------------------------------------------
 var int: students_sadness = sum(st in Student, sb in Subject) (student_preferences[st, sb] * student_subject[st, sb]);
 % --------------------------------------------------
 
-
-% We want to minimize the number of groups that have students in common. It's easier to set a schedule when more groups are disjoint.
-% --------------------------------------------------
-function var set of int: get_intersection_of_groups(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-  {s1 | s1 in Student where student_group[s1, c1] == g1}
-        intersect
-  {s2 | s2 in Student where student_group[s2, c2] == g2};
-
-function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-    card(get_intersection_of_groups(c1, g1, c2, g2)) > 0;
-
-
-var int: violation_of_condition_magic_number = 
-            sum(c1 in Class, g1 in Group 
-                  where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
-                c2 in Class
-                  where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
-                g2 in Group
-                  where g2 != 0 /\ g2 <= number_of_groups_in_class[c2])
-            (bool2int(are_groups_have_students_in_common(c1, g1, c2, g2)));
-% --------------------------------------------------
-
-solve minimize students_sadness + violation_of_condition_magic_number;
+solve minimize students_sadness;
 
 output
 ["students_sadness: ", show(students_sadness), ";\n"] ++
-["violation_number: ", show(violation_of_condition_magic_number), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"];
 
 

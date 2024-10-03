@@ -6,6 +6,7 @@ number_class_types = 1;
 number_section = 1;
 number_classes = 5;
 
+student_average = [2.5, 3.0, 5.0, 5.0];
 subject_ects = [1, 1];
 subject_section = [1, 1];
 

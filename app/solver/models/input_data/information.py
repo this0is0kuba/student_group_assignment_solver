@@ -8,6 +8,7 @@ class Information(BaseModel):
         instructors: list[str]
         subjects: list[str]
         class_types: list[str]
+        student_average: list[float]
         class_type_min_students: list[int]
         class_type_max_students: list[int]
         section_number: int
