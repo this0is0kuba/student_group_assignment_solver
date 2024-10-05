@@ -172,6 +172,7 @@ var int: students_happiness = sum(st in Student, sb in Subject) (
 );
 % --------------------------------------------------
 
+solve maximize students_happiness;
 
 output
 ["students_happiness: ", show(students_happiness), ";\n"] ++
