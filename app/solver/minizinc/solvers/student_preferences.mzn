@@ -19,7 +19,6 @@ set of int: ClassType = 1..number_class_types;
 set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
 
-array[Student] of float: student_average;
 array[Subject] of int: subject_ects;
 array[Subject] of Section: subject_section;
 
@@ -164,27 +163,18 @@ constraint forall(st in Student, sc in Section) (
 % --------------------------------------------------
 
 
-% If two students have subjects on the same ranking positions and only one can have it then the one with higher average should get it.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Students' happiness is equal to sum of the subject's pointes given by students. We count the points only of the subject that started. Additionally we favor students with higher average
 % --------------------------------------------------
-constraint forall(s1 in Student,
-                  s2 in Student where s1 < s2 /\ student_average[s1] > student_average[s2], 
-                  sb in Subject where student_preferences[s1, sb] >= student_preferences[s2, sb]) (
-                  
-              student_subject[s1, sb] \/ not student_subject[s2, sb]
+var int: students_happiness = sum(st in Student, sb in Subject) (
+ student_preferences[st, sb] * student_subject[st, sb]
 );
 % --------------------------------------------------
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Students' sadness is equal to sum of the subject's positions in the student ranking which were chosen by solver.
-% --------------------------------------------------
-var int: students_sadness = sum(st in Student, sb in Subject) (student_preferences[st, sb] * student_subject[st, sb]);
-% --------------------------------------------------
-
-solve minimize students_sadness;
 
 output
-["students_sadness: ", show(students_sadness), ";\n"] ++
+["students_happiness: ", show(students_happiness), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"];
 
 
