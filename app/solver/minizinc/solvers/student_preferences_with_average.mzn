@@ -8,13 +8,21 @@ int: number_students;
 int: number_instructors;
 int: number_subjects;
 int: number_class_types;
+int: number_section;
 int: number_classes;
 
 set of int: Student = 1..number_students;
 set of int: Instructor = 1..number_instructors;
 set of int: Subject = 1..number_subjects;
+set of int: SubjectSquare = 1..number_subjects*number_subjects;
 set of int: ClassType = 1..number_class_types;
+set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
+
+array[Student] of int: student_average;
+
+array[Subject] of int: subject_ects;
+array[Subject] of Section: subject_section;
 
 array[Class] of ClassType: class_type;
 array[Class] of Subject: class_subject;
@@ -25,18 +33,39 @@ array[ClassType] of int: class_type_min_students;
 array[ClassType] of int: class_type_max_students;
 % --------------------------------------------------
 
-% More constraints
+
+% Info about science club, science research, and more constraints
 % --------------------------------------------------
+int: science_club_ects;
+int: science_research_ects;
+int: science_club_section;
+int: science_research_section;
+
+array[Student] of bool: student_science_club;
+array[Student] of bool: student_science_research;
+
 array[Instructor] of int: instructor_max_h;
-
-
-% Main array - students' subjects
+array[Section] of int: section_min_ects;
+array[Section] of int: section_max_ects;
 % --------------------------------------------------
-array[Student, Subject] of bool: student_subject;
+
+% Preferences
+% --------------------------------------------------
+array[Student, Subject] of SubjectSquare: student_preferences;
+% --------------------------------------------------
+
+% Info from student_preferences model
+% --------------------------------------------------
+int: students_happiness;
 % --------------------------------------------------
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Main array of variables - students' subjects.
+% --------------------------------------------------
+array[Student, Subject] of var bool: student_subject;
+% --------------------------------------------------
 
 
 % Student group equals 0 when a student doesn't attend a subject and doesn't equal 0 when student attends a subject.
@@ -116,31 +145,58 @@ constraint forall(i in Instructor) (
 % --------------------------------------------------
 
 
+% Total ECTS points for each student in each section are sum of all ECTS of his subjets. It's also neccesary to count ects of science club and science research becase each student who's declared particpation in these activities should be assined to them.
+% --------------------------------------------------
+array[Student, Section] of var min(section_min_ects)..max(section_max_ects): sum_student_ects_in_section;
+
+constraint forall(st in Student, sc in Section) (
+  sum_student_ects_in_section[st, sc] == 
+      sum(sb in Subject where student_subject[st, sb] /\ subject_section[sb] == sc) (subject_ects[sb])
+      +
+      bool2int(science_club_section == sc) * student_science_club[st] * science_club_ects
+      +
+      bool2int(science_research_section == sc) * student_science_research[st] * science_research_ects
+);
+% --------------------------------------------------
+
+
+% Each student has appropriate number of ECTS in each section.
+% --------------------------------------------------
+constraint forall(st in Student, sc in Section) (
+  sum_student_ects_in_section[st, sc] <= section_max_ects[sc]
+  /\
+  sum_student_ects_in_section[st, sc] >= section_min_ects[sc]
+);
+% --------------------------------------------------
+
+
+% Students' happiness is equal to sum of the subject's points given by students. We count the points only of the subject that started.
+% --------------------------------------------------
+var int: students_happiness_counter = sum(st in Student, sb in Subject) (
+ student_preferences[st, sb] * student_subject[st, sb]
+);
+% --------------------------------------------------
+
+% Students' happiness should be at least good as we have counted earlier. When we will try to find a new solution taking into account the averages of students, we don't want to change the earlier global happiness. We don't want to favor students with higher average too much.
+% --------------------------------------------------
+constraint students_happiness_counter <= students_happiness;
+% --------------------------------------------------
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% We want to minimize the number of groups that have students in common. It's easier to set a schedule when more groups are disjoint.
+% students_happiness_with_average is equal to sum of the subject's points given by students multiped by student's average. We count the points only for the subjects that started.
 % --------------------------------------------------
-function var set of int: get_intersection_of_groups(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-  {s1 | s1 in Student where student_group[s1, c1] == g1}
-        intersect
-  {s2 | s2 in Student where student_group[s2, c2] == g2};
-
-function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-    card(get_intersection_of_groups(c1, g1, c2, g2)) > 0;
-
-
-var int: violation_of_condition_magic_number = 
-            sum(c1 in Class, g1 in Group 
-                  where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
-                c2 in Class
-                  where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
-                g2 in Group
-                  where g2 != 0 /\ g2 <= number_of_groups_in_class[c2])
-            (bool2int(are_groups_have_students_in_common(c1, g1, c2, g2)));
+var int: students_happiness_with_average = sum(st in Student, sb in Subject) (
+ student_preferences[st, sb] * student_subject[st, sb] * student_average[st]
+);
 % --------------------------------------------------
 
-solve minimize violation_of_condition_magic_number;
+solve maximize students_happiness_with_average;
 
 output
-["violation_of_condition_magic_number: ", show(violation_of_condition_magic_number), ";\n"] ++
-["students' groups: ", show(student_group[1, 2]), ";\n"];
+["students_happiness_with_average: ", show(students_happiness_with_average), ";\n"] ++
+["student_subject: ", show(student_subject), ";\n"];
+
+
+

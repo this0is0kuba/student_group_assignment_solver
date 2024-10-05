@@ -165,7 +165,7 @@ constraint forall(st in Student, sc in Section) (
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Students' happiness is equal to sum of the subject's pointes given by students. We count the points only of the subject that started. Additionally we favor students with higher average
+% Students' happiness is equal to sum of the subject's points given by students. We count the points only of the subjects that have started.
 % --------------------------------------------------
 var int: students_happiness = sum(st in Student, sb in Subject) (
  student_preferences[st, sb] * student_subject[st, sb]
