@@ -9,6 +9,8 @@ number_classes = 5;
 subject_ects = [1, 1];
 subject_section = [1, 1];
 
+student_average = [300, 350, 500, 450];
+
 class_type = [1, 1, 1, 1, 1];
 class_subject = [1, 1, 1, 2, 2];
 class_instructor = [1, 2, 2, 1, 3];

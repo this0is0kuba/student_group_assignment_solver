@@ -28,12 +28,22 @@ array[ClassType] of int: class_type_max_students;
 % More constraints
 % --------------------------------------------------
 array[Instructor] of int: instructor_max_h;
+% --------------------------------------------------
 
 
 % Main array - students' subjects
 % --------------------------------------------------
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
+
+
+% Student's friends
+int: max_number_friends;
+bool: friend_flag;
+
+set of int: Friend = 1..max_number_friends;
+
+array[Student, Friend] of int: student_friend;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -122,25 +132,50 @@ constraint forall(i in Instructor) (
 % --------------------------------------------------
 function var set of int: get_intersection_of_groups(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
   {s1 | s1 in Student where student_group[s1, c1] == g1}
-        intersect
+    intersect
   {s2 | s2 in Student where student_group[s2, c2] == g2};
 
 function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
     card(get_intersection_of_groups(c1, g1, c2, g2)) > 0;
 
 
-var int: violation_of_condition_magic_number = 
-            sum(c1 in Class, g1 in Group 
-                  where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
-                c2 in Class
-                  where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
-                g2 in Group
-                  where g2 != 0 /\ g2 <= number_of_groups_in_class[c2])
-            (bool2int(are_groups_have_students_in_common(c1, g1, c2, g2)));
+var int: meet_condition_magic_number = sum(
+  c1 in Class, 
+  g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
+  c2 in Class where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
+  g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
+  
+    bool2int(not are_groups_have_students_in_common(c1, g1, c2, g2))
+    
+);
 % --------------------------------------------------
 
-solve minimize violation_of_condition_magic_number;
+
+% Number of friends in the same groups. 
+% --------------------------------------------------
+function var set of int: get_set_of_frends(var Class: c, var Group: g, var Student: s) = 
+  {s1 | s1 in Student where student_group[s1, c] == g}
+    intersect
+  {student_friend[s, f] | f in Friend where student_friend[s, f] != 0};
+ 
+ 
+function var int: get_number_of_friends_in_group(var Class: c, var Group: g, var Student: s) =
+    card(get_set_of_frends(c, g, s));
+
+var int: number_friends = sum(
+  c in Class, 
+  g in Group where g != 0 /\ g <= number_of_groups_in_class[c],
+  s in Student where student_group[s, c] == g) (
+  
+  get_number_of_friends_in_group(c, g, s)
+  
+);
+% --------------------------------------------------
+
+
+solve maximize meet_condition_magic_number + friend_flag * number_friends;
 
 output
-["violation_of_condition_magic_number: ", show(violation_of_condition_magic_number), ";\n"] ++
+["meet_condition_magic_number: ", show(meet_condition_magic_number), ";\n"] ++
+["number_friends: ", show(number_friends), ";\n"] ++
 ["students' groups: ", show(student_group[1, 2]), ";\n"];

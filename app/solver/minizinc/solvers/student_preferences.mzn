@@ -19,6 +19,8 @@ set of int: ClassType = 1..number_class_types;
 set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
 
+array[Student] of int: student_average;
+
 array[Subject] of int: subject_ects;
 array[Subject] of Section: subject_section;
 
@@ -172,10 +174,26 @@ var int: students_happiness = sum(st in Student, sb in Subject) (
 );
 % --------------------------------------------------
 
-solve maximize students_happiness;
+
+% students_happiness_with_average is equal to sum of the subject's points given by students multiped by student's average. We count the points only for the subjects that started.
+% --------------------------------------------------
+var int: students_happiness_with_average = sum(st in Student, sb in Subject) (
+ student_preferences[st, sb] * student_subject[st, sb] * student_average[st]
+);
+% --------------------------------------------------
+
+
+% The weight is used to make students_happiness always grater than students_happiness_with_average. We want students with a higher average to be happier while only one student with a lower average will be sadder (not more than one)
+% --------------------------------------------------
+var int: weight = (max(student_average) - min(student_average)) * number_students;
+% --------------------------------------------------
+
+var int: obj = weight * students_happiness + students_happiness_with_average;
+solve maximize obj;
 
 output
 ["students_happiness: ", show(students_happiness), ";\n"] ++
+["obj: ", show(obj), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"];
 
 

@@ -24,3 +24,13 @@ student_subject = array2d(1..number_students, 1..number_subjects,
     false, true ]
 );
 
+% Student's friends
+friend_flag = true;
+max_number_friends = 3;
+
+student_friend = array2d(1..number_students, 1..max_number_friends,
+  [ 2, 4, 0,
+    1, 0, 0,
+    4, 0, 0, 
+    3, 1, 0 ]
+);
