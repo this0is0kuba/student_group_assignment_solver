@@ -34,3 +34,7 @@ student_friend = array2d(1..number_students, 1..max_number_friends,
     4, 0, 0, 
     3, 1, 0 ]
 );
+
+% Importance of parallel groups
+weight = 100;
+
