@@ -151,7 +151,7 @@ function var bool: are_groups_have_students_in_common(var Class: c1, var Group: 
 %     card(get_intersection_of_groups(c1, g1, c2, g2)) > 0;
 
 
-var int: meet_condition_magic_number = sum(
+var int: meet_condition_number = sum(
   c1 in Class, 
   g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
   c2 in Class where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
@@ -192,13 +192,14 @@ var int: number_friends = sum(
 % --------------------------------------------------
 
 
-% meet_conditon_magic_number < 45 * 22 ~= 1000
+% meet_conditon < 45 * 22 ~= 1000
 % number_of_friends < 100 * 3 * 45 = 13500
 
-var int: obj = weight * meet_condition_magic_number + bool2int(friend_flag) * number_friends;
+var int: obj = weight * meet_condition_number + bool2int(friend_flag) * number_friends;
 solve maximize obj;
 
 output
-["meet_condition_magic_number: ", show(meet_condition_magic_number), ";\n"] ++
+["obj: ", show(obj), ";\n"] ++
+["meet_condition_number: ", show(meet_condition_number), ";\n"] ++
 ["number_friends: ", show(number_friends), ";\n"] ++
 ["students' groups: ", show(student_group), ";\n"];

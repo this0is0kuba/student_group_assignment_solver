@@ -192,8 +192,8 @@ var int: obj = weight * students_happiness + students_happiness_with_average;
 solve maximize obj;
 
 output
-["students_happiness: ", show(students_happiness), ";\n"] ++
 ["obj: ", show(obj), ";\n"] ++
+["students_happiness: ", show(students_happiness), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"];
 
 
