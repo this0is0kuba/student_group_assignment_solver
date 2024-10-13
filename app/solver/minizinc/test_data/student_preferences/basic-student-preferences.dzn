@@ -1,4 +1,5 @@
 % Basic info about classes
+% --------------------------------------------------
 number_students = 4;
 number_instructors = 3;
 number_subjects = 2;
@@ -6,20 +7,17 @@ number_class_types = 1;
 number_section = 1;
 number_classes = 5;
 
+student_average = [300, 350, 500, 450];
+
 subject_ects = [1, 1];
 subject_section = [1, 1];
-
-student_average = [300, 350, 500, 450];
 
 class_type = [1, 1, 1, 1, 1];
 class_subject = [1, 1, 1, 2, 2];
 class_instructor = [1, 2, 2, 1, 3];
 class_time_h = [28, 14, 14, 28, 28];
 
-class_type_min_students = [2];
-class_type_max_students = [4];
-
-% Info about science club, science research, and more constraints
+% Info about science club, science research
 science_club_ects = 1;
 science_research_ects = 1;
 science_club_section = 1;
@@ -27,15 +25,25 @@ science_research_section = 1;
 
 student_science_club = [false, false, false, false];
 student_science_research = [false, false, false, false];
+% --------------------------------------------------
 
+% Constraints
+% --------------------------------------------------
 instructor_max_h = [100, 100, 100];
+
 section_min_ects = [1];
 section_max_ects = [1];
 
+class_type_min_students = [2];
+class_type_max_students = [4];
+% --------------------------------------------------
+
 % Preferences
+% --------------------------------------------------
 student_preferences = array2d(1..number_students, 1..number_subjects, 
   [ 4, 1,
     4, 1,
     4, 1,
     1, 4, ]
 );
+% --------------------------------------------------

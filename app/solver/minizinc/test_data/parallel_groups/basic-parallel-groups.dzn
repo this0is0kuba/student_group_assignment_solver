@@ -1,4 +1,5 @@
 % Basic info about classes
+% --------------------------------------------------
 number_students = 4;
 number_instructors = 3;
 number_subjects = 2;
@@ -12,19 +13,28 @@ class_time_h = [28, 14, 14, 28, 28];
 
 class_type_min_students = [2];
 class_type_max_students = [4];
+% --------------------------------------------------
 
 % More constraints
+% --------------------------------------------------
 instructor_max_h = [100, 100, 100];
 
+class_type_min_students = [2];
+class_type_max_students = [4];
+% --------------------------------------------------
+
 % Student's subjects
+% --------------------------------------------------
 student_subject = array2d(1..number_students, 1..number_subjects, 
   [ false, true, 
     true, false, 
     true, false, 
     false, true ]
 );
+% --------------------------------------------------
 
 % Student's friends
+% --------------------------------------------------
 friend_flag = true;
 max_number_friends = 3;
 
@@ -34,7 +44,10 @@ student_friend = array2d(1..number_students, 1..max_number_friends,
     4, 0, 0, 
     3, 1, 0 ]
 );
+% --------------------------------------------------
 
 % Importance of parallel groups
+% --------------------------------------------------
 weight = 100;
+% --------------------------------------------------
 

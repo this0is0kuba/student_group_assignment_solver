@@ -20,14 +20,14 @@ array[Class] of ClassType: class_type;
 array[Class] of Subject: class_subject;
 array[Class] of Instructor: class_instructor;
 array[Class] of int: class_time_h;
+% --------------------------------------------------
+
+% Constraints
+% --------------------------------------------------
+array[Instructor] of int: instructor_max_h;
 
 array[ClassType] of int: class_type_min_students;
 array[ClassType] of int: class_type_max_students;
-% --------------------------------------------------
-
-% More constraints
-% --------------------------------------------------
-array[Instructor] of int: instructor_max_h;
 % --------------------------------------------------
 
 % Main array - students' subjects
@@ -191,12 +191,12 @@ var int: number_friends = sum(
 );
 % --------------------------------------------------
 
-
 % meet_conditon < 45 * 22 ~= 1000
 % number_of_friends < 100 * 3 * 45 = 13500
 
 var int: obj = weight * meet_condition_number + bool2int(friend_flag) * number_friends;
 solve maximize obj;
+
 
 output
 ["obj: ", show(obj), ";\n"] ++

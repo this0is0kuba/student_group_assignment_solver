@@ -1,11 +1,14 @@
 from fastapi import FastAPI
-from app.solver.models.input import Input
+from app.models import Input
 
 app = FastAPI()
 
 
 @app.post("/run-solver")
 async def run_solver(solver_input: Input):
+
+    
+
     return {"message": "started solving"}
 
 

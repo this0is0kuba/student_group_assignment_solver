@@ -28,13 +28,10 @@ array[Class] of ClassType: class_type;
 array[Class] of Subject: class_subject;
 array[Class] of Instructor: class_instructor;
 array[Class] of int: class_time_h;
-
-array[ClassType] of int: class_type_min_students;
-array[ClassType] of int: class_type_max_students;
 % --------------------------------------------------
 
 
-% Info about science club, science research, and more constraints
+% Info about science club, science research
 % --------------------------------------------------
 int: science_club_ects;
 int: science_research_ects;
@@ -43,11 +40,20 @@ int: science_research_section;
 
 array[Student] of bool: student_science_club;
 array[Student] of bool: student_science_research;
+% --------------------------------------------------
 
+
+% Constraints
+% --------------------------------------------------
 array[Instructor] of int: instructor_max_h;
+
 array[Section] of int: section_min_ects;
 array[Section] of int: section_max_ects;
+
+array[ClassType] of int: class_type_min_students;
+array[ClassType] of int: class_type_max_students;
 % --------------------------------------------------
+
 
 % Preferences
 % --------------------------------------------------

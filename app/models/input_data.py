@@ -7,5 +7,3 @@ class Input(BaseModel):
 
     information: Information
     preferences: StudentPreferences
-
-
