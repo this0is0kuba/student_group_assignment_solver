@@ -2,7 +2,7 @@ from minizinc import Model, Instance, Solver, Result
 
 from models import InputStudentPreferences
 from models.input_parallel_groups import InputParallelGroups
-from models.solution import Solution
+from models import Solution
 
 
 class StudentAssignmentSolver:
@@ -61,4 +61,6 @@ class StudentAssignmentSolver:
 
     def _get_solution(self, result_parallel_groups: Result) -> Solution:
 
-        return Solution()
+        return Solution(
+
+        )

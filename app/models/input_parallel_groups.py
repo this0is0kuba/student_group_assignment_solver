@@ -28,7 +28,7 @@ class InputParallelGroups(BaseModel):
     # Student's subjects
     # --------------------------------------------------
     # None is allowed because we have to wait until we get this info from the solver
-    student_subject: list[int, int] | None
+    student_subject: list[list[int]] | None
     # --------------------------------------------------
 
     # Student's friends
@@ -36,7 +36,7 @@ class InputParallelGroups(BaseModel):
     friend_flag: bool = False
     max_number_friends: int | None
 
-    student_friend = list[int, int] | None
+    student_friend: list[list[int]] | None
     # --------------------------------------------------
 
     # Importance of parallel groups
