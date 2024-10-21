@@ -1,16 +1,26 @@
 from app.models import InputData
 from app.solver.solver import StudentAssignmentSolver
-from models.solution import Solution
-from solver.preprocessor import prepare_input_for_student_preferences, prepare_input_for_parallel_groups
+from models.minizinc_solution import MinizincSolution
+from tools.preprocessor import Preprocessor
 
 
 def start_process(input_data: InputData) -> None:
 
-    input_student_preferences = prepare_input_for_student_preferences(input_data)
-    input_parallel_groups = prepare_input_for_parallel_groups(input_data)
+    # Prepare input for minizinc solvers
+    minizinc_student_preferences = Preprocessor.prepare_student_preferences(input_data)
+    minizinc_parallel_groups = Preprocessor.prepare_parallel_groups(input_data)
 
-    solver: StudentAssignmentSolver = StudentAssignmentSolver(input_student_preferences, input_parallel_groups)
-    solution: Solution = solver.solve()
+    # Run minizinc solver
+    solver: StudentAssignmentSolver = StudentAssignmentSolver(minizinc_student_preferences, minizinc_parallel_groups)
+    minizincSolution: MinizincSolution = solver.solve()
 
-    print(solution)
-    # TODO - save solution
+    # TODO - Verify the solution
+    # Verify the solution
+
+    # TODO - Covert minizinc solution
+    # Covert minizinc solution
+
+    # TODO - Save solution
+    # Save solution
+
+    print(minizincSolution)

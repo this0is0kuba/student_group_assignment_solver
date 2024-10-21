@@ -1,10 +1,8 @@
-from pathlib import Path
-
 from minizinc import Model, Instance, Solver, Result
 
-from models import InputStudentPreferences
+from models import InputStudentPreferences, InputData
 from models.input_parallel_groups import InputParallelGroups
-from models import Solution
+from models.minizinc_solution import MinizincSolution
 
 
 class StudentAssignmentSolver:
@@ -12,10 +10,11 @@ class StudentAssignmentSolver:
     def __init__(self,
                  input_student_preferences: InputStudentPreferences,
                  input_parallel_groups: InputParallelGroups):
+
         self.input_student_preferences = input_student_preferences
         self.input_parallel_groups = input_parallel_groups
 
-    def solve(self) -> Solution:
+    def solve(self) -> MinizincSolution:
 
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
@@ -25,13 +24,14 @@ class StudentAssignmentSolver:
         return self._get_solution(result_parallel_groups)
 
     def _solve_student_preferences(self, solver: Solver) -> Result:
-        print(Path(__file__).parent)
+
         model: Model = Model(r"./app/solver/minizinc/solvers/student_preferences.mzn")
         instance: Instance = self._create_instance_student_preferences(solver, model)
 
         return instance.solve()
 
     def _solve_parallel_groups(self, solver: Solver, result_student_preferences: Result) -> Result:
+
         model: Model = Model(r"./app/solver/minizinc/solvers/parallel_groups.mzn")
         instance: Instance = self._create_instance_parallel_groups(solver, model, result_student_preferences)
 
@@ -56,15 +56,11 @@ class StudentAssignmentSolver:
         instance = Instance(solver, model)
 
         for field, value in self.input_parallel_groups.dict().items():
-            print("field: ", field, ", value: ", value)
             instance[field] = value
 
         instance["student_subject"] = result_student_preferences["student_subject"]
 
         return instance
 
-    def _get_solution(self, result_parallel_groups: Result) -> Solution:
-
-        return Solution(
-
-        )
+    def _get_solution(self, result: Result) -> MinizincSolution:
+        return result["student_group"]
