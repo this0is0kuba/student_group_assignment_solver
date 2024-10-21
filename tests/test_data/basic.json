@@ -4,7 +4,7 @@
     "basic_info": {
       "students": ["Anna Kowalska", "Piotr Nowak", "Katarzyna Zielińska", "Michał Wiśniewski"],
       "instructors": ["Monika Lewandowska", "Tomasz Wróbel", "Joanna Majewska"],
-      "subjects": ["Algebra Liniowa", "Fizyka Techniczna", "Analiza Matematyczna"],
+      "subjects": ["Algebra Liniowa", "Analiza Matematyczna"],
       "class_types": ["Wykład"],
       "student_average": [3.00, 3.50, 5.00, 4.50],
       "section_number": 1,
@@ -29,7 +29,7 @@
     },
 
     "constraints": {
-      "instructor_max_h": [100, 100, 100],
+      "instructor_max_hours": [100, 100, 100],
       "section_min_ects": [1],
       "section_max_ects": [1],
       "class_type_min_students": [2],
@@ -39,10 +39,10 @@
   },
 
   "preferences": {
-    "preferences_subjects":  [ 1, 2,
-                               1, 2,
-                               1, 2,
-                               2, 1 ],
+    "preferences_subjects":  [ [1, 2],
+                               [1, 2],
+                               [1, 2],
+                               [2, 1] ],
     "friends_info": null
   }
 }

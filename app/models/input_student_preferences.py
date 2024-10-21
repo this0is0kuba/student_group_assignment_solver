@@ -46,5 +46,5 @@ class InputStudentPreferences(BaseModel):
 
     # Preferences
     # --------------------------------------------------
-    student_preferences: list[int, int]
+    student_preferences: list[list[int]]
     # --------------------------------------------------

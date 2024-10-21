@@ -20,11 +20,11 @@ def prepare_input_for_student_preferences(input_data: InputData) -> InputStudent
         # how much subjects is in each section
         section_subject_amount = [0 for _ in range(section_number)]
 
-        for section in range(section_number):
+        for section in range(1, section_number + 1):
             for current_section in subject_section:
 
                 if current_section == section:
-                    section_subject_amount[section] += 1
+                    section_subject_amount[section - 1] += 1
 
         new_list_preferences = []
         for i in range(len(list_preferences)):
@@ -33,7 +33,7 @@ def prepare_input_for_student_preferences(input_data: InputData) -> InputStudent
             for j in range(len(list_preferences[0])):
 
                 list_student_preferences.append(
-                    math.pow(section_subject_amount[subject_section[j]] - list_preferences[i][j], 2)
+                    int(math.pow(section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1, 2))
                 )
 
             new_list_preferences.append(list_student_preferences)
@@ -91,7 +91,7 @@ def prepare_input_for_parallel_groups(input_data: InputData) -> InputParallelGro
 
     friend_flag = False
     max_number_friends = 0
-    preferences_friends = []
+    preferences_friends = [[] for _ in range(len(basic_info.students))]
     weight = 1
 
     if friends_info:
@@ -107,6 +107,10 @@ def prepare_input_for_parallel_groups(input_data: InputData) -> InputParallelGro
         number_class_types=len(basic_info.class_types),
         number_section=basic_info.section_number,
         number_classes=len(class_info.class_subject),
+        class_type=class_info.class_type,
+        class_subject=class_info.class_subject,
+        class_instructor=class_info.class_instructor,
+        class_time_h=class_info.class_time_hours,
         instructor_max_h=constraints.instructor_max_hours,
         class_type_min_students=constraints.class_type_min_students,
         class_type_max_students=constraints.class_type_max_students,

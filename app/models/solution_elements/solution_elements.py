@@ -2,16 +2,16 @@ from pydantic import BaseModel
 
 
 class StudentGroups(BaseModel):
-    subject: str
     subject_id: str
-    instructor: str
+    subject: str
     instructor_id: str
+    instructor: str
     group_number: int
 
 
 class InstructorGroups(BaseModel):
-    subject: str
     subject_id: str
+    subject: str
     group_number: int
     student_list: list[(str, str)]
 

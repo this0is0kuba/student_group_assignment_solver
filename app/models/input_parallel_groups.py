@@ -34,9 +34,9 @@ class InputParallelGroups(BaseModel):
     # Student's friends
     # --------------------------------------------------
     friend_flag: bool = False
-    max_number_friends: int | None
+    max_number_friends: int
 
-    student_friend: list[list[int]] | None
+    student_friend: list[list[int]]
     # --------------------------------------------------
 
     # Importance of parallel groups
