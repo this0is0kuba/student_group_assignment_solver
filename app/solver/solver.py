@@ -1,6 +1,6 @@
 from minizinc import Model, Instance, Solver, Result
 
-from models import InputStudentPreferences, InputData
+from models import InputStudentPreferences
 from models.input_parallel_groups import InputParallelGroups
 from models.minizinc_solution import MinizincSolution
 

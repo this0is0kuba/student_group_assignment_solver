@@ -1,17 +1,17 @@
 from pydantic import BaseModel
 
 
-class StudentInfo:
+class StudentInfo(BaseModel):
     student_id: str
     student_name: str
 
 
-class GroupInfo:
+class GroupInfo(BaseModel):
     group_number: int
     students: list[StudentInfo]
 
 
-class ClassInfo:
+class OpenedClass(BaseModel):
     subject: str
     class_type: str
     students: list[GroupInfo]
@@ -20,4 +20,4 @@ class ClassInfo:
 
 
 class Solution(BaseModel):
-    class_list: list[str]
+    classes: list[OpenedClass]
