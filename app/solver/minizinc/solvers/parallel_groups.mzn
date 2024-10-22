@@ -133,23 +133,9 @@ constraint forall(i in Instructor) (
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% We want to minimize the number of groups that have students in common. It's easier to set a schedule when more groups are disjoint.
-% --------------------------------------------------
-% function var set of int: get_intersection_of_groups(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-%   {s1 | s1 in Student where student_group[s1, c1] == g1}
-%     intersect
-%   {s2 | s2 in Student where student_group[s2, c2] == g2};
-
 function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
 
     exists (s in Student where student_group[s, c1] == g1) (student_group[s, c2] == g2);
-
-%     sum (
-%       s in Student where student_group[s, c1] == g1
-%      ) (bool2int(student_group[s, c2] == g2)) > 0;
-    
-%     card(get_intersection_of_groups(c1, g1, c2, g2)) > 0;
-
 
 var int: meet_condition_number = sum(
   c1 in Class, 
@@ -160,26 +146,11 @@ var int: meet_condition_number = sum(
     bool2int(not are_groups_have_students_in_common(c1, g1, c2, g2))
     
 );
-% --------------------------------------------------
-
-
-% Number of friends in the same groups. 
-% --------------------------------------------------
-% function var set of int: get_set_of_frends(var Class: c, var Group: g, var Student: s) = 
-%   {s1 | s1 in Student where student_group[s1, c] == g}
-%     intersect
-%   {student_friend[s, f] | f in Friend where student_friend[s, f] != 0};
- 
+% -------------------------------------------------- 
  
 function var int: get_number_of_friends_in_group(var Class: c, var Group: g, var Student: s) =
 
       exists (f in Friend where student_friend[s, f] != 0) (student_group[student_friend[s, f], c] == g);
-
-%     sum (
-%       f in Friend where student_friend[s, f] != 0
-%     ) (bool2int(student_group[student_friend[s, f], c] == g)) > 0;
-    
-%     card(get_set_of_frends(c, g, s));
 
 var int: number_friends = sum(
   c in Class, 
@@ -190,9 +161,6 @@ var int: number_friends = sum(
   
 );
 % --------------------------------------------------
-
-% meet_conditon < 45 * 22 ~= 1000
-% number_of_friends < 100 * 3 * 45 = 13500
 
 var int: obj = weight * meet_condition_number + bool2int(friend_flag) * number_friends;
 solve maximize obj;
