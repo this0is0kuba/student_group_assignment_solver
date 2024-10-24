@@ -1,0 +1,105 @@
+% Basic info about classes
+% --------------------------------------------------
+number_students = 92;
+number_instructors = 11;
+number_subjects = 11;
+number_class_types = 4;
+number_section = 2;
+number_classes = 22;
+
+subject_ects = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+subject_section = [1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2];
+
+student_average = [393, 450, 485, 411, 471, 315, 438, 414, 484, 432,
+                   360, 393, 409, 334, 436, 410, 378, 476, 344, 464,
+                   367, 423, 382, 415, 428, 355, 399, 364, 442, 479,
+                   445, 400, 371, 313, 314, 352, 387, 454, 347, 334,
+                   439, 417, 338, 424, 491, 403, 452, 367, 438, 364,
+                   409, 441, 468, 478, 338, 425, 302, 459, 401, 415,
+                   453, 410, 432, 411, 485, 346, 413, 489, 308, 405,
+                   464, 484, 466, 311, 338, 380, 348, 371, 349, 443,
+                   421, 389, 471, 416, 402, 494, 353, 458, 445, 413,
+                   491, 403];
+
+class_type = [1, 2, 1, 2, 1, 2, 3, 4, 1, 2, 1, 2, 3, 1, 2, 1, 3, 2, 1, 3, 1, 2];
+class_subject = [1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 8, 8, 9, 10, 10, 11, 11];
+class_instructor = [1, 2, 2, 2, 4, 4, 5, 5, 6, 6, 1, 2, 7, 8, 8, 9, 9, 10, 4, 4, 11, 11];
+class_time_h = [14, 28, 28, 20, 14, 14, 10, 20, 14, 28, 10, 20, 10, 14, 28, 28, 14, 42, 14, 14, 14, 28];
+% --------------------------------------------------
+
+% Info about science club, science research
+% --------------------------------------------------
+science_club_ects = 2;
+science_research_ects = 2;
+science_club_section = 1;
+science_research_section = 1;
+
+student_science_club = [false, false, false, false, true, false, false, false, false, false,
+                        false, false, false, false, false, false, false, false, true, false,
+                        false, false, false, false, false, false, false, false, false, true,
+                        false, false, true, false, false, false, true, false, false, false,
+                        false, false, true, false, false, false, true, false, true, false,
+                        false, true, false, false, false, false, false, false, false, false,
+                        false, false, true, false, false, true, false, false, false, false,
+                        false, true, false, false, true, true, false, false, false, false,
+                        false, false, false, false, false, false, false, false, false, false,
+                        false, false];
+
+student_science_research = [false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false, false, false, false, false, false, false, false, false,
+                            false, false];
+% --------------------------------------------------
+
+% Constraints
+% --------------------------------------------------
+instructor_max_h = [140, 280, 140, 280, 140, 140, 140, 140, 140, 140, 140];
+
+section_min_ects = [8, 8];
+section_max_ects = [10, 10];
+
+class_type_min_students = [1, 10, 15, 15];
+class_type_max_students = [100, 15, 30, 30];
+% --------------------------------------------------
+
+% Preferences
+% --------------------------------------------------
+student_preferences = array2d(1..number_students, 1..number_subjects,
+  [ 4, 9, 1, 9, 4, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    1, 9, 4, 1, 9, 4,
+    1, 9, 4, 1, 9, 4,
+    4, 9, 1, 1, 9, 4,
+    4, 9, 1, 1, 9, 4,
+    4, 9, 1, 9, 4, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    1, 9, 4, 1, 9, 4,
+    1, 9, 4, 1, 9, 4,
+    4, 9, 1, 1, 9, 4,
+    4, 9, 1, 1, 9, 4,
+    4, 9, 1, 9, 4, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    4, 9, 1, 4, 9, 1,
+    1, 9, 4, 1, 9, 4,
+    1, 9, 4, 1, 9, 4,
+    4, 9, 1, 1, 9, 4,
+    4, 9, 1, 1, 9, 4 ]
+);
+% --------------------------------------------------
