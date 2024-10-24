@@ -33,5 +33,6 @@ class Constraints(BaseModel):
     instructor_max_hours: list[int]
     section_min_ects: list[int]
     section_max_ects: list[int]
+    section_min_subjects: list[int]
     class_type_min_students: list[int]
     class_type_max_students: list[int]

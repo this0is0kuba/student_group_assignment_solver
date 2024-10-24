@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class InputParallelGroups(BaseModel):
+class InputStudentGroups(BaseModel):
 
     # Basic info about classes
     # --------------------------------------------------
@@ -27,19 +27,6 @@ class InputParallelGroups(BaseModel):
 
     # Student's subjects
     # --------------------------------------------------
-    # None is allowed because we have to wait until we get this info from the solver
+    # None is allowed because we have to wait until we get this info from the earlier solver
     student_subject: list[list[int]] | None
-    # --------------------------------------------------
-
-    # Student's friends
-    # --------------------------------------------------
-    friend_flag: bool = False
-    max_number_friends: int
-
-    student_friend: list[list[int]]
-    # --------------------------------------------------
-
-    # Importance of parallel groups
-    # --------------------------------------------------
-    weight: int
     # --------------------------------------------------
