@@ -22,6 +22,7 @@ array[Class] of Instructor: class_instructor;
 array[Class] of int: class_time_h;
 % --------------------------------------------------
 
+
 % Constraints
 % --------------------------------------------------
 array[Instructor] of int: instructor_max_h;
@@ -30,24 +31,10 @@ array[ClassType] of int: class_type_min_students;
 array[ClassType] of int: class_type_max_students;
 % --------------------------------------------------
 
-% Main array - students' subjects
+
+% Main array of variables - students' subjects.
 % --------------------------------------------------
 array[Student, Subject] of bool: student_subject;
-% --------------------------------------------------
-
-% Student's friends
-% --------------------------------------------------
-int: max_number_friends;
-bool: friend_flag;
-
-set of int: Friend = 1..max_number_friends;
-
-array[Student, Friend] of int: student_friend;
-% --------------------------------------------------
-
-%Importance of parallel groups
-% --------------------------------------------------
-int: weight;
 % --------------------------------------------------
 
 
@@ -112,6 +99,12 @@ constraint forall(c in Class, g in Group where g != 0 /\ g <= number_of_groups_i
 );
 % --------------------------------------------------
 
+% There is at most 1 group for lectures (It can be 0 as well). We assume the first element in class_type is always lecture
+% --------------------------------------------------
+constraint forall(c in Class where class_type[c] == 1) (
+  number_of_groups_in_class[c] <= 1
+);
+% --------------------------------------------------
 
 % Instructor hours.
 % --------------------------------------------------
@@ -133,41 +126,10 @@ constraint forall(i in Instructor) (
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-
-    exists (s in Student where student_group[s, c1] == g1) (student_group[s, c2] == g2);
-
-var int: meet_condition_number = sum(
-  c1 in Class, 
-  g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
-  c2 in Class where c1 < c2 /\ class_instructor[c1] != class_instructor[c2],
-  g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
-  
-    bool2int(not are_groups_have_students_in_common(c1, g1, c2, g2))
-    
-);
-% -------------------------------------------------- 
- 
-function var int: get_number_of_friends_in_group(var Class: c, var Group: g, var Student: s) =
-
-      exists (f in Friend where student_friend[s, f] != 0) (student_group[student_friend[s, f], c] == g);
-
-var int: number_friends = sum(
-  c in Class, 
-  g in Group where g != 0 /\ g <= number_of_groups_in_class[c],
-  s in Student where student_group[s, c] == g) (
-  
-  get_number_of_friends_in_group(c, g, s)
-  
-);
-% --------------------------------------------------
-
-var int: obj = weight * meet_condition_number + bool2int(friend_flag) * number_friends;
-solve maximize obj;
-
+solve satisfy;
 
 output
-["obj: ", show(obj), ";\n"] ++
-["meet_condition_number: ", show(meet_condition_number), ";\n"] ++
-["number_friends: ", show(number_friends), ";\n"] ++
-["students' groups: ", show(student_group), ";\n"];
+["student_group: ", show(student_group), ";\n"];
+
+
+

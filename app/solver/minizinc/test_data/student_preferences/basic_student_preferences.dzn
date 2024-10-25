@@ -33,6 +33,7 @@ instructor_max_h = [100, 100, 100];
 
 section_min_ects = [1];
 section_max_ects = [1];
+section_min_subjects = [1];
 
 class_type_min_students = [2];
 class_type_max_students = [4];
@@ -41,9 +42,9 @@ class_type_max_students = [4];
 % Preferences
 % --------------------------------------------------
 student_preferences = array2d(1..number_students, 1..number_subjects, 
-  [ 4, 1,
-    4, 1,
-    4, 1,
-    1, 4, ]
+  [ 2, 1,
+    2, 1,
+    2, 1,
+    1, 2, ]
 );
 % --------------------------------------------------

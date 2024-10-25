@@ -1,13 +1,12 @@
 import math
 
-from models import InputStudentPreferences, InputData
-from models.input_parallel_groups import InputParallelGroups
+from models import InputStudentSubjects, InputStudentGroups, InputData
 
 
 class Preprocessor:
 
     @classmethod
-    def prepare_student_preferences(cls, input_data: InputData) -> InputStudentPreferences:
+    def prepare_input_student_subjects(cls, input_data: InputData) -> InputStudentSubjects:
 
         basic_info = input_data.information.basic_info
         class_info = input_data.information.class_info
@@ -18,10 +17,10 @@ class Preprocessor:
 
         student_average = Preprocessor._prepare_student_average(basic_info.student_average)
         student_preferences = Preprocessor._prepare_list_preferences(preferences_subjects,
-                                                       basic_info.section_number,
-                                                       basic_info.subject_section)
+                                                                     basic_info.section_number,
+                                                                     basic_info.subject_section)
 
-        return InputStudentPreferences(
+        return InputStudentSubjects(
             number_students=len(basic_info.students),
             number_instructors=len(basic_info.instructors),
             number_subjects=len(basic_info.subjects),
@@ -44,13 +43,14 @@ class Preprocessor:
             instructor_max_h=constraints.instructor_max_hours,
             section_min_ects=constraints.section_min_ects,
             section_max_ects=constraints.section_max_ects,
+            section_min_subjects=constraints.section_min_subjects,
             class_type_min_students=constraints.class_type_min_students,
             class_type_max_students=constraints.class_type_max_students,
             student_preferences=student_preferences
         )
 
     @classmethod
-    def prepare_parallel_groups(cls, input_data: InputData) -> InputParallelGroups:
+    def prepare_input_student_groups(cls, input_data: InputData) -> InputStudentGroups:
         basic_info = input_data.information.basic_info
         class_info = input_data.information.class_info
         constraints = input_data.information.constraints
@@ -68,7 +68,7 @@ class Preprocessor:
             preferences_friends = friends_info.preferences_friends
             weight = friends_info.weight
 
-        return InputParallelGroups(
+        return InputStudentGroups(
             number_students=len(basic_info.students),
             number_instructors=len(basic_info.instructors),
             number_subjects=len(basic_info.subjects),
@@ -100,7 +100,8 @@ class Preprocessor:
         return new_list_average
 
     @classmethod
-    def _prepare_list_preferences(cls, list_preferences: list[list[int]], section_number: int, subject_section: list[int]):
+    def _prepare_list_preferences(cls, list_preferences: list[list[int]], section_number: int,
+                                  subject_section: list[int]):
 
         # how much subjects is in each section
         section_subject_amount = [0 for _ in range(section_number)]
@@ -117,7 +118,7 @@ class Preprocessor:
             list_student_preferences = []
             for j in range(len(list_preferences[0])):
                 list_student_preferences.append(
-                    int(math.pow(section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1, 2))
+                    section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1
                 )
 
             new_list_preferences.append(list_student_preferences)
