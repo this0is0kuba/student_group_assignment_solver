@@ -99,6 +99,12 @@ constraint forall(c in Class, g in Group where g != 0 /\ g <= number_of_groups_i
 );
 % --------------------------------------------------
 
+% There is at most 1 group for lectures (It can be 0 as well). We assume the first element in class_type is always lecture
+% --------------------------------------------------
+constraint forall(c in Class where class_type[c] == 1) (
+  number_of_groups_in_class[c] <= 1
+);
+% --------------------------------------------------
 
 % Instructor hours.
 % --------------------------------------------------

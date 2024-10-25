@@ -79,7 +79,7 @@ constraint forall(sb in Subject) (
 % --------------------------------------------------
 
 
-% Instructor hours. We assume the most optymistic situation. We check if it's possible to create grous. Is there a situation in which instructor is able to handle all the groups for his class.
+% Instructor hours. We assume the most optymistic situation. We check if it's possible to create grous. Should be a situation in which instructor is able to handle all the groups for his classes.
 % --------------------------------------------------
 array[Instructor] of var 0..max(instructor_max_h): instructor_h;
 
@@ -106,11 +106,13 @@ constraint forall(i in Instructor) (
 );
 % --------------------------------------------------
 
-// repair this, check why output doesn't work, set leccture to have only one group
+
 % Check if it's possible to create grous. Check if there is no too little students in class
 % --------------------------------------------------
 constraint forall(c in Class) (
   number_of_students_in_subject[class_subject[c]] >= class_type_min_students[class_type[c]]
+  \/
+  number_of_students_in_subject[class_subject[c]] == 0
 );
 % --------------------------------------------------
 
@@ -168,9 +170,9 @@ constraint forall(st in Student, sc in Section) (
 
 % Students' happiness is equal to sum of the subject's points given by students. We count the points only of the subjects that have started.
 % --------------------------------------------------
-var int: students_happiness = sum(st in Student, sb in Subject) (
- student_subject[st, sb] * pow(student_preferences[st, sb], 2)
-);
+var int: students_happiness = pow(
+  sum(st in Student, sb in Subject) (student_subject[st, sb] * student_preferences[st, sb]), 
+  2);
 % --------------------------------------------------
 
 

@@ -17,12 +17,10 @@ class StudentAssignmentSolver:
 
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
-        result_student_preferences = self._solve_student_subjects(solver)
-        result_parallel_groups = self._solve_student_groups(solver, result_student_preferences)
+        result_student_subjects = self._solve_student_subjects(solver)
+        result_student_groups = self._solve_student_groups(solver, result_student_subjects)
 
-        print(result_parallel_groups.solution)
-
-        return self._get_solution(result_parallel_groups)
+        return self._get_solution(result_student_groups)
 
     def _solve_student_subjects(self, solver: Solver) -> Result:
 
@@ -59,6 +57,7 @@ class StudentAssignmentSolver:
         for field, value in self.input_student_groups.dict().items():
             instance[field] = value
 
+        # We have to add student_subject which we get from the first solver
         instance["student_subject"] = result_student_preferences["student_subject"]
 
         return instance
