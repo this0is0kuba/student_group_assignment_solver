@@ -1,0 +1,30 @@
+% Basic info about classes
+% --------------------------------------------------
+number_students = 4;
+number_instructors = 3;
+number_subjects = 2;
+number_class_types = 1;
+number_classes = 5;
+
+class_type = [1, 1, 1, 1, 1];
+class_subject = [1, 1, 1, 2, 2];
+class_instructor = [1, 2, 2, 1, 3];
+class_time_h = [28, 14, 14, 28, 28];
+
+
+% Constraints
+% --------------------------------------------------
+instructor_max_h = [100, 100, 100];
+
+class_type_min_students = [2];
+class_type_max_students = [4];
+% --------------------------------------------------
+
+% Preferences
+% --------------------------------------------------
+% Main array of variables - students' subjects.
+% --------------------------------------------------
+student_subject = array2d(1..number_students, 1..number_subjects,
+  [ false, true, true, false, true, false, false, true ]
+);
+% --------------------------------------------------
