@@ -172,28 +172,29 @@ constraint forall(c in Class) (
 
 % Our objective function is the number of groups that have students in common. We check each pair
 % --------------------------------------------------
-function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-    sum(s in Student) ((student_group[s, c1] == g1) * (student_group[s, c2] == g2)) > 0;
+% function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
+%     sum(s in Student) ((student_group[s, c1] == g1) * (student_group[s, c2] == g2)) > 0;
 
-var int: groups_with_common_students;
+% var int: groups_with_common_students;
 
-constraint groups_with_common_students == sum (
-                  c1 in Class where number_of_students_in_class[c1] > 0,
-                  g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
-                  c2 in Class where c2 > c1,
-                  g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
+% constraint groups_with_common_students == sum (
+%                   c1 in Class where number_of_students_in_class[c1] > 0,
+%                   g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
+%                   c2 in Class where c2 > c1 /\
+%                                     class_instructor[c1] != class_instructor[c2],
+%                   g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
                   
-    bool2int(are_groups_have_students_in_common(c1, g1, c2, g2))
-);
+%     bool2int(are_groups_have_students_in_common(c1, g1, c2, g2))
+% );
 % --------------------------------------------------
 
 
-solve minimize groups_with_common_students;
+solve satisfy;
 
 output
 % ["student_group: ", show(student_group), ";\n"] ++
-["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
-% ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
+% ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
+["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++
 [];

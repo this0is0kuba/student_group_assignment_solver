@@ -20,8 +20,7 @@ class_type_min_students = [2];
 class_type_max_students = [4];
 % --------------------------------------------------
 
-% Preferences
-% --------------------------------------------------
+
 % Main array of variables - students' subjects.
 % --------------------------------------------------
 student_subject = array2d(1..number_students, 1..number_subjects,

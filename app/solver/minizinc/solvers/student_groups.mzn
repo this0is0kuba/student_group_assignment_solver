@@ -178,16 +178,16 @@ constraint forall(c in Class) (
 
 % We force solver to always choose option with the lower number of groups.
 % --------------------------------------------------
-function var int: my_ceil_var(var int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
+% function var int: my_ceil_var(var int: a, int: b) =
+%     if a mod b == 0 then
+%         a div b
+%     else
+%         a div b + 1
+%     endif;
     
-constraint forall(c in Class) (
-  number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
-);
+% constraint forall(c in Class) (
+%   number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
+% );
 % --------------------------------------------------
 
 
@@ -203,7 +203,9 @@ var int: groups_with_common_students;
 
 constraint groups_with_common_students == sum (
                   g1 in AllGroups where number_of_students_in_group[g1] > 0,
-                  g2 in AllGroups where g2 > g1 /\ number_of_students_in_group[g2] > 0 /\ group_class[g1] != group_class[g2]) (
+                  g2 in AllGroups where g2 > g1 /\ number_of_students_in_group[g2] > 0 /\ 
+                     group_class[g1] != group_class[g2] /\
+                     class_instructor[group_class[g1]] != class_instructor[group_class[g2]]) (
                   
     bool2int(are_groups_have_students_in_common(g1, g2))
 );
@@ -214,6 +216,7 @@ solve minimize groups_with_common_students;
 
 output
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
+% ["Group: ", show(Group), ";\n"] ++
 % ["transformed student_group: ", show(bool2int(student_group)), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
