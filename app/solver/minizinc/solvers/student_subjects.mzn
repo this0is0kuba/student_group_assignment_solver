@@ -83,7 +83,7 @@ constraint forall(sb in Subject) (
 % --------------------------------------------------
 array[Instructor] of var 0..max(instructor_max_h): instructor_h;
 
-function var int: ceil_div(var int: a, var int: b) =
+function var int: my_ceil(var int: a, var int: b) =
     if a mod b == 0 then
         a div b
     else
@@ -93,7 +93,7 @@ function var int: ceil_div(var int: a, var int: b) =
 constraint forall(i in Instructor) (
   instructor_h[i] = sum(c in Class where class_instructor[c] == i) (
       class_time_h[c] * 
-      ceil_div(number_of_students_in_subject[class_subject[c]], class_type_max_students[class_type[c]])
+      my_ceil(number_of_students_in_subject[class_subject[c]], class_type_max_students[class_type[c]])
   )
 );
 % --------------------------------------------------
