@@ -30,8 +30,7 @@
 
     "constraints": {
       "instructor_max_hours": [100, 100, 100],
-      "section_min_ects": [1],
-      "section_max_ects": [1],
+      "student_subjects_in_section": [[1], [1], [1], [1]],
       "class_type_min_students": [2],
       "class_type_max_students": [4]
     }

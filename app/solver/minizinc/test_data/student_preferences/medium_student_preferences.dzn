@@ -7,7 +7,6 @@ number_class_types = 4;
 number_section = 2;
 number_classes = 13;
 
-subject_ects = [1, 1, 2, 1, 1, 2];
 subject_section = [1, 1, 1, 2, 2, 2];
 
 student_average = [ 300, 300, 300, 300, 300, 300, 300, 300, 300, 300,
@@ -20,33 +19,48 @@ class_instructor = [1, 2, 2, 3, 4, 3, 4, 5, 6, 7, 7, 8, 8];
 class_time_h = [28, 14, 14, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28];
 % --------------------------------------------------
 
-% Info about science club, science research
-% --------------------------------------------------
-science_club_ects = 1;
-science_research_ects = 1;
-science_club_section = 1;
-science_research_section = 1;
-
-student_science_club = [true, false, false, false, false, false, false, false, false, false,
-                        true, false, false, false, false, false, false, false, false, false,
-                        true, false, false, false, false, false, false, false, false, false];
-
-student_science_research = [true, false, false, false, false, false, false, false, false, false,
-                            false, false, false, false, false, false, false, false, false, false,
-                            false, false, false, false, false, false, false, false, false, true];
-% --------------------------------------------------
 
 % Constraints
 % --------------------------------------------------
 instructor_max_h = [336, 140, 336, 336, 336, 336, 336, 336];
 
-section_min_ects = [2, 2];
-section_max_ects = [2, 2];
-section_min_subjects = [2, 2];
+student_subjects_in_section = array2d(1..number_students, 1..number_section, 
+  [ 0, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2,
+    1, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2,
+    1, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 2, 
+    2, 1 ]
+);
 
 class_type_min_students = [1, 2, 5, 5];
 class_type_max_students = [30, 5, 10, 10];
 % --------------------------------------------------
+
 
 % Preferences
 % --------------------------------------------------
