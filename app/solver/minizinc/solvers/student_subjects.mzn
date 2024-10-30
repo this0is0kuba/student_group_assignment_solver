@@ -19,8 +19,6 @@ set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
 
 array[Student] of int: student_average;
-
-array[Subject] of int: subject_ects;
 array[Subject] of Section: subject_section;
 
 array[Class] of ClassType: class_type;
@@ -30,25 +28,11 @@ array[Class] of int: class_time_h;
 % --------------------------------------------------
 
 
-% Info about science club, science research
-% --------------------------------------------------
-int: science_club_ects;
-int: science_research_ects;
-int: science_club_section;
-int: science_research_section;
-
-array[Student] of bool: student_science_club;
-array[Student] of bool: student_science_research;
-% --------------------------------------------------
-
-
 % Constraints
 % --------------------------------------------------
 array[Instructor] of int: instructor_max_h;
 
-array[Section] of int: section_min_ects;
-array[Section] of int: section_max_ects;
-array[Section] of int: section_min_subjects;
+array[Student, Section] of 0..number_subjects: student_subjects_in_section;
 
 array[ClassType] of int: class_type_min_students;
 array[ClassType] of int: class_type_max_students;
@@ -117,43 +101,13 @@ constraint forall(c in Class) (
 % --------------------------------------------------
 
 
-
-% Total ECTS points for each student in each section are sum of all ECTS of his subjets. It's also neccesary to count ects of science club and science research becase each student who's declared particpation in these activities should be assined to them.
+% Total number of subjects for each student in each section.
 % --------------------------------------------------
-array[Student, Section] of var min(section_min_ects)..max(section_max_ects): sum_student_ects_in_section;
+array[Student, Section] of var int: student_subjects_in_section_var;
 
 constraint forall(st in Student, sc in Section) (
-  sum_student_ects_in_section[st, sc] == 
-      sum(sb in Subject where student_subject[st, sb] /\ subject_section[sb] == sc) (subject_ects[sb])
-      +
-      bool2int(science_club_section == sc) * student_science_club[st] * science_club_ects
-      +
-      bool2int(science_research_section == sc) * student_science_research[st] * science_research_ects
-);
-% --------------------------------------------------
-
-
-% Each student has appropriate number of ECTS in each section.
-% --------------------------------------------------
-constraint forall(st in Student, sc in Section) (
-  sum_student_ects_in_section[st, sc] <= section_max_ects[sc]
-  /\
-  sum_student_ects_in_section[st, sc] >= section_min_ects[sc]
-);
-% --------------------------------------------------
-
-
-% Total number of subjects for each student in each section. Similar to sum of ECTS
-% --------------------------------------------------
-array[Student, Section] of var int: sum_student_subjects_in_section;
-
-constraint forall(st in Student, sc in Section) (
-  sum_student_subjects_in_section[st, sc] == 
+  student_subjects_in_section_var[st, sc] == 
       sum(sb in Subject where student_subject[st, sb] /\ subject_section[sb] == sc) (1)
-      +
-      bool2int(science_club_section == sc) * student_science_club[st]
-      +
-      bool2int(science_research_section == sc) * student_science_research[st]
 );
 % --------------------------------------------------
 
@@ -161,7 +115,7 @@ constraint forall(st in Student, sc in Section) (
 % Each student has appropriate number of subjects in each section.
 % --------------------------------------------------
 constraint forall(st in Student, sc in Section) (
-  sum_student_subjects_in_section[st, sc] >= section_min_subjects[sc]
+  student_subjects_in_section_var[st, sc] == student_subjects_in_section[st, sc]
 );
 % --------------------------------------------------
 

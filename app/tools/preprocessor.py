@@ -11,7 +11,6 @@ class Preprocessor:
         basic_info = input_data.information.basic_info
         class_info = input_data.information.class_info
         constraints = input_data.information.constraints
-        sc_and_res = input_data.information.science_club_and_research
 
         preferences_subjects = input_data.preferences.preferences_subjects
 
@@ -28,22 +27,13 @@ class Preprocessor:
             number_section=basic_info.section_number,
             number_classes=len(class_info.class_subject),
             student_average=student_average,
-            subject_ects=basic_info.subject_ects,
             subject_section=basic_info.subject_section,
             class_type=class_info.class_type,
             class_subject=class_info.class_subject,
             class_instructor=class_info.class_instructor,
             class_time_h=class_info.class_time_hours,
-            science_club_ects=sc_and_res.science_club_ects,
-            science_research_ects=sc_and_res.science_research_ects,
-            science_club_section=sc_and_res.science_club_section,
-            science_research_section=sc_and_res.science_research_section,
-            student_science_club=sc_and_res.student_science_club,
-            student_science_research=sc_and_res.student_science_research,
             instructor_max_h=constraints.instructor_max_hours,
-            section_min_ects=constraints.section_min_ects,
-            section_max_ects=constraints.section_max_ects,
-            section_min_subjects=constraints.section_min_subjects,
+            student_subjects_in_section=constraints.student_subjects_in_section,
             class_type_min_students=constraints.class_type_min_students,
             class_type_max_students=constraints.class_type_max_students,
             student_preferences=student_preferences
