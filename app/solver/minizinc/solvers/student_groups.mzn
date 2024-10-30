@@ -178,16 +178,30 @@ constraint forall(c in Class) (
 
 % We force solver to always choose option with the lower number of groups.
 % --------------------------------------------------
-% function var int: my_ceil_var(var int: a, int: b) =
-%     if a mod b == 0 then
-%         a div b
-%     else
-%         a div b + 1
-%     endif;
+function var int: my_ceil_var(var int: a, int: b) =
+    if a mod b == 0 then
+        a div b
+    else
+        a div b + 1
+    endif;
     
-% constraint forall(c in Class) (
-%   number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
-% );
+constraint forall(c in Class) (
+  number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
+);
+% --------------------------------------------------
+
+
+% Break symmetry 
+% --------------------------------------------------
+constraint forall(g1 in AllGroups where
+                    number_of_students_in_group[g1] > 0,
+                  g2 in AllGroups where 
+                    g2 == g1 + 1 /\
+                    group_class[g1] == group_class[g2] /\ 
+                    number_of_students_in_group[g2] > 0) (
+                    
+  lex_greatereq(student_group[.., g1], student_group[.., g2])
+);
 % --------------------------------------------------
 
 
@@ -210,7 +224,6 @@ constraint groups_with_common_students == sum (
     bool2int(are_groups_have_students_in_common(g1, g2))
 );
 % --------------------------------------------------
-
 
 solve minimize groups_with_common_students;
 
