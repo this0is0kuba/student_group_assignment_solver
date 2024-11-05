@@ -38,6 +38,15 @@ array[ClassType] of int: class_type_max_students;
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
 
+% LNS
+% --------------------------------------------------
+int: number_frozen_subjects;
+set of int: FrozenSubject = 1..number_frozen_subjects;
+array[FrozenSubject] of Subject: frozen_subjects;
+
+array[Student, AllGroups] of var bool: current_best_groups;
+% --------------------------------------------------
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -204,6 +213,17 @@ constraint forall(g1 in AllGroups where
 );
 % --------------------------------------------------
 
+% LNS - we freeze part of subjects
+% --------------------------------------------------
+constraint forall(fs in FrozenSubject,
+                  s in Student where student_subject[s, fs],
+                  c in Class where class_subject[c] = fs,
+                  g in Group) (
+                  
+  student_group[s, group_index(c, g)] = current_best_groups[s, group_index(c, g)]
+);
+% --------------------------------------------------
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -225,12 +245,12 @@ constraint groups_with_common_students == sum (
 );
 % --------------------------------------------------
 
-solve satisfy;
+solve minimize groups_with_common_students;
 
 output
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
 % ["Group: ", show(Group), ";\n"] ++
-["transformed student_group: ", show(student_group), ";\n"] ++
+["student_group: ", show(student_group), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++
