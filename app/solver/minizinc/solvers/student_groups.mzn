@@ -225,7 +225,7 @@ constraint groups_with_common_students == sum (
 );
 % --------------------------------------------------
 
-solve satisfy;
+solve minimize groups_with_common_students;
 
 output
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++

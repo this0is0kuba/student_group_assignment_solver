@@ -38,23 +38,6 @@ array[ClassType] of int: class_type_max_students;
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
 
-% Info about groups
-% --------------------------------------------------
-int: max_number_of_groups = my_ceil(number_students, my_min(class_type_min_students)); 
-
-set of int: Group = 1..max_number_of_groups;
-set of int: AllGroups = 1..max_number_of_groups*number_classes;
-% --------------------------------------------------
-
-% LNS
-% --------------------------------------------------
-int: number_frozen_classes;
-set of int: FrozenClass = 1..number_frozen_classes;
-array[FrozenClass] of Class: frozen_classes;
-
-array[Student, AllGroups] of var bool: current_best_groups;
-% --------------------------------------------------
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,6 +57,12 @@ function int: my_min(array[int] of int: arr) =
     else
         min(arr[2..])
     endif;
+    
+    
+int: max_number_of_groups = my_ceil(number_students, my_min(class_type_min_students)); 
+
+set of int: Group = 1..max_number_of_groups;
+set of int: AllGroups = 1..max_number_of_groups*number_classes;
 
 array[Student, AllGroups] of var bool: student_group;
 % --------------------------------------------------
@@ -215,41 +204,35 @@ constraint forall(g1 in AllGroups where
 );
 % --------------------------------------------------
 
-% LNS - we freeze part of classes
-% --------------------------------------------------
-constraint forall(c in FrozenClass, g in Group, s in Student) (
-                  
-  student_group[s, group_index(c, g)] = current_best_groups[s, group_index(c, g)]
-);
-% --------------------------------------------------
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Our objective function is the number of groups that have students in common. We check each pair
+% Z
 % --------------------------------------------------
-function var bool: are_groups_have_students_in_common(var AllGroups: g1, var AllGroups: g2) =
-    sum(s in Student) (student_group[s, g1] * student_group[s, g2]) > 0;
+array[AllGroups, AllGroups] of var 0..1: array_z;
 
-var int: groups_with_common_students;
-
-constraint groups_with_common_students == sum (
-                  g1 in AllGroups where number_of_students_in_group[g1] > 0,
-                  g2 in AllGroups where g2 > g1 /\ number_of_students_in_group[g2] > 0 /\ 
+constraint forall(g1 in AllGroups where 
+                     number_of_students_in_group[g1] > 0,
+                     
+                  g2 in AllGroups where 
+                     g2 > g1 /\ number_of_students_in_group[g2] > 0 /\ 
                      group_class[g1] != group_class[g2] /\
-                     class_instructor[group_class[g1]] != class_instructor[group_class[g2]]) (
-                  
-    bool2int(are_groups_have_students_in_common(g1, g2))
+                     class_instructor[group_class[g1]] != class_instructor[group_class[g2]],
+                     
+                  s in Student ) (
+
+  array_z[g1, g2] >= student_group[s, g1] + student_group[s, g2] - 1
+                                                      
 );
 % --------------------------------------------------
 
-solve minimize groups_with_common_students;
+solve minimize sum(array_z);
 
 output
-["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
+["groups_with_common_students: ", show(sum(array_z)), ";\n"] ++
 % ["Group: ", show(Group), ";\n"] ++
-["student_group: ", show(student_group), ";\n"] ++
+% ["transformed student_group: ", show(student_group), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++

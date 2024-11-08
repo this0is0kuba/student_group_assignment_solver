@@ -19,6 +19,7 @@ class StudentAssignmentSolver:
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
         result_student_subjects = self._solve_student_subjects(solver)
+        print("found student subjects")
 
         lns = LNS(self.input_student_groups, result_student_subjects)
         student_groups = lns.solve()
@@ -33,4 +34,4 @@ class StudentAssignmentSolver:
         for field, value in self.input_student_subjects.dict().items():
             instance[field] = value
 
-        return instance.solve()
+        return instance.solve(processes=8)

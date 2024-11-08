@@ -17,21 +17,21 @@ class LNS:
 
     def solve(self) -> Solution:
 
-        number_of_all_subjects = self.input_student_groups.number_subjects
-        number_of_active_subjects = min(4, number_of_all_subjects)
+        number_of_all_classes = self.input_student_groups.number_classes
+        number_of_active_classes = min(3, number_of_all_classes)
 
         for i in range(5):
 
             model: Model = Model(r"./app/solver/minizinc/solvers/student_groups_lns.mzn")
             instance: Instance = self._create_instance_student_groups(self.solver, model)
 
-            frozen_subjects = self._find_random_subjects(number_of_active_subjects)
+            frozen_classes = self._find_random_classes(number_of_active_classes)
 
-            instance["number_frozen_subjects"] = number_of_all_subjects - number_of_active_subjects
-            instance["frozen_subjects"] = frozen_subjects
+            instance["number_frozen_classes"] = number_of_all_classes - number_of_active_classes
+            instance["frozen_classes"] = frozen_classes
             instance["current_best_groups"] = self.current_best_solution
 
-            result = instance.solve()
+            result = instance.solve(processes=8)
             solution, score = result["student_group"], result["groups_with_common_students"]
 
             if score >= self.current_best_score:
@@ -42,21 +42,21 @@ class LNS:
 
         return self.current_best_solution
 
-    def _find_random_subjects(self, active_subjects):
+    def _find_random_classes(self, active_classes):
 
-        all_subjects = self.input_student_groups.number_subjects
+        all_classes = self.input_student_groups.number_classes
 
-        scope = range(1, self.input_student_groups.number_subjects)
+        scope = range(1, self.input_student_groups.number_classes)
 
-        frozen_subjects = sample(scope, all_subjects - active_subjects)
-        return frozen_subjects
+        frozen_classes = sample(scope, all_classes - active_classes)
+        return frozen_classes
 
     def _find_initial_groups(self) -> (Solution, int):
 
         model: Model = Model(r"./app/solver/minizinc/solvers/student_groups.mzn")
         instance: Instance = self._create_instance_student_groups(self.solver, model)
 
-        initial_solution = instance.solve()
+        initial_solution = instance.solve(processes=8)
 
         return initial_solution["student_group"], initial_solution["groups_with_common_students"]
 

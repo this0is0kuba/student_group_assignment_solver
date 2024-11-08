@@ -2,45 +2,17 @@
   "information": {
 
     "basic_info": {
-
-      "students": [
-        "Anna Kowalska",
-        "Jan Nowak",
-        "Piotr Wiśniewski",
-        "Maria Zielińska",
-        "Krzysztof Krawczyk",
-        "Ewa Majewska",
-        "Tomasz Zawadzki",
-        "Agnieszka Dąbrowska",
-        "Michał Lewandowski",
-        "Katarzyna Wójcik"
-      ],
-
-      "instructors": [
-        "Marek Piotrowski",
-        "Joanna Jankowska",
-        "Tomasz Nowicki",
-        "Agnieszka Kamińska",
-        "Paweł Wiśniewski",
-        "Ewa Zielińska",
-        "Adam Kaczmarek",
-        "Magdalena Wysocka"
-      ],
-
-      "subjects": [
-        "Matematyka Dyskretna",
-        "Algorytmy i Struktury Danych",
-        "Programowanie Obiektowe",
-        "Sztuczna Inteligencja"
-      ],
-
-      "class_types": ["Wykład", "Ćwiczenia Laboratoryjne"],
+      "number_of_students": 10,
+      "number_of_instructors": 8,
+      "number_of_subjects": 4,
+      "number_of_class_types": 2,
+      "number_of_sections": 2,
       "student_average": [3.00, 3.50, 5.00, 4.50, 3.00, 3.50, 5.00, 4.50, 3.00, 3.00],
-      "section_number": 2,
       "subject_section": [1, 1, 2, 2]
     },
 
     "class_info": {
+      "number_of_classes": 8,
       "class_type": [1, 2, 1, 2, 1, 2, 1, 2],
       "class_subject": [1, 1, 2, 2, 3, 3, 4, 4],
       "class_instructor": [1, 2, 3, 4, 5, 6, 7, 8],
