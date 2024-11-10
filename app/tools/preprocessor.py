@@ -73,6 +73,8 @@ class Preprocessor:
             class_type_min_students=constraints.class_type_min_students,
             class_type_max_students=constraints.class_type_max_students,
             student_subject=None,  # We will set this parameter after receiving it from first solver
+            max_number_of_groups=None,  # We will set this parameter after receiving more info from first solver
+            min_number_of_groups_in_class=None,  # We will set this parameter after receiving more info from first solver
             friend_flag=friend_flag,
             max_number_friends=max_number_friends,
             student_friend=preferences_friends,
@@ -102,15 +104,41 @@ class Preprocessor:
                 if current_section == section:
                     section_subject_amount[section - 1] += 1
 
+        max_number_of_subjects = max(section_subject_amount)
+
         new_list_preferences = []
         for i in range(len(list_preferences)):
 
             list_student_preferences = []
             for j in range(len(list_preferences[0])):
+
+                reverted_value = section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1
+                new_value = round(reverted_value * (max_number_of_subjects / section_subject_amount[subject_section[j] - 1]))
+
                 list_student_preferences.append(
-                    section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1
+                    new_value
                 )
 
             new_list_preferences.append(list_student_preferences)
 
         return new_list_preferences
+
+    @classmethod
+    def get_number_of_groups_in_each_class(
+            cls,
+            number_of_students_in_subject: list[int],
+            class_subject: list[int],
+            class_type: list[int],
+            class_type_max_students: list[int]
+    ) -> list[int]:
+
+        number_of_groups_in_class = []
+
+        for i in range(len(class_subject)):
+
+            n = number_of_students_in_subject[class_subject[i] - 1]
+            max_n_in_class = class_type_max_students[class_type[i] - 1]
+
+            number_of_groups_in_class.append(math.ceil(n / max_n_in_class))
+
+        return number_of_groups_in_class

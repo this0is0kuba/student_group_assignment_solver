@@ -38,30 +38,20 @@ array[ClassType] of int: class_type_max_students;
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
 
+% Info about groups
+% --------------------------------------------------
+int: max_number_of_groups; 
+
+set of int: Group = 1..max_number_of_groups;
+
+array[Class] of Group: min_number_of_groups_in_class;
+% --------------------------------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Main array of variables - students' groups.
 % --------------------------------------------------
-function int: my_ceil(int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
-    
-function int: my_min(array[int] of int: arr) =
-    if length(arr) == 1 then
-        arr[1]
-    else
-        min(arr[2..])
-    endif;
-    
-    
-int: max_number_of_groups = my_ceil(number_students, my_min(class_type_min_students)); 
-
-set of int: Group = 1..max_number_of_groups;
 set of int: AllGroups = 1..max_number_of_groups*number_classes;
 
 array[Student, AllGroups] of var bool: student_group;
@@ -128,11 +118,10 @@ constraint forall(g1 in AllGroups,
 % --------------------------------------------------
 
 
-% There is at most 1 group for lectures (It can be 0 when subject hasn't started). We assume the first element in class_type is always lecture
+% We force solver to choose the min possible number of groups for each class.
 % --------------------------------------------------
-constraint forall(c in Class where class_type[c] == 1,
-                  g in Group where g != 1) (
-  number_of_students_in_group[group_index(c, g)] == 0  
+constraint forall(c in Class) (
+  number_of_groups_in_class[c] == min_number_of_groups_in_class[c]
 );
 % --------------------------------------------------
 
@@ -176,21 +165,6 @@ constraint forall(c in Class) (
 % --------------------------------------------------
 
 
-% We force solver to always choose option with the lower number of groups.
-% --------------------------------------------------
-function var int: my_ceil_var(var int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
-    
-constraint forall(c in Class) (
-  number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
-);
-% --------------------------------------------------
-
-
 % Break symmetry 
 % --------------------------------------------------
 constraint forall(g1 in AllGroups where
@@ -230,7 +204,7 @@ solve minimize groups_with_common_students;
 output
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
 % ["Group: ", show(Group), ";\n"] ++
-["transformed student_group: ", show(student_group), ";\n"] ++
+% ["transformed student_group: ", show(student_group), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++

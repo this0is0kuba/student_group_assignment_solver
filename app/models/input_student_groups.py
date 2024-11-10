@@ -29,4 +29,6 @@ class InputStudentGroups(BaseModel):
     # --------------------------------------------------
     # None is allowed because we have to wait until we get this info from the earlier solver
     student_subject: list[list[int]] | None
+    max_number_of_groups:  int | None
+    min_number_of_groups_in_class: list[int] | None
     # --------------------------------------------------

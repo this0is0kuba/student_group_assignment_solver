@@ -91,7 +91,7 @@ constraint forall(i in Instructor) (
 % --------------------------------------------------
 
 
-% Check if it's possible to create grous. Check if there is no too little students in class
+% Check if it's possible to create groups. Check if there is no too little students in class
 % --------------------------------------------------
 constraint forall(c in Class) (
   number_of_students_in_subject[class_subject[c]] >= class_type_min_students[class_type[c]]
@@ -149,7 +149,8 @@ solve maximize obj;
 output
 ["obj: ", show(obj), ";\n"] ++
 ["students_happiness: ", show(students_happiness), ";\n"] ++
-["student_subject: ", show(student_subject), ";\n"];
+["student_subject: ", show(student_subject), ";\n"] ++ 
+["number_of_students_in_subject", show(number_of_students_in_subject)];
 
 
 

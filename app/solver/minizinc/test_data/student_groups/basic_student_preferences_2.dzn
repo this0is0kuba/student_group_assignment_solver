@@ -27,3 +27,10 @@ student_subject = array2d(1..number_students, 1..number_subjects,
   [ false, true, true, false, true, false, false, true ]
 );
 % --------------------------------------------------
+
+
+% Info about groups
+% --------------------------------------------------
+max_number_of_groups = 1;
+min_number_of_groups_in_class = [1, 1, 1, 1, 1];
+% --------------------------------------------------

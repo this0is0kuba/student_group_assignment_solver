@@ -24,7 +24,7 @@ class_type_max_students = [8, 3];
 % Main array of variables - students' subjects.
 % --------------------------------------------------
 student_subject = array2d(1..number_students, 1..number_subjects,
-  [ false, false, true, false, 
+  [ false, false, true, false,
     false, false, true, false, 
     true, false, true, false, 
     true, false, true, false, 
@@ -35,4 +35,10 @@ student_subject = array2d(1..number_students, 1..number_subjects,
     true, false, false, true, 
     true, false, false, true ]
 );
+% --------------------------------------------------
+
+% Info about groups
+% --------------------------------------------------
+max_number_of_groups = 2;
+min_number_of_groups_in_class = [1, 2, 1, 1, 1, 2, 1, 2];
 % --------------------------------------------------

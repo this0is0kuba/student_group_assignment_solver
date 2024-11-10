@@ -38,6 +38,15 @@ array[ClassType] of int: class_type_max_students;
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
 
+% Info about groups
+% --------------------------------------------------
+int: max_number_of_groups; 
+
+set of int: Group = 0..max_number_of_groups;
+
+array[Class] of Group: min_number_of_groups_in_class;
+% --------------------------------------------------
+
 % LNS
 % --------------------------------------------------
 int: number_frozen_classes;
@@ -47,29 +56,12 @@ array[FrozenClass] of Class: frozen_classes;
 array[Student, Class] of var Group: current_best_groups;
 % --------------------------------------------------
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Student group equals 0 when a student doesn't attend a subject and doesn't equal 0 when student attends a subject.
 % --------------------------------------------------
-function int: my_ceil(int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
-    
-function int: my_min(array[int] of int: arr) =
-    if length(arr) == 1 then
-        arr[1]
-    else
-        min(arr[2..])
-    endif;
-    
-    
-int: max_number_of_groups = my_ceil(number_students, my_min(class_type_min_students)); 
-set of int: Group = 0..max_number_of_groups;
-
 array[Student, Class] of var Group: student_group;
 
 constraint forall(s in Student, c in Class where not student_subject[s, class_subject[c]]) (
@@ -78,6 +70,13 @@ constraint forall(s in Student, c in Class where not student_subject[s, class_su
 
 constraint forall(s in Student, c in Class where student_subject[s, class_subject[c]]) (
     student_group[s, c] != 0
+);
+% --------------------------------------------------
+
+% We force solver to choose the min possible number of groups for each class.
+% --------------------------------------------------
+constraint forall(c in Class) (
+  number_of_groups_in_class[c] == min_number_of_groups_in_class[c]
 );
 % --------------------------------------------------
 
@@ -159,20 +158,6 @@ constraint forall(c in Class) (
 );
 % --------------------------------------------------
 
-
-% We force solver to always choose option with the lower number of groups.
-% --------------------------------------------------
-function var int: my_ceil_var(var int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
-    
-constraint forall(c in Class) (
-  number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
-);
-% --------------------------------------------------
 
 % LNS - we freeze part of classes
 % --------------------------------------------------

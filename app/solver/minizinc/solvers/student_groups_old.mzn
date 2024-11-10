@@ -39,29 +39,20 @@ array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
 
 
+% Info about groups
+% --------------------------------------------------
+int: max_number_of_groups; 
+
+set of int: Group = 0..max_number_of_groups;
+
+array[Class] of Group: min_number_of_groups_in_class;
+% --------------------------------------------------
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Student group equals 0 when a student doesn't attend a subject and doesn't equal 0 when student attends a subject.
 % --------------------------------------------------
-function int: my_ceil(int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
-    
-function int: my_min(array[int] of int: arr) =
-    if length(arr) == 1 then
-        arr[1]
-    else
-        min(arr[2..])
-    endif;
-    
-    
-int: max_number_of_groups = my_ceil(number_students, my_min(class_type_min_students)); 
-set of int: Group = 0..max_number_of_groups;
-
 array[Student, Class] of var Group: student_group;
 
 constraint forall(s in Student, c in Class where not student_subject[s, class_subject[c]]) (
@@ -74,12 +65,20 @@ constraint forall(s in Student, c in Class where student_subject[s, class_subjec
 % --------------------------------------------------
 
 
+% We force solver to choose the min possible number of groups for each class.
+% --------------------------------------------------
+constraint forall(c in Class) (
+  number_of_groups_in_class[c] == min_number_of_groups_in_class[c]
+);
+% --------------------------------------------------
+
+
 % Number of groups in class equals sum of distinct groups for that class.
 % --------------------------------------------------
 array[Class] of var Group: number_of_groups_in_class;
 
 constraint forall(c in Class) (
-  number_of_groups_in_class[c] = nvalue([student_group[s, c] | s in Student where student_group[s, c] != 0])
+  number_of_groups_in_class[c] == nvalue([student_group[s, c] | s in Student where student_group[s, c] != 0])
 );
 % --------------------------------------------------
 
@@ -152,46 +151,32 @@ constraint forall(c in Class) (
 % --------------------------------------------------
 
 
-% We force solver to always choose option with the lower number of groups.
-% --------------------------------------------------
-function var int: my_ceil_var(var int: a, int: b) =
-    if a mod b == 0 then
-        a div b
-    else
-        a div b + 1
-    endif;
-    
-constraint forall(c in Class) (
-  number_of_groups_in_class[c] == my_ceil_var(number_of_students_in_class[c], class_type_max_students[class_type[c]])
-);
-% --------------------------------------------------
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Our objective function is the number of groups that have students in common. We check each pair
 % --------------------------------------------------
-% function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
-%     sum(s in Student) ((student_group[s, c1] == g1) * (student_group[s, c2] == g2)) > 0;
+function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
+    sum(s in Student where student_group[s, c1] == g1 /\ student_group[s, c2] == g2) (1) > 0;
 
-% var int: groups_with_common_students;
+var int: groups_with_common_students;
 
-% constraint groups_with_common_students == sum (
-%                   c1 in Class where number_of_students_in_class[c1] > 0,
-%                   g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
-%                   c2 in Class where c2 > c1 /\
-%                                     class_instructor[c1] != class_instructor[c2],
-%                   g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
+constraint groups_with_common_students == sum (
+                  c1 in Class where number_of_students_in_class[c1] > 0,
+                  g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
+                  c2 in Class where c2 > c1 /\
+                                    class_instructor[c1] != class_instructor[c2],
+                  g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
                   
-%     bool2int(are_groups_have_students_in_common(c1, g1, c2, g2))
-% );
+    bool2int(are_groups_have_students_in_common(c1, g1, c2, g2))
+);
+% --------------------------------------------------
 
-solve satisfy;
+solve minimize groups_with_common_students;
 
 output
-["student_group: ", show(student_group), ";\n"] ++
-% ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
+% ["student_group: ", show(student_group), ";\n"] ++
+["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++
