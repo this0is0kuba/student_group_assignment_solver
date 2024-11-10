@@ -33,16 +33,24 @@ array[ClassType] of int: class_type_max_students;
 % --------------------------------------------------
 
 
-% Students' subjects.
+% Main array of variables - students' subjects.
 % --------------------------------------------------
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
 
+% LNS
+% --------------------------------------------------
+int: number_frozen_classes;
+set of int: FrozenClass = 1..number_frozen_classes;
+array[FrozenClass] of Class: frozen_classes;
+
+array[Student, Class] of var Group: current_best_groups;
+% --------------------------------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Main array of variables - students' groups.
+% Student group equals 0 when a student doesn't attend a subject and doesn't equal 0 when student attends a subject.
 % --------------------------------------------------
 function int: my_ceil(int: a, int: b) =
     if a mod b == 0 then
@@ -60,90 +68,66 @@ function int: my_min(array[int] of int: arr) =
     
     
 int: max_number_of_groups = my_ceil(number_students, my_min(class_type_min_students)); 
+set of int: Group = 0..max_number_of_groups;
 
-set of int: Group = 1..max_number_of_groups;
-set of int: AllGroups = 1..max_number_of_groups*number_classes;
+array[Student, Class] of var Group: student_group;
 
-array[Student, AllGroups] of var bool: student_group;
-% --------------------------------------------------
+constraint forall(s in Student, c in Class where not student_subject[s, class_subject[c]]) (
+    student_group[s, c] == 0
+);
 
-
-% Student group equals false when a student doesn't attend a group
-% --------------------------------------------------
-array[AllGroups] of Class: group_class = [(g - 1) div max_number_of_groups + 1 | g in AllGroups];
-array[AllGroups] of Class: group_subject = [class_subject[group_class[g]] | g in AllGroups]; 
-
-constraint forall(s in Student, 
-                  g in AllGroups where not student_subject[s, group_subject[g]]) ( 
-  student_group[s, g] == false
+constraint forall(s in Student, c in Class where student_subject[s, class_subject[c]]) (
+    student_group[s, c] != 0
 );
 % --------------------------------------------------
 
 
-% Student group equals true when a student is in a group. Student can be only in one group per class
+% Number of groups in class equals sum of distinct groups for that class.
 % --------------------------------------------------
-function var int: group_index(var Class: c, var Group: g) =
-  (c-1)*max_number_of_groups + g;
+array[Class] of var Group: number_of_groups_in_class;
 
-constraint forall(s in Student,
-                  c in Class where student_subject[s, class_subject[c]]) (
-                  
-    sum(g in Group) (bool2int(student_group[s, group_index(c, g)])) == 1
-  
+constraint forall(c in Class) (
+  number_of_groups_in_class[c] = nvalue([student_group[s, c] | s in Student where student_group[s, c] != 0])
+);
+% --------------------------------------------------
+
+
+% Student group indexes are consecutive natural numbers - we want groups like: [0, 1, 2] instead of: [0, 4, 9].
+% --------------------------------------------------
+constraint forall(c in Class) (
+  number_of_groups_in_class[c] == max([student_group[s, c] | s in Student])
 );
 % --------------------------------------------------
 
 
 % Sum of students in each group.
 % --------------------------------------------------
-array[AllGroups] of var 0..number_students: number_of_students_in_group;
+array[Class, Group] of var 0..number_students: number_of_students_in_group;
 
-constraint forall(g in AllGroups) (
-  number_of_students_in_group[g] == sum(s in Student) (bool2int(student_group[s, g])) 
+constraint forall(c in Class, g in Group where g <= number_of_groups_in_class[c]) (
+  number_of_students_in_group[c, g] == sum(s in Student where student_group[s, c] == g) (1) 
+);
+
+constraint forall(c in Class, g in Group where g > number_of_groups_in_class[c]) (
+  number_of_students_in_group[c, g] == 0
 );
 % --------------------------------------------------
 
 
 % Sum of students in each group is within the appropriate range.
 % --------------------------------------------------
-constraint forall(g in AllGroups) (
-    ( 
-      number_of_students_in_group[g] <= class_type_max_students[class_type[group_class[g]]]
-      /\
-      number_of_students_in_group[g] >= class_type_min_students[class_type[group_class[g]]]
-    )
-    \/
-      number_of_students_in_group[g] == 0
-    
-);
-% ---------------------------------------------
-
-
-% Student group indexes are consecutive natural numbers - we want groups for class like: [0, 1, 2] instead of: [0, 4, 9]. If some group has no students then the group with higher index shouldn't have studnets as well. 
-% --------------------------------------------------
-constraint forall(g1 in AllGroups, 
-                  g2 in AllGroups where g2 == g1 + 1 /\ group_class[g1] == group_class[g2]) (
-  number_of_students_in_group[g1] == 0 -> number_of_students_in_group[g2] == 0
+constraint forall(c in Class, g in Group where g != 0 /\ g <= number_of_groups_in_class[c]) (
+  number_of_students_in_group[c, g] <= class_type_max_students[class_type[c]]
+  /\
+  number_of_students_in_group[c, g] >= class_type_min_students[class_type[c]]
 );
 % --------------------------------------------------
 
 
 % There is at most 1 group for lectures (It can be 0 when subject hasn't started). We assume the first element in class_type is always lecture
 % --------------------------------------------------
-constraint forall(c in Class where class_type[c] == 1,
-                  g in Group where g != 1) (
-  number_of_students_in_group[group_index(c, g)] == 0  
-);
-% --------------------------------------------------
-
-
-% Number of groups in class
-% --------------------------------------------------
-array[Class] of var 0..max_number_of_groups: number_of_groups_in_class;
-
-constraint forall(c in Class) (
-  number_of_groups_in_class[c] == 
-    sum(g in Group where number_of_students_in_group[group_index(c, g)] != 0) (1)
+constraint forall(c in Class where class_type[c] == 1) (
+  number_of_groups_in_class[c] <= 1
 );
 % --------------------------------------------------
 
@@ -153,7 +137,7 @@ constraint forall(c in Class) (
 array[Instructor] of var 0..max(instructor_max_h): instructor_h;
 
 constraint forall(i in Instructor) (
-  instructor_h[i] == sum(c in Class where class_instructor[c] == i) (class_time_h[c] * number_of_groups_in_class[c])
+  instructor_h[i] = sum(c in Class where class_instructor[c] == i) (class_time_h[c] * number_of_groups_in_class[c])
 );
 % --------------------------------------------------
 
@@ -171,7 +155,7 @@ constraint forall(i in Instructor) (
 array[Class] of var 0..number_students: number_of_students_in_class;
 
 constraint forall(c in Class) (
-  number_of_students_in_class[c] == sum(g in Group) (number_of_students_in_group[group_index(c, g)]) 
+  number_of_students_in_class[c] == sum(g in Group where g != 0) (number_of_students_in_group[c, g]) 
 );
 % --------------------------------------------------
 
@@ -190,47 +174,43 @@ constraint forall(c in Class) (
 );
 % --------------------------------------------------
 
-
-% Break symmetry 
+% LNS - we freeze part of classes
 % --------------------------------------------------
-constraint forall(g1 in AllGroups where
-                    number_of_students_in_group[g1] > 0,
-                  g2 in AllGroups where 
-                    g2 == g1 + 1 /\
-                    group_class[g1] == group_class[g2] /\ 
-                    number_of_students_in_group[g2] > 0) (
-                    
-  lex_greatereq(student_group[.., g1], student_group[.., g2])
+constraint forall(c in FrozenClass, s in Student) (
+                  
+  student_group[s, c] == current_best_groups[s, c]
 );
-% --------------------------------------------------
 
+% --------------------------------------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 % Our objective function is the number of groups that have students in common. We check each pair
 % --------------------------------------------------
-function var bool: are_groups_have_students_in_common(var AllGroups: g1, var AllGroups: g2) =
-    sum(s in Student) (student_group[s, g1] * student_group[s, g2]) > 0;
+function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
+    sum(s in Student) ((student_group[s, c1] == g1) * (student_group[s, c2] == g2)) > 0;
 
 var int: groups_with_common_students;
 
 constraint groups_with_common_students == sum (
-                  g1 in AllGroups where number_of_students_in_group[g1] > 0,
-                  g2 in AllGroups where g2 > g1 /\ number_of_students_in_group[g2] > 0 /\ 
-                     group_class[g1] != group_class[g2] /\
-                     class_instructor[group_class[g1]] != class_instructor[group_class[g2]]) (
+                  c1 in Class where number_of_students_in_class[c1] > 0,
+                  g1 in Group where g1 != 0 /\ g1 <= number_of_groups_in_class[c1],
+                  c2 in Class where c2 > c1 /\
+                                    class_instructor[c1] != class_instructor[c2],
+                  g2 in Group where g2 != 0 /\ g2 <= number_of_groups_in_class[c2]) (
                   
-    bool2int(are_groups_have_students_in_common(g1, g2))
+    bool2int(are_groups_have_students_in_common(c1, g1, c2, g2))
 );
 % --------------------------------------------------
+
 
 solve minimize groups_with_common_students;
 
 output
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
 % ["Group: ", show(Group), ";\n"] ++
-["transformed student_group: ", show(student_group), ";\n"] ++
+["student_group: ", show(student_group), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++

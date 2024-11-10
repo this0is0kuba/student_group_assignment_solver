@@ -16,16 +16,16 @@ class Preprocessor:
 
         student_average = Preprocessor._prepare_student_average(basic_info.student_average)
         student_preferences = Preprocessor._prepare_list_preferences(preferences_subjects,
-                                                                     basic_info.section_number,
+                                                                     basic_info.number_of_sections,
                                                                      basic_info.subject_section)
 
         return InputStudentSubjects(
-            number_students=len(basic_info.students),
-            number_instructors=len(basic_info.instructors),
-            number_subjects=len(basic_info.subjects),
-            number_class_types=len(basic_info.class_types),
-            number_section=basic_info.section_number,
-            number_classes=len(class_info.class_subject),
+            number_students=basic_info.number_of_students,
+            number_instructors=basic_info.number_of_instructors,
+            number_subjects=basic_info.number_of_subjects,
+            number_class_types=basic_info.number_of_class_types,
+            number_section=basic_info.number_of_sections,
+            number_classes=class_info.number_of_classes,
             student_average=student_average,
             subject_section=basic_info.subject_section,
             class_type=class_info.class_type,
@@ -49,7 +49,7 @@ class Preprocessor:
 
         friend_flag = False
         max_number_friends = 0
-        preferences_friends = [[] for _ in range(len(basic_info.students))]
+        preferences_friends = [[] for _ in range(basic_info.number_of_students)]
         weight = 1
 
         if friends_info:
@@ -59,12 +59,12 @@ class Preprocessor:
             weight = friends_info.weight
 
         return InputStudentGroups(
-            number_students=len(basic_info.students),
-            number_instructors=len(basic_info.instructors),
-            number_subjects=len(basic_info.subjects),
-            number_class_types=len(basic_info.class_types),
-            number_section=basic_info.section_number,
-            number_classes=len(class_info.class_subject),
+            number_students=basic_info.number_of_students,
+            number_instructors=basic_info.number_of_instructors,
+            number_subjects=basic_info.number_of_subjects,
+            number_class_types=basic_info.number_of_class_types,
+            number_section=basic_info.number_of_sections,
+            number_classes=class_info.number_of_classes,
             class_type=class_info.class_type,
             class_subject=class_info.class_subject,
             class_instructor=class_info.class_instructor,
@@ -72,7 +72,7 @@ class Preprocessor:
             instructor_max_h=constraints.instructor_max_hours,
             class_type_min_students=constraints.class_type_min_students,
             class_type_max_students=constraints.class_type_max_students,
-            student_subject=None,  # We set this parameter after receiving it from first solver
+            student_subject=None,  # We will set this parameter after receiving it from first solver
             friend_flag=friend_flag,
             max_number_friends=max_number_friends,
             student_friend=preferences_friends,

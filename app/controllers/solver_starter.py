@@ -1,7 +1,7 @@
 from app.models import InputData
 from app.solver.solver import StudentAssignmentSolver
 from models import InputStudentSubjects, InputStudentGroups
-from models.minizinc_solution import MinizincSolution
+from models.solution import Solution
 from tools.preprocessor import Preprocessor
 
 
@@ -13,7 +13,7 @@ def start_process(input_data: InputData) -> None:
 
     # Run minizinc solver
     solver: StudentAssignmentSolver = StudentAssignmentSolver(input_student_subjects, input_student_groups)
-    minizinc_solution: MinizincSolution = solver.solve()
+    minizinc_solution: Solution = solver.solve()
 
     # TODO - Verify the solution
     # Verify the solution
