@@ -175,7 +175,7 @@ constraint groups_with_common_students == sum (
 solve minimize groups_with_common_students;
 
 output
-% ["student_group: ", show(student_group), ";\n"] ++
+["student_group: ", show(student_group), ";\n"] ++
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++

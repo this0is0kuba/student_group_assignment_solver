@@ -204,7 +204,7 @@ solve minimize groups_with_common_students;
 output
 ["groups_with_common_students: ", show(groups_with_common_students), ";\n"] ++
 % ["Group: ", show(Group), ";\n"] ++
-% ["transformed student_group: ", show(student_group), ";\n"] ++
+["transformed student_group: ", show(student_group), ";\n"] ++
 % ["number_of_students_in_group: ", show(number_of_students_in_group), ";\n"] ++
 % ["number_of_groups_in_class: ", show(number_of_groups_in_class), ";\n"] ++
 % ["number_of_students_in_class: ", show(number_of_students_in_class), ";\n"] ++
