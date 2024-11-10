@@ -176,9 +176,9 @@ constraint forall(c in Class) (
 
 % LNS - we freeze part of classes
 % --------------------------------------------------
-constraint forall(c in FrozenClass, g in Group, s in Student) (
+constraint forall(c in FrozenClass, s in Student) (
                   
-  student_group[s, c] = current_best_groups[s, c]
+  student_group[s, c] == current_best_groups[s, c]
 );
 
 % --------------------------------------------------
@@ -203,7 +203,6 @@ constraint groups_with_common_students == sum (
     bool2int(are_groups_have_students_in_common(c1, g1, c2, g2))
 );
 % --------------------------------------------------
-
 
 
 solve minimize groups_with_common_students;
