@@ -46,3 +46,10 @@ student_preferences = array2d(1..number_students, 1..number_subjects,
     2, 1, 1, 2 ]
 );
 % --------------------------------------------------
+
+
+% Info about student_happiness
+% --------------------------------------------------
+students_happiness = 36;
+the_saddest_student_happiness = 2;
+% --------------------------------------------------

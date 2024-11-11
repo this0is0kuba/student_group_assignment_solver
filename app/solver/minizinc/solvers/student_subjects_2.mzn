@@ -18,7 +18,6 @@ set of int: ClassType = 1..number_class_types;
 set of int: Section = 1..number_section;
 set of int: Class = 1..number_classes;
 
-array[Student] of int: student_average;
 array[Subject] of Section: subject_section;
 
 array[Class] of ClassType: class_type;
@@ -42,6 +41,12 @@ array[ClassType] of int: class_type_max_students;
 % Preferences
 % --------------------------------------------------
 array[Student, Subject] of Subject: student_preferences;
+% --------------------------------------------------
+
+
+% The happiness of the saddest student
+% --------------------------------------------------
+int: the_saddest_student_happiness;
 % --------------------------------------------------
 
 
@@ -122,32 +127,36 @@ constraint forall(st in Student, sc in Section) (
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% We count happiness for each student
+% --------------------------------------------------
+array[Student] of var int: student_happiness_array;
+
+constraint student_happiness_array == 
+  [ sum(sb in Subject) (student_subject[st, sb] * student_preferences[st, sb]) | st in Student ];
+% --------------------------------------------------
+  
+
+% We can't reduce the happiness of the saddest student
+% --------------------------------------------------
+var int: the_saddest_student_happiness_var; 
+
+constraint the_saddest_student_happiness_var == min(student_happiness_array);
+constraint the_saddest_student_happiness_var >= the_saddest_student_happiness;
+% --------------------------------------------------
+
+
 % Students' happiness is equal to sum of the subject's points given by students. We count the points only of the subjects that have started.
 % --------------------------------------------------
-var int: students_happiness = pow(
-  sum(st in Student, sb in Subject) (student_subject[st, sb] * student_preferences[st, sb]), 
-  2);
-% --------------------------------------------------
+var int: students_happiness; 
 
-
-% students_happiness_with_average is equal to sum of the subject's points given by students multiped by student's average. We count the points only for the subjects that started.
-% --------------------------------------------------
-var int: students_happiness_with_average = sum(st in Student, sb in Subject) (
- student_preferences[st, sb] * student_subject[st, sb] * student_average[st]
+constraint students_happiness = sum(st in Student, sb in Subject) (
+  student_subject[st, sb] * student_preferences[st, sb]
 );
 % --------------------------------------------------
 
-
-% The weight is used to make students_happiness always grater than students_happiness_with_average. We want students with a higher average to be happier while only one student with a lower average will be sadder (not more than one)
-% --------------------------------------------------
-var int: weight = (max(student_average) - min(student_average)) * number_students;
-% --------------------------------------------------
-
-var int: obj = weight * students_happiness + students_happiness_with_average;
-solve maximize obj;
+solve maximize students_happiness;
 
 output
-["obj: ", show(obj), ";\n"] ++
 ["students_happiness: ", show(students_happiness), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"] ++ 
 ["number_of_students_in_subject", show(number_of_students_in_subject)];

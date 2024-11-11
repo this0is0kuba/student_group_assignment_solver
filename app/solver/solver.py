@@ -1,50 +1,108 @@
 from datetime import timedelta
 
-from minizinc import Model, Instance, Solver, Result
+from minizinc import Model, Instance, Solver
 
-from models import InputStudentSubjects, InputStudentGroups
-from models.solution import Solution
-from models.solution_student_subjects import SolutionStudentSubjects
-from tools.preprocessor import Preprocessor
+from models import InputStudentGroups, Solution, InputStudentSubjectsWithAverage, SolutionStudentSubjects1,\
+    SolutionStudentSubjects2, InputStudentSubjects1, InputStudentSubjects2
+from tools.data_processing import get_number_of_groups_in_each_class
 
 
 class StudentAssignmentSolver:
 
     def __init__(self,
-                 input_student_subjects: InputStudentSubjects,
+                 input_student_subjects_1: InputStudentSubjects1,
+                 input_student_subjects_2: InputStudentSubjects2,
+                 input_student_subjects_with_average: InputStudentSubjectsWithAverage,
                  input_student_groups: InputStudentGroups):
 
-        self.input_student_subjects = input_student_subjects
+        self.input_student_subjects_1 = input_student_subjects_1
+        self.input_student_subjects_2 = input_student_subjects_2
+        self.input_student_subjects_with_average = input_student_subjects_with_average
         self.input_student_groups = input_student_groups
 
     def solve(self) -> Solution:
 
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
-        solution_student_subjects: SolutionStudentSubjects = self._solve_student_subjects(solver)
-        print("found student subjects")
-        print("number_of_students_in_subject: ", solution_student_subjects.number_of_students_in_subject)
-        print()
+        solution_student_subjects_1: SolutionStudentSubjects1 = self._solve_student_subjects_1(solver)
+        print("found student_subjects_1")
+
+        solution_student_subjects_2: SolutionStudentSubjects2 = self._solve_student_subjects_2(
+            solver,
+            solution_student_subjects_1
+        )
+        print("found student_subjects_2")
+
+        solution_student_subjects: SolutionStudentSubjects2 = self._solve_student_subjects_with_average(
+                solver,
+                solution_student_subjects_2
+        )
+        print("found student_subjects_with_average")
 
         solution_student_groups: Solution = self._solve_student_groups(solver, solution_student_subjects)
+        print("found student_groups")
+
         return solution_student_groups
 
-    def _solve_student_subjects(self, solver: Solver) -> SolutionStudentSubjects:
+    def _solve_student_subjects_1(self, solver: Solver) -> SolutionStudentSubjects1:
 
-        model: Model = Model(r"./app/solver/minizinc/solvers/student_subjects.mzn")
+        model: Model = Model(r"./app/solver/minizinc/solvers/student_subjects_1.mzn")
         instance = Instance(solver, model)
 
-        for field, value in self.input_student_subjects.dict().items():
+        for field, value in self.input_student_subjects_1.dict().items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
 
-        return SolutionStudentSubjects(
+        return SolutionStudentSubjects1(
+            the_saddest_student_happiness=result["the_saddest_student_happiness"]
+        )
+
+    def _solve_student_subjects_2(self, solver: Solver, solution_student_subjects_1: SolutionStudentSubjects1) -> \
+            SolutionStudentSubjects2:
+
+        model: Model = Model(r"./app/solver/minizinc/solvers/student_subjects_2.mzn")
+        instance = Instance(solver, model)
+
+        self.input_student_subjects_2.the_saddest_student_happiness = solution_student_subjects_1.the_saddest_student_happiness
+
+        for field, value in self.input_student_subjects_2.dict().items():
+            instance[field] = value
+
+        result = instance.solve(processes=8, timeout=timedelta(seconds=20))
+
+        return SolutionStudentSubjects2(
+            the_saddest_student_happiness=result["the_saddest_student_happiness_var"],
+            students_happiness=result["students_happiness"],
             student_subjects=result["student_subject"],
             number_of_students_in_subject=result["number_of_students_in_subject"]
         )
 
-    def _solve_student_groups(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects) -> Solution:
+    def _solve_student_subjects_with_average(
+            self,
+            solver: Solver,
+            solution_student_subjects: SolutionStudentSubjects2
+    ) -> SolutionStudentSubjects2:
+
+        model: Model = Model(r"./app/solver/minizinc/solvers/student_subjects_with_average.mzn")
+        instance = Instance(solver, model)
+
+        self.input_student_subjects_with_average.students_happiness = solution_student_subjects.students_happiness
+        self.input_student_subjects_with_average.the_saddest_student_happiness = solution_student_subjects.the_saddest_student_happiness
+
+        for field, value in self.input_student_subjects_with_average.dict().items():
+            instance[field] = value
+
+        result = instance.solve(processes=8, timeout=timedelta(seconds=20))
+
+        return SolutionStudentSubjects2(
+            the_saddest_student_happiness=result["the_saddest_student_happiness_var"],
+            students_happiness=result["students_happiness_var"],
+            student_subjects=result["student_subject"],
+            number_of_students_in_subject=result["number_of_students_in_subject"]
+        )
+
+    def _solve_student_groups(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2) -> Solution:
 
         model: Model = Model(r"./app/solver/minizinc/solvers/student_groups_old.mzn")
         instance: Instance = self._create_instance_student_groups(solver, model, solution_student_subjects)
@@ -58,14 +116,14 @@ class StudentAssignmentSolver:
             self,
             solver: Solver,
             model: Model,
-            solution_student_subjects: SolutionStudentSubjects
+            solution_student_subjects: SolutionStudentSubjects2
     ) -> Instance:
 
         instance = Instance(solver, model)
 
         # We use the info from the first solver
         self.input_student_groups.student_subject = solution_student_subjects.student_subjects
-        self.input_student_groups.min_number_of_groups_in_class = Preprocessor.get_number_of_groups_in_each_class(
+        self.input_student_groups.min_number_of_groups_in_class = get_number_of_groups_in_each_class(
             solution_student_subjects.number_of_students_in_subject,
             self.input_student_groups.class_subject,
             self.input_student_groups.class_type,

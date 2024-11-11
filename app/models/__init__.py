@@ -1,4 +1,3 @@
-from .input_student_subjects import *
-from .input_student_groups import *
 from .input_data import *
-from .solution import *
+from .minizinc_inputs import *
+from .minizinc_solutions import *
