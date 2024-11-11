@@ -1,7 +1,7 @@
 import math
 
 from models import InputStudentSubjects1, InputStudentSubjects2, InputStudentGroups, InputData, \
-    InputStudentSubjectsWithAverage
+    InputStudentSubjectsWithAverage, InputStudentGroupsWithFriends
 
 
 def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubjects1:
@@ -108,19 +108,6 @@ def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
     class_info = input_data.information.class_info
     constraints = input_data.information.constraints
 
-    friends_info = input_data.preferences.friends_info
-
-    friend_flag = False
-    max_number_friends = 0
-    preferences_friends = [[] for _ in range(basic_info.number_of_students)]
-    weight = 1
-
-    if friends_info:
-        friend_flag = True
-        max_number_friends = friends_info.friends_max_number
-        preferences_friends = friends_info.preferences_friends
-        weight = friends_info.weight
-
     return InputStudentGroups(
         number_students=basic_info.number_of_students,
         number_instructors=basic_info.number_of_instructors,
@@ -139,10 +126,37 @@ def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
         max_number_of_groups=None,  # We will set this parameter after receiving more info from student_subjects solver
         min_number_of_groups_in_class=None,  # We will set this parameter after receiving more info from
                                              # student_subjects solver
-        friend_flag=friend_flag,
-        max_number_friends=max_number_friends,
-        student_friend=preferences_friends,
-        weight=weight
+    )
+
+
+def prepare_input_student_groups_with_friends(input_data: InputData) -> InputStudentGroupsWithFriends:
+    basic_info = input_data.information.basic_info
+    class_info = input_data.information.class_info
+    constraints = input_data.information.constraints
+
+    friends_info = input_data.preferences.friends_info
+
+    return InputStudentGroupsWithFriends(
+        number_students=basic_info.number_of_students,
+        number_instructors=basic_info.number_of_instructors,
+        number_subjects=basic_info.number_of_subjects,
+        number_class_types=basic_info.number_of_class_types,
+        number_section=basic_info.number_of_sections,
+        number_classes=class_info.number_of_classes,
+        class_type=class_info.class_type,
+        class_subject=class_info.class_subject,
+        class_instructor=class_info.class_instructor,
+        class_time_h=class_info.class_time_hours,
+        instructor_max_h=constraints.instructor_max_hours,
+        class_type_min_students=constraints.class_type_min_students,
+        class_type_max_students=constraints.class_type_max_students,
+        student_subject=None,  # We will set this parameter after receiving it from student_subjects solver
+        max_number_of_groups=None,  # We will set this parameter after receiving more info from student_subjects solver
+        min_number_of_groups_in_class=None,  # We will set this parameter after receiving more info from
+                                             # student_subjects solver
+        friends_max_number=friends_info.max_number_friends,
+        friends_array=friends_info.friends_array,
+        groups_with_common_students=None  # We will set this parameter after receiving it from student_groups solver
     )
 
 

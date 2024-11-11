@@ -1,0 +1,57 @@
+% Basic info about classes
+% --------------------------------------------------
+number_students = 10;
+number_instructors = 8;
+number_subjects = 4;
+number_class_types = 2;
+number_classes = 8;
+
+class_type = [1, 2, 1, 2, 1, 2, 1, 2];
+class_subject = [1, 1, 2, 2, 3, 3, 4, 4];
+class_instructor = [1, 2, 3, 4, 5, 6, 7, 8];
+class_time_h = [28, 28, 28, 28, 28, 28, 28, 28];
+% --------------------------------------------------
+
+
+% Constraints
+% --------------------------------------------------
+instructor_max_h = [100, 100, 100, 100, 100, 100, 100, 100];
+
+class_type_min_students = [1, 2];
+class_type_max_students = [8, 3];
+% --------------------------------------------------
+
+
+% Main array of variables - students' subjects.
+% --------------------------------------------------
+student_subject = array2d(1..number_students, 1..number_subjects,
+  [ false, false, true, false,
+    false, false, true, false, 
+    true, false, true, false, 
+    true, false, true, false, 
+    true, false, true, false, 
+    true, false, true, false, 
+    false, true, false, true, 
+    false, true, false, true, 
+    true, false, false, true, 
+    true, false, false, true ]
+);
+% --------------------------------------------------
+
+
+% Info about groups
+% --------------------------------------------------
+max_number_of_groups = 2;
+min_number_of_groups_in_class = [1, 2, 1, 1, 1, 2, 1, 2];
+
+groups_with_common_students = 22;
+% --------------------------------------------------
+
+
+% Info about Friends
+% --------------------------------------------------
+friends_max_number = 1;
+friends_array = array2d(1..number_students, 1..friends_max_number,
+  [2, 1, 4, 3, 6, 5, 8, 7, 0, 0]
+);
+% --------------------------------------------------

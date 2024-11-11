@@ -112,7 +112,7 @@ class InputStudentSubjectsWithAverage(BaseModel):
     student_preferences: list[list[int]]
     # --------------------------------------------------
 
-    # Info about happiness from student_subjects_2 solver
+    # Info about happiness
     # --------------------------------------------------
     the_saddest_student_happiness: int | None
     students_happiness: int | None
@@ -149,4 +149,48 @@ class InputStudentGroups(BaseModel):
     student_subject: list[list[int]] | None
     max_number_of_groups:  int | None
     min_number_of_groups_in_class: list[int] | None
+    # --------------------------------------------------
+
+
+class InputStudentGroupsWithFriends(BaseModel):
+
+    # Basic info about classes
+    # --------------------------------------------------
+    number_students: int
+    number_instructors: int
+    number_subjects: int
+    number_class_types: int
+    number_classes: int
+
+    class_type: list[int]
+    class_subject: list[int]
+    class_instructor: list[int]
+    class_time_h: list[int]
+    # --------------------------------------------------
+
+    # Constraints
+    # --------------------------------------------------
+    instructor_max_h: list[int]
+
+    class_type_min_students: list[int]
+    class_type_max_students: list[int]
+    # --------------------------------------------------
+
+    # Student's subjects
+    # --------------------------------------------------
+    # None is allowed because we have to wait until we get this info from the earlier solver
+    student_subject: list[list[int]] | None
+    max_number_of_groups:  int | None
+    min_number_of_groups_in_class: list[int] | None
+    # --------------------------------------------------
+
+    # Info about students' friends
+    # --------------------------------------------------
+    friends_array: list[list[int]]
+    friends_max_number: int
+    # --------------------------------------------------
+
+    # Info about groups from student_groups solver
+    # --------------------------------------------------
+    groups_with_common_students: int | None
     # --------------------------------------------------
