@@ -82,6 +82,8 @@ class StudentAssignmentSolver:
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
 
+        print("students_happiness: ", result["students_happiness"])
+
         return SolutionStudentSubjects2(
             the_saddest_student_happiness=result["the_saddest_student_happiness_var"],
             students_happiness=result["students_happiness"],

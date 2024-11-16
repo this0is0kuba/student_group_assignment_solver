@@ -37,3 +37,16 @@ student_preferences = array2d(1..number_students, 1..number_subjects,
     1, 2, ]
 );
 % --------------------------------------------------
+
+
+% Custom Constraints
+% --------------------------------------------------
+number_predetermined_subjects = 0;
+predetermined_subjects = [];
+
+number_predetermined_students = 0;
+predetermined_students = [];
+predetermined_subjects_for_students = array2d(1..number_predetermined_students, 1..number_subjects,
+  []
+);
+% --------------------------------------------------

@@ -2,18 +2,26 @@ import math
 
 from models import InputStudentSubjects1, InputStudentSubjects2, InputStudentGroups, InputData, \
     InputStudentSubjectsWithAverage, InputStudentGroupsWithFriends
+from models.input_data_elements.custom_constraints import PredeterminedSubjectsForStudent, CustomConstraints
 
 
 def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubjects1:
     basic_info = input_data.information.basic_info
     class_info = input_data.information.class_info
     constraints = input_data.information.constraints
+    custom_constraints = input_data.custom_constraints
 
     preferences_subjects = input_data.preferences.preferences_subjects
 
     student_preferences = _prepare_list_preferences(preferences_subjects,
                                                     basic_info.number_of_sections,
                                                     basic_info.subject_section)
+
+    if custom_constraints is None:
+        custom_constraints = CustomConstraints(
+            predetermined_subjects=[],
+            predetermined_subjects_for_students=[]
+        )
 
     return InputStudentSubjects1(
         number_students=basic_info.number_of_students,
@@ -31,7 +39,17 @@ def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubje
         student_subjects_in_section=constraints.student_subjects_in_section,
         class_type_min_students=constraints.class_type_min_students,
         class_type_max_students=constraints.class_type_max_students,
-        student_preferences=student_preferences
+        student_preferences=student_preferences,
+        number_predetermined_subjects=len(custom_constraints.predetermined_subjects),
+        predetermined_subjects=custom_constraints.predetermined_subjects,
+        number_predetermined_students=len(custom_constraints.predetermined_subjects_for_students),
+        predetermined_students=_prepare_predetermined_students(
+            custom_constraints.predetermined_subjects_for_students
+        ),
+        predetermined_subjects_for_students=_prepare_predetermined_subjects_for_students(
+            custom_constraints.predetermined_subjects_for_students,
+            basic_info.number_of_subjects
+        ),
     )
 
 
@@ -39,12 +57,19 @@ def prepare_input_student_subjects_2(input_data: InputData) -> InputStudentSubje
     basic_info = input_data.information.basic_info
     class_info = input_data.information.class_info
     constraints = input_data.information.constraints
+    custom_constraints = input_data.custom_constraints
 
     preferences_subjects = input_data.preferences.preferences_subjects
 
     student_preferences = _prepare_list_preferences(preferences_subjects,
                                                     basic_info.number_of_sections,
                                                     basic_info.subject_section)
+
+    if custom_constraints is None:
+        custom_constraints = CustomConstraints(
+            predetermined_subjects=[],
+            predetermined_subjects_for_students=[]
+        )
 
     return InputStudentSubjects2(
         number_students=basic_info.number_of_students,
@@ -63,7 +88,17 @@ def prepare_input_student_subjects_2(input_data: InputData) -> InputStudentSubje
         class_type_min_students=constraints.class_type_min_students,
         class_type_max_students=constraints.class_type_max_students,
         student_preferences=student_preferences,
-        the_saddest_student_happiness=None,
+        number_predetermined_subjects=len(custom_constraints.predetermined_subjects),
+        predetermined_subjects=custom_constraints.predetermined_subjects,
+        number_predetermined_students=len(custom_constraints.predetermined_subjects_for_students),
+        predetermined_students=_prepare_predetermined_students(
+            custom_constraints.predetermined_subjects_for_students
+        ),
+        predetermined_subjects_for_students=_prepare_predetermined_subjects_for_students(
+            custom_constraints.predetermined_subjects_for_students,
+            basic_info.number_of_subjects
+        ),
+        the_saddest_student_happiness=None
     )
 
 
@@ -71,6 +106,7 @@ def prepare_input_student_subjects_with_average(input_data: InputData) -> InputS
     basic_info = input_data.information.basic_info
     class_info = input_data.information.class_info
     constraints = input_data.information.constraints
+    custom_constraints = input_data.custom_constraints
 
     preferences_subjects = input_data.preferences.preferences_subjects
 
@@ -78,6 +114,12 @@ def prepare_input_student_subjects_with_average(input_data: InputData) -> InputS
     student_preferences = _prepare_list_preferences(preferences_subjects,
                                                     basic_info.number_of_sections,
                                                     basic_info.subject_section)
+
+    if custom_constraints is None:
+        custom_constraints = CustomConstraints(
+            predetermined_subjects=[],
+            predetermined_subjects_for_students=[]
+        )
 
     return InputStudentSubjectsWithAverage(
         number_students=basic_info.number_of_students,
@@ -97,8 +139,19 @@ def prepare_input_student_subjects_with_average(input_data: InputData) -> InputS
         class_type_min_students=constraints.class_type_min_students,
         class_type_max_students=constraints.class_type_max_students,
         student_preferences=student_preferences,
+        number_predetermined_subjects=len(custom_constraints.predetermined_subjects),
+        predetermined_subjects=custom_constraints.predetermined_subjects,
+        number_predetermined_students=len(custom_constraints.predetermined_subjects_for_students),
+        predetermined_students=_prepare_predetermined_students(
+            custom_constraints.predetermined_subjects_for_students
+        ),
+        predetermined_subjects_for_students=_prepare_predetermined_subjects_for_students(
+            custom_constraints.predetermined_subjects_for_students,
+            basic_info.number_of_subjects
+        ),
         students_happiness=None,  # We will set this parameter after receiving it from student_subjects solver
         the_saddest_student_happiness=None  # We will set this parameter after receiving it from student_subjects solver
+
 
     )
 
@@ -160,6 +213,56 @@ def prepare_input_student_groups_with_friends(input_data: InputData) -> InputStu
     )
 
 
+def get_number_of_groups_in_each_class(
+        number_of_students_in_subject: list[int],
+        class_subject: list[int],
+        class_type: list[int],
+        class_type_max_students: list[int]
+) -> list[int]:
+    number_of_groups_in_class = []
+
+    for i in range(len(class_subject)):
+        n = number_of_students_in_subject[class_subject[i] - 1]
+        max_n_in_class = class_type_max_students[class_type[i] - 1]
+
+        number_of_groups_in_class.append(math.ceil(n / max_n_in_class))
+
+    return number_of_groups_in_class
+
+
+def _prepare_predetermined_students(
+    predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent],
+) -> list[int]:
+
+    prepared_list = []
+
+    for predetermined_subjects in predetermined_subjects_for_students:
+
+        student_id = predetermined_subjects.student_id
+        prepared_list.append(student_id)
+
+    return prepared_list
+
+
+def _prepare_predetermined_subjects_for_students(
+        predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent],
+        number_of_subjects: int
+) -> list[list[int]]:
+
+    prepared_list = []
+
+    for i in range(len(predetermined_subjects_for_students)):
+
+        subjects = predetermined_subjects_for_students[i].predetermined_subjects_for_student
+        prepared_subjects = subjects[:]
+
+        # Fill the rest of list with zeroes for minizinc
+        prepared_subjects.extend([0 in range(number_of_subjects - len(subjects))])
+        prepared_list[i] = prepared_subjects
+
+    return prepared_list
+
+
 def _prepare_student_average(list_average: list[float]) -> list[int]:
     new_list_average = []
 
@@ -199,19 +302,3 @@ def _prepare_list_preferences(list_preferences: list[list[int]], section_number:
 
     return new_list_preferences
 
-
-def get_number_of_groups_in_each_class(
-        number_of_students_in_subject: list[int],
-        class_subject: list[int],
-        class_type: list[int],
-        class_type_max_students: list[int]
-) -> list[int]:
-    number_of_groups_in_class = []
-
-    for i in range(len(class_subject)):
-        n = number_of_students_in_subject[class_subject[i] - 1]
-        max_n_in_class = class_type_max_students[class_type[i] - 1]
-
-        number_of_groups_in_class.append(math.ceil(n / max_n_in_class))
-
-    return number_of_groups_in_class

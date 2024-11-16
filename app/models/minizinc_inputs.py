@@ -37,7 +37,12 @@ class InputStudentSubjects1(BaseModel):
 
     # Custom constraints
     # --------------------------------------------------
+    number_predetermined_subjects: int
+    predetermined_subjects: list[int]
 
+    number_predetermined_students: int
+    predetermined_students: list[int]
+    predetermined_subjects_for_students: list[list[int]]
     # --------------------------------------------------
 
 
@@ -73,6 +78,16 @@ class InputStudentSubjects2(BaseModel):
     # Preferences
     # --------------------------------------------------
     student_preferences: list[list[int]]
+    # --------------------------------------------------
+
+    # Custom constraints
+    # --------------------------------------------------
+    number_predetermined_subjects: int
+    predetermined_subjects: list[int]
+
+    number_predetermined_students: int
+    predetermined_students: list[int]
+    predetermined_subjects_for_students: list[list[int]]
     # --------------------------------------------------
 
     # Info about the saddest student from student_subjects_1 solver
@@ -115,6 +130,16 @@ class InputStudentSubjectsWithAverage(BaseModel):
     # Preferences
     # --------------------------------------------------
     student_preferences: list[list[int]]
+    # --------------------------------------------------
+
+    # Custom constraints
+    # --------------------------------------------------
+    number_predetermined_subjects: int
+    predetermined_subjects: list[int]
+
+    number_predetermined_students: int
+    predetermined_students: list[int]
+    predetermined_subjects_for_students: list[list[int]]
     # --------------------------------------------------
 
     # Info about happiness from student_subjects_2 solver
