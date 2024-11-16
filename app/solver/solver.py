@@ -115,7 +115,7 @@ class StudentAssignmentSolver:
 
     def _solve_student_groups(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2) -> Solution:
 
-        model: Model = Model(r"./app/solver/minizinc/solvers/student_groups_int.mzn")
+        model: Model = Model(r"./app/solver/minizinc/solvers/student_groups.mzn")
         instance: Instance = self._create_instance_student_groups(solver, model, solution_student_subjects)
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))

@@ -35,6 +35,11 @@ class InputStudentSubjects1(BaseModel):
     student_preferences: list[list[int]]
     # --------------------------------------------------
 
+    # Custom constraints
+    # --------------------------------------------------
+
+    # --------------------------------------------------
+
 
 class InputStudentSubjects2(BaseModel):
 
@@ -112,7 +117,7 @@ class InputStudentSubjectsWithAverage(BaseModel):
     student_preferences: list[list[int]]
     # --------------------------------------------------
 
-    # Info about happiness
+    # Info about happiness from student_subjects_2 solver
     # --------------------------------------------------
     the_saddest_student_happiness: int | None
     students_happiness: int | None
@@ -143,9 +148,8 @@ class InputStudentGroups(BaseModel):
     class_type_max_students: list[int]
     # --------------------------------------------------
 
-    # Student's subjects
+    # Student's subjects - from student_subjects solver
     # --------------------------------------------------
-    # None is allowed because we have to wait until we get this info from the earlier solver
     student_subject: list[list[int]] | None
     max_number_of_groups:  int | None
     min_number_of_groups_in_class: list[int] | None
@@ -176,9 +180,8 @@ class InputStudentGroupsWithFriends(BaseModel):
     class_type_max_students: list[int]
     # --------------------------------------------------
 
-    # Student's subjects
+    # Student's subjects - from student_subjects solver
     # --------------------------------------------------
-    # None is allowed because we have to wait until we get this info from the earlier solver
     student_subject: list[list[int]] | None
     max_number_of_groups:  int | None
     min_number_of_groups_in_class: list[int] | None

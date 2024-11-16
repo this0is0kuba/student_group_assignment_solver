@@ -34,5 +34,7 @@
                                [1, 2],
                                [2, 1] ],
     "friends_info": null
-  }
+  },
+
+  "custom_constraints": null
 }

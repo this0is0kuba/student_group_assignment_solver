@@ -9,6 +9,7 @@ from tools.data_processing import prepare_input_student_groups, \
 
 
 def start_process(input_data: InputData) -> None:
+
     # Prepare input for minizinc solvers
     input_student_subjects_1: InputStudentSubjects1 = prepare_input_student_subjects_1(input_data)
     input_student_subjects_2: InputStudentSubjects2 = prepare_input_student_subjects_2(input_data)

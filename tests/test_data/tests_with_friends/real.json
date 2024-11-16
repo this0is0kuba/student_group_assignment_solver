@@ -234,5 +234,7 @@
                           [0, 0, 0, 0, 0]],
         "max_number_friends": 5
     }
-  }
+  },
+
+  "custom_constraints": null
 }

@@ -37,5 +37,7 @@
         "friends_array": [[2], [1], [4], [3]],
         "max_number_friends": 1
     }
-  }
+  },
+
+  "custom_constraints": null
 }
