@@ -7,8 +7,8 @@ class PredeterminedSubjectsForStudent(BaseModel):
 
 
 class CustomConstraints(BaseModel):
-    predetermined_subjects: list[int] | None
-    predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent] | None
+    predetermined_subjects: list[int]
+    predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent]
 
 
 

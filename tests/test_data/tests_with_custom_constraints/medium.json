@@ -66,5 +66,13 @@
     "friends_info": null
   },
 
-  "custom_constraints":
+  "custom_constraints": {
+    "predetermined_subjects": [1],
+    "predetermined_subjects_for_students": [
+      {
+        "student_id": 2,
+        "predetermined_subjects_for_student": [3, 6]
+      }
+    ]
+  }
 }

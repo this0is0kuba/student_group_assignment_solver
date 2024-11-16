@@ -257,8 +257,8 @@ def _prepare_predetermined_subjects_for_students(
         prepared_subjects = subjects[:]
 
         # Fill the rest of list with zeroes for minizinc
-        prepared_subjects.extend([0 in range(number_of_subjects - len(subjects))])
-        prepared_list[i] = prepared_subjects
+        prepared_subjects.extend([0 for _ in range(number_of_subjects - len(subjects))])
+        prepared_list.append(prepared_subjects)
 
     return prepared_list
 

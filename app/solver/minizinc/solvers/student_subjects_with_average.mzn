@@ -153,7 +153,7 @@ constraint forall(s in PredeterminedSubject) (
 constraint forall(st in PredeterminedStudent, sb in Subject where
    predetermined_subjects_for_students[st, sb] != 0) (
    
-  student_subject[predetermined_students[st], sb] = predetermined_subjects_for_students[st, sb]
+  student_subject[predetermined_students[st], predetermined_subjects_for_students[st, sb]] = true
 );
 % --------------------------------------------------
 
