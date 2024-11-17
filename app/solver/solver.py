@@ -2,8 +2,9 @@ from datetime import timedelta
 
 from minizinc import Model, Instance, Solver
 
-from models import InputStudentGroups, Solution, InputStudentSubjectsWithAverage, SolutionStudentSubjects1, \
-    SolutionStudentSubjects2, InputStudentSubjects1, InputStudentSubjects2, InputStudentGroupsWithFriends
+from models import InputStudentGroups, InputStudentSubjectsWithAverage, SolutionStudentSubjects1, \
+    SolutionStudentSubjects2, InputStudentSubjects1, InputStudentSubjects2, InputStudentGroupsWithFriends, \
+    SolutionStudentGroups
 from tools.data_processing import get_number_of_groups_in_each_class
 
 
@@ -22,7 +23,7 @@ class StudentAssignmentSolver:
         self.input_student_groups = input_student_groups
         self.input_student_groups_with_friends = input_student_groups_with_friends
 
-    def solve(self) -> Solution:
+    def solve(self) -> SolutionStudentGroups:
 
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
@@ -41,7 +42,7 @@ class StudentAssignmentSolver:
         )
         print("found student_subjects_with_average")
 
-        solution_student_groups: Solution = self._solve_student_groups(solver, solution_student_subjects)
+        solution_student_groups: SolutionStudentGroups = self._solve_student_groups(solver, solution_student_subjects)
         print("found student_groups")
 
         if self.input_student_groups_with_friends:
@@ -115,7 +116,7 @@ class StudentAssignmentSolver:
             number_of_students_in_subject=result["number_of_students_in_subject"]
         )
 
-    def _solve_student_groups(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2) -> Solution:
+    def _solve_student_groups(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2) -> SolutionStudentGroups:
 
         model: Model = Model(r"./app/solver/minizinc/solvers/student_groups.mzn")
         instance: Instance = self._create_instance_student_groups(solver, model, solution_student_subjects)
@@ -123,12 +124,12 @@ class StudentAssignmentSolver:
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
         print("groups_with_common_students: ", result["groups_with_common_students"])
 
-        return Solution(
+        return SolutionStudentGroups(
             student_group=result["student_group"],
             groups_with_common_students=result["groups_with_common_students"]
         )
 
-    def _solve_student_groups_with_friends(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2, solution_student_groups: Solution) -> Solution:
+    def _solve_student_groups_with_friends(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2, solution_student_groups: SolutionStudentGroups) -> SolutionStudentGroups:
 
         model: Model = Model(r"./app/solver/minizinc/solvers/student_groups_with_friends.mzn")
         instance: Instance = self._create_instance_student_groups_with_friends(solver, model, solution_student_subjects, solution_student_groups)
@@ -136,7 +137,7 @@ class StudentAssignmentSolver:
         result = instance.solve(processes=8, timeout=timedelta(seconds=20*3))
         print("groups_with_common_students: ", result["groups_with_common_students_var"])
 
-        return Solution(
+        return SolutionStudentGroups(
             student_group=result["student_group"],
             groups_with_common_students=result["groups_with_common_students_var"]
         )
@@ -170,7 +171,7 @@ class StudentAssignmentSolver:
             solver: Solver,
             model: Model,
             solution_student_subjects: SolutionStudentSubjects2,
-            solution_student_groups: Solution
+            solution_student_groups: SolutionStudentGroups
     ) -> Instance:
 
         instance = Instance(solver, model)
