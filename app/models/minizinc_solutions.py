@@ -11,7 +11,7 @@ class SolutionStudentSubjects2(SolutionStudentSubjects1):
     number_of_students_in_subject: list[int]
 
 
-class Solution(BaseModel):
+class SolutionStudentGroups(BaseModel):
 
     # 2 dimensional array about students' groups.
     # Example:

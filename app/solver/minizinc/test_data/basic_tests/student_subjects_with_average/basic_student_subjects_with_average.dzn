@@ -7,6 +7,8 @@ number_class_types = 1;
 number_section = 1;
 number_classes = 5;
 
+student_average = [300, 350, 500, 450];
+
 subject_section = [1, 1];
 
 class_type = [1, 1, 1, 1, 1];
@@ -36,4 +38,24 @@ student_preferences = array2d(1..number_students, 1..number_subjects,
     2, 1,
     1, 2, ]
 );
+% --------------------------------------------------
+
+
+% Custom Constraints
+% --------------------------------------------------
+number_predetermined_subjects = 0;
+predetermined_subjects = [];
+
+number_predetermined_students = 0;
+predetermined_students = [];
+predetermined_subjects_for_students = array2d(1..number_predetermined_students, 1..number_subjects,
+  []
+);
+% --------------------------------------------------
+
+
+% Info about student_happiness
+% --------------------------------------------------
+students_happiness = 7;
+the_saddest_student_happiness = 1;
 % --------------------------------------------------

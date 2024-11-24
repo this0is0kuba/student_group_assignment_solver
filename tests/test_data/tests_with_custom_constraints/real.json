@@ -140,5 +140,27 @@
                               [3,4,1,5,6,2,7,3,2,1,4]],
 
     "friends_info": null
+  },
+
+  "custom_constraints": {
+    "predetermined_subjects": [],
+    "predetermined_subjects_for_students": [
+      {
+        "student_id": 1,
+        "predetermined_subjects_for_student": [1]
+      },
+      {
+        "student_id": 2,
+        "predetermined_subjects_for_student": [1]
+      },
+      {
+        "student_id": 91,
+        "predetermined_subjects_for_student": [11]
+      },
+      {
+        "student_id": 92,
+        "predetermined_subjects_for_student": [2]
+      }
+    ]
   }
 }

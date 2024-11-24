@@ -33,6 +33,11 @@
                                [1, 2],
                                [1, 2],
                                [2, 1] ],
-    "friends_info": null
-  }
+    "friends_info": {
+        "friends_array": [[2], [1], [4], [3]],
+        "max_number_friends": 1
+    }
+  },
+
+  "custom_constraints": null
 }

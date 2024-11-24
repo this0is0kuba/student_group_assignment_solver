@@ -52,6 +52,19 @@ int: the_saddest_student_happiness;
 % --------------------------------------------------
 
 
+% Custom Constraints
+% --------------------------------------------------
+int: number_predetermined_subjects;
+set of int: PredeterminedSubject = 1..number_predetermined_subjects;
+array[PredeterminedSubject] of Subject: predetermined_subjects;
+
+int: number_predetermined_students;
+set of int: PredeterminedStudent = 1..number_predetermined_students;
+array[PredeterminedStudent] of Student: predetermined_students;
+array[PredeterminedStudent, Subject] of 0..number_subjects: predetermined_subjects_for_students;
+% --------------------------------------------------
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VARIABLES AND CONSTRAINTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Main array of variables - students' subjects.
@@ -123,6 +136,24 @@ constraint forall(st in Student, sc in Section) (
 % --------------------------------------------------
 constraint forall(st in Student, sc in Section) (
   student_subjects_in_section_var[st, sc] == student_subjects_in_section[st, sc]
+);
+% --------------------------------------------------
+
+
+% We force solver to open subjects that are predetermined. 
+% --------------------------------------------------
+constraint forall(s in PredeterminedSubject) (
+  number_of_students_in_subject[predetermined_subjects[s]] > 0
+);
+% --------------------------------------------------
+
+
+% We force solver to assign students to their predefined subjects
+% --------------------------------------------------
+constraint forall(st in PredeterminedStudent, sb in Subject where
+   predetermined_subjects_for_students[st, sb] != 0) (
+   
+  student_subject[predetermined_students[st], predetermined_subjects_for_students[st, sb]] = true
 );
 % --------------------------------------------------
 

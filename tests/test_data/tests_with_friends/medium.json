@@ -96,5 +96,7 @@
                           [29, 0, 0] ],
         "max_number_friends": 3
     }
-  }
+  },
+
+  "custom_constraints": null
 }

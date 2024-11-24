@@ -39,9 +39,8 @@
                                 [2, 1, 2, 1],
                                 [1, 2, 2, 1],
                                 [1, 2, 2, 1]  ],
-    "friends_info": {
-        "friends_array": [[2], [1], [4], [3], [6], [5], [8], [7], [0], [0]],
-        "max_number_friends": 1
-    }
-  }
+    "friends_info": null
+  },
+
+  "custom_constraints": null
 }
