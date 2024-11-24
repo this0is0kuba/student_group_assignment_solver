@@ -45,13 +45,6 @@ array[Student, Subject] of Subject: student_preferences;
 % --------------------------------------------------
 
 
-% Info about students' hapiness
-% --------------------------------------------------
-int: students_happiness;
-int: the_saddest_student_happiness;
-% --------------------------------------------------
-
-
 % Custom Constraints
 % --------------------------------------------------
 int: number_predetermined_subjects;
@@ -62,6 +55,13 @@ int: number_predetermined_students;
 set of int: PredeterminedStudent = 1..number_predetermined_students;
 array[PredeterminedStudent] of Student: predetermined_students;
 array[PredeterminedStudent, Subject] of 0..number_subjects: predetermined_subjects_for_students;
+% --------------------------------------------------
+
+
+% Info about students' hapiness
+% --------------------------------------------------
+int: students_happiness;
+int: the_saddest_student_happiness;
 % --------------------------------------------------
 
 
@@ -151,7 +151,7 @@ constraint forall(s in PredeterminedSubject) (
 % We force solver to assign students to their predefined subjects
 % --------------------------------------------------
 constraint forall(st in PredeterminedStudent, sb in Subject where
-   predetermined_subjects_for_students[st, sb] != 0) (
+  predetermined_subjects_for_students[st, sb] != 0) (
    
   student_subject[predetermined_students[st], predetermined_subjects_for_students[st, sb]] = true
 );
