@@ -73,6 +73,14 @@
         "student_id": 2,
         "predetermined_subjects_for_student": [3, 6]
       }
+    ],
+
+    "predetermined_groups_for_students": [
+      {
+        "student_id": 2,
+        "predetermined_classes_for_student": [7],
+        "predetermined_groups_for_student": [1]
+      }
     ]
   }
 }

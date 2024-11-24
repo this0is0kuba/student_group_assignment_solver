@@ -22,6 +22,17 @@ class_type_min_students = [1, 8, 15, 15];
 class_type_max_students = [100, 15, 30, 30];
 % --------------------------------------------------
 
+
+% Custom Constraints
+% --------------------------------------------------
+number_predetermined_students = 0;
+predetermined_students = [];
+
+predetermined_classes_for_students = [];
+predetermined_groups_for_students = [];
+% --------------------------------------------------
+
+
 % Main array of variables - students' subjects.
 % --------------------------------------------------
 student_subject = array2d(1..number_students, 1..number_subjects,

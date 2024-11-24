@@ -161,6 +161,18 @@
         "student_id": 92,
         "predetermined_subjects_for_student": [2]
       }
+    ],
+    "predetermined_groups_for_students": [
+      {
+        "student_id": 1,
+        "predetermined_classes_for_student": [1, 2],
+        "predetermined_groups_for_student": [1, 1]
+      },
+      {
+        "student_id": 2,
+        "predetermined_classes_for_student": [1, 2],
+        "predetermined_groups_for_student": [1, 2]
+      }
     ]
   }
 }

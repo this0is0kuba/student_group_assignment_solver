@@ -173,6 +173,14 @@ class InputStudentGroups(BaseModel):
     class_type_max_students: list[int]
     # --------------------------------------------------
 
+    # Custom constraints
+    # --------------------------------------------------
+    number_predetermined_students: int
+    predetermined_students: list[int]
+    predetermined_classes_for_students: list[list[int]]
+    predetermined_groups_for_students: list[list[int]]
+    # --------------------------------------------------
+
     # Student's subjects - from student_subjects solver
     # --------------------------------------------------
     student_subject: list[list[int]] | None
@@ -205,17 +213,25 @@ class InputStudentGroupsWithFriends(BaseModel):
     class_type_max_students: list[int]
     # --------------------------------------------------
 
-    # Student's subjects - from student_subjects solver
+    # Custom constraints
     # --------------------------------------------------
-    student_subject: list[list[int]] | None
-    max_number_of_groups:  int | None
-    min_number_of_groups_in_class: list[int] | None
+    number_predetermined_students: int
+    predetermined_students: list[int]
+    predetermined_classes_for_students: list[list[int]]
+    predetermined_groups_for_students: list[list[int]]
     # --------------------------------------------------
 
     # Info about students' friends
     # --------------------------------------------------
     friends_array: list[list[int]]
     friends_max_number: int
+    # --------------------------------------------------
+
+    # Student's subjects - from student_subjects solver
+    # --------------------------------------------------
+    student_subject: list[list[int]] | None
+    max_number_of_groups:  int | None
+    min_number_of_groups_in_class: list[int] | None
     # --------------------------------------------------
 
     # Info about groups from student_groups solver
