@@ -150,7 +150,7 @@ constraint forall(s in PredeterminedSubject) (
 % We force solver to assign students to their predefined subjects
 % --------------------------------------------------
 constraint forall(st in PredeterminedStudent, sb in Subject where
-   predetermined_subjects_for_students[st, sb] != 0) (
+  predetermined_subjects_for_students[st, sb] != 0) (
    
   student_subject[predetermined_students[st], predetermined_subjects_for_students[st, sb]] = true
 );

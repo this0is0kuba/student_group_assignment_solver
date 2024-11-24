@@ -33,7 +33,21 @@ array[ClassType] of int: class_type_max_students;
 % --------------------------------------------------
 
 
-% Main array of variables - students' subjects.
+% Custom Constraints
+% --------------------------------------------------
+int: number_predetermined_students;
+set of int: PredeterminedStudent = 1..number_predetermined_students;
+array[PredeterminedStudent] of Student: predetermined_students;
+
+set of int: PredeterminedClasses = 0..number_classes;
+
+% Each predetermined group is associated with each predetermined class
+array[PredeterminedStudent, Class] of PredeterminedClasses: predetermined_classes_for_students;
+array[PredeterminedStudent, Class] of int: predetermined_groups_for_students;
+% --------------------------------------------------
+
+
+% Main array of constants - students' subjects. We have it from the previous solvers.
 % --------------------------------------------------
 array[Student, Subject] of bool: student_subject;
 % --------------------------------------------------
@@ -150,6 +164,21 @@ array[Class] of var 0..number_students: number_of_students_in_class;
 
 constraint forall(c in Class) (
   number_of_students_in_class[c] == sum(g in Group where g != 0) (number_of_students_in_group[c, g]) 
+);
+% --------------------------------------------------
+
+
+% We force solver to assign students to their predefined groups
+% --------------------------------------------------
+constraint forall(p in PredeterminedStudent, c in Class where 
+  predetermined_classes_for_students[p, c] != 0) (
+    
+  student_group[
+    predetermined_students[p], 
+    predetermined_classes_for_students[p, c]
+  ] 
+    == 
+  predetermined_groups_for_students[p, c]
 );
 % --------------------------------------------------
 
