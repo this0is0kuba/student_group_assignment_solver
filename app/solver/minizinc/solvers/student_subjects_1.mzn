@@ -55,6 +55,10 @@ int: number_predetermined_students;
 set of int: PredeterminedStudent = 1..number_predetermined_students;
 array[PredeterminedStudent] of Student: predetermined_students;
 array[PredeterminedStudent, Subject] of 0..number_subjects: predetermined_subjects_for_students;
+
+int: number_conditional_students;
+set of int: ConditionalStudent = 1..number_conditional_students;
+array[ConditionalStudent] of Student: conditional_students;
 % --------------------------------------------------
 
 
@@ -67,12 +71,22 @@ array[Student, Subject] of var bool: student_subject;
 % --------------------------------------------------
 
 
-% Sum of students in each subject.
+% Sum of students in each subject (conditional students and normal students).
 % --------------------------------------------------
 array[Subject] of var int: number_of_students_in_subject;
 
 constraint forall(sb in Subject) (
   number_of_students_in_subject[sb] == sum(st in Student) (student_subject[st, sb])
+);
+% --------------------------------------------------
+
+
+% Sum of conditional students in each subject.
+% --------------------------------------------------
+array[Subject] of var int: number_of_conditional_students_in_subject;
+
+constraint forall(sb in Subject) (
+  number_of_conditional_students_in_subject[sb] == sum(st in ConditionalStudent) (student_subject[conditional_students[st], sb])
 );
 % --------------------------------------------------
 
@@ -105,11 +119,18 @@ constraint forall(i in Instructor) (
 % --------------------------------------------------
 
 
-% Check if it's possible to create groups. Check if there is no too little students in class
+% Check if it's possible to create groups. Check if there is no too little students in class. We need to remember about the condtional students. It's neccessary to consider a situation without them and check if the condition is still met.
 % --------------------------------------------------
 constraint forall(c in Class) (
-  number_of_students_in_subject[class_subject[c]] >= class_type_min_students[class_type[c]]
-  \/
+
+  (
+   number_of_students_in_subject[class_subject[c]] - 
+   number_of_conditional_students_in_subject[class_subject[c]]
+  )  
+    >= class_type_min_students[class_type[c]]
+    
+   \/
+   
   number_of_students_in_subject[class_subject[c]] == 0
 );
 % --------------------------------------------------

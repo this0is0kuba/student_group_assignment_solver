@@ -44,6 +44,10 @@ set of int: PredeterminedClasses = 0..number_classes;
 % Each predetermined group is associated with each predetermined class
 array[PredeterminedStudent, Class] of PredeterminedClasses: predetermined_classes_for_students;
 array[PredeterminedStudent, Class] of int: predetermined_groups_for_students;
+
+int: number_conditional_students;
+set of int: ConditionalStudent = 1..number_conditional_students;
+array[ConditionalStudent] of Student: conditional_students;
 % --------------------------------------------------
 
 
@@ -106,7 +110,7 @@ constraint forall(c in Class) (
 % --------------------------------------------------
 
 
-% Sum of students in each group.
+% Sum of students in each group (conditional students and normal students).
 % --------------------------------------------------
 array[Class, Group] of var 0..number_students: number_of_students_in_group;
 
@@ -120,12 +124,29 @@ constraint forall(c in Class, g in Group where g > number_of_groups_in_class[c])
 % --------------------------------------------------
 
 
+% Sum of conditional students in each group.
+% --------------------------------------------------
+array[Class, Group] of var 0..number_students: number_of_conditional_students_in_group;
+
+constraint forall(c in Class, g in Group where g <= number_of_groups_in_class[c]) (
+  number_of_conditional_students_in_group[c, g] 
+    == 
+  sum(s in ConditionalStudent where student_group[conditional_students[s], c] == g) (1) 
+);
+
+constraint forall(c in Class, g in Group where g > number_of_groups_in_class[c]) (
+  number_of_conditional_students_in_group[c, g] == 0
+);
+% --------------------------------------------------
+
+
 % Sum of students in each group is within the appropriate range.
 % --------------------------------------------------
 constraint forall(c in Class, g in Group where g != 0 /\ g <= number_of_groups_in_class[c]) (
   number_of_students_in_group[c, g] <= class_type_max_students[class_type[c]]
   /\
-  number_of_students_in_group[c, g] >= class_type_min_students[class_type[c]]
+  (number_of_students_in_group[c, g] - number_of_conditional_students_in_group[c, g])
+    >= class_type_min_students[class_type[c]]
 );
 % --------------------------------------------------
 

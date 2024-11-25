@@ -107,4 +107,7 @@ predetermined_subjects_for_students = array2d(1..number_predetermined_students, 
     3, 6, 0, 0, 0, 0
   ]
 );
+
+number_conditional_students = 5;
+conditional_students = [1, 2, 3, 4, 5];
 % --------------------------------------------------

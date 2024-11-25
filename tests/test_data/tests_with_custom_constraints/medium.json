@@ -81,6 +81,8 @@
         "predetermined_classes_for_student": [7],
         "predetermined_groups_for_student": [1]
       }
-    ]
+    ],
+
+    "conditional_students": [1, 2, 3, 4, 5, 6, 7]
   }
 }

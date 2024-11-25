@@ -29,6 +29,9 @@ predetermined_students = [];
 
 predetermined_classes_for_students = [];
 predetermined_groups_for_students = [];
+
+number_conditional_students = 0;
+conditional_students = [];
 % --------------------------------------------------
 
 
