@@ -43,6 +43,9 @@ class InputStudentSubjects1(BaseModel):
     number_predetermined_students: int
     predetermined_students: list[int]
     predetermined_subjects_for_students: list[list[int]]
+
+    number_conditional_students: int
+    conditional_students: list[int]
     # --------------------------------------------------
 
 
@@ -88,6 +91,9 @@ class InputStudentSubjects2(BaseModel):
     number_predetermined_students: int
     predetermined_students: list[int]
     predetermined_subjects_for_students: list[list[int]]
+
+    number_conditional_students: int
+    conditional_students: list[int]
     # --------------------------------------------------
 
     # Info about the saddest student from student_subjects_1 solver
@@ -140,6 +146,9 @@ class InputStudentSubjectsWithAverage(BaseModel):
     number_predetermined_students: int
     predetermined_students: list[int]
     predetermined_subjects_for_students: list[list[int]]
+
+    number_conditional_students: int
+    conditional_students: list[int]
     # --------------------------------------------------
 
     # Info about happiness from student_subjects_2 solver
@@ -179,6 +188,9 @@ class InputStudentGroups(BaseModel):
     predetermined_students: list[int]
     predetermined_classes_for_students: list[list[int]]
     predetermined_groups_for_students: list[list[int]]
+
+    number_conditional_students: int
+    conditional_students: list[int]
     # --------------------------------------------------
 
     # Student's subjects - from student_subjects solver
@@ -219,6 +231,9 @@ class InputStudentGroupsWithFriends(BaseModel):
     predetermined_students: list[int]
     predetermined_classes_for_students: list[list[int]]
     predetermined_groups_for_students: list[list[int]]
+
+    number_conditional_students: int
+    conditional_students: list[int]
     # --------------------------------------------------
 
     # Info about students' friends

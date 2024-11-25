@@ -16,3 +16,4 @@ class CustomConstraints(BaseModel):
     predetermined_subjects: list[int]
     predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent]
     predetermined_groups_for_students: list[PredeterminedGroupsForStudent]
+    conditional_students: list[int]

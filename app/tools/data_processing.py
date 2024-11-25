@@ -22,7 +22,8 @@ def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubje
         custom_constraints = CustomConstraints(
             predetermined_subjects=[],
             predetermined_subjects_for_students=[],
-            predetermined_groups_for_students=[]
+            predetermined_groups_for_students=[],
+            conditional_students=[]
         )
 
     return InputStudentSubjects1(
@@ -52,6 +53,8 @@ def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubje
             custom_constraints.predetermined_subjects_for_students,
             basic_info.number_of_subjects
         ),
+        number_conditional_students=len(custom_constraints.conditional_students),
+        conditional_students=custom_constraints.conditional_students
     )
 
 
@@ -71,7 +74,8 @@ def prepare_input_student_subjects_2(input_data: InputData) -> InputStudentSubje
         custom_constraints = CustomConstraints(
             predetermined_subjects=[],
             predetermined_subjects_for_students=[],
-            predetermined_groups_for_students=[]
+            predetermined_groups_for_students=[],
+            conditional_students=[]
         )
 
     return InputStudentSubjects2(
@@ -101,6 +105,8 @@ def prepare_input_student_subjects_2(input_data: InputData) -> InputStudentSubje
             custom_constraints.predetermined_subjects_for_students,
             basic_info.number_of_subjects
         ),
+        number_conditional_students=len(custom_constraints.conditional_students),
+        conditional_students=custom_constraints.conditional_students,
         the_saddest_student_happiness=None
     )
 
@@ -122,7 +128,8 @@ def prepare_input_student_subjects_with_average(input_data: InputData) -> InputS
         custom_constraints = CustomConstraints(
             predetermined_subjects=[],
             predetermined_subjects_for_students=[],
-            predetermined_groups_for_students=[]
+            predetermined_groups_for_students=[],
+            conditional_students=[]
         )
 
     return InputStudentSubjectsWithAverage(
@@ -153,6 +160,8 @@ def prepare_input_student_subjects_with_average(input_data: InputData) -> InputS
             custom_constraints.predetermined_subjects_for_students,
             basic_info.number_of_subjects
         ),
+        number_conditional_students=len(custom_constraints.conditional_students),
+        conditional_students=custom_constraints.conditional_students,
         students_happiness=None,  # We will set this parameter after receiving it from student_subjects solver
         the_saddest_student_happiness=None  # We will set this parameter after receiving it from student_subjects solver
     )
@@ -168,7 +177,8 @@ def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
         custom_constraints = CustomConstraints(
             predetermined_subjects=[],
             predetermined_subjects_for_students=[],
-            predetermined_groups_for_students=[]
+            predetermined_groups_for_students=[],
+            conditional_students=[]
         )
 
     return InputStudentGroups(
@@ -197,6 +207,8 @@ def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
             custom_constraints.predetermined_groups_for_students,
             class_info.number_of_classes
         ),
+        number_conditional_students=len(custom_constraints.conditional_students),
+        conditional_students=custom_constraints.conditional_students,
         student_subject=None,  # We will set this parameter after receiving it from student_subjects solver
         max_number_of_groups=None,  # We will set this parameter after receiving more info from student_subjects solver
         min_number_of_groups_in_class=None,  # We will set this parameter after receiving more info from
@@ -216,7 +228,8 @@ def prepare_input_student_groups_with_friends(input_data: InputData) -> InputStu
         custom_constraints = CustomConstraints(
             predetermined_subjects=[],
             predetermined_subjects_for_students=[],
-            predetermined_groups_for_students=[]
+            predetermined_groups_for_students=[],
+            conditional_students=[]
         )
 
     return InputStudentGroupsWithFriends(
@@ -245,6 +258,8 @@ def prepare_input_student_groups_with_friends(input_data: InputData) -> InputStu
             custom_constraints.predetermined_groups_for_students,
             class_info.number_of_classes
         ),
+        number_conditional_students=len(custom_constraints.conditional_students),
+        conditional_students=custom_constraints.conditional_students,
         student_subject=None,  # We will set this parameter after receiving it from student_subjects solver
         max_number_of_groups=None,  # We will set this parameter after receiving more info from student_subjects solver
         min_number_of_groups_in_class=None,  # We will set this parameter after receiving more info from
