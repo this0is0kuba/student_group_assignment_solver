@@ -4,7 +4,7 @@ from minizinc import Model, Instance, Solver
 
 from models import InputStudentGroups, InputStudentSubjectsWithAverage, SolutionStudentSubjects1, \
     SolutionStudentSubjects2, InputStudentSubjects1, InputStudentSubjects2, InputStudentGroupsWithFriends, \
-    SolutionStudentGroups
+    SolutionStudentGroups, Solution
 from tools.data_processing import get_number_of_groups_in_each_class
 
 
@@ -23,7 +23,7 @@ class StudentAssignmentSolver:
         self.input_student_groups = input_student_groups
         self.input_student_groups_with_friends = input_student_groups_with_friends
 
-    def solve(self) -> SolutionStudentGroups:
+    def solve(self) -> Solution:
 
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
@@ -36,25 +36,28 @@ class StudentAssignmentSolver:
         )
         print("found student_subjects_2")
 
-        solution_student_subjects: SolutionStudentSubjects2 = self._solve_student_subjects_with_average(
+        solution_student_subjects_2 = self._solve_student_subjects_with_average(
                 solver,
                 solution_student_subjects_2
         )
         print("found student_subjects_with_average")
 
-        solution_student_groups: SolutionStudentGroups = self._solve_student_groups(solver, solution_student_subjects)
+        solution_student_groups: SolutionStudentGroups = self._solve_student_groups(solver, solution_student_subjects_2)
         print("found student_groups")
 
         if self.input_student_groups_with_friends:
             solution_student_groups_with_average = self._solve_student_groups_with_friends(
                 solver,
-                solution_student_subjects,
+                solution_student_subjects_2,
                 solution_student_groups
             )
             solution_student_groups = solution_student_groups_with_average
             print("found student_groups_with_friends")
 
-        return solution_student_groups
+        return Solution(
+            student_subjects=solution_student_subjects_2.student_subjects,
+            student_groups=solution_student_groups.student_group
+        )
 
     def _solve_student_subjects_1(self, solver: Solver) -> SolutionStudentSubjects1:
 
