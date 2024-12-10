@@ -1,7 +1,6 @@
 from app.models import InputData
 from app.solver.solver import StudentAssignmentSolver
-from models import InputStudentGroups, InputStudentSubjectsWithAverage, InputStudentSubjects1, InputStudentSubjects2, \
-    InputStudentGroupsWithFriends, Solution
+from models import InputStudentGroupsWithFriends, Solution
 
 from tools.data_processing import prepare_input_student_groups, \
     prepare_input_student_subjects_with_average, prepare_input_student_subjects_1, prepare_input_student_subjects_2, \
@@ -9,20 +8,20 @@ from tools.data_processing import prepare_input_student_groups, \
 
 
 def start_process(input_data: InputData) -> Solution:
-    # Prepare input for minizinc solvers
-    input_student_subjects_1: InputStudentSubjects1 = prepare_input_student_subjects_1(input_data)
-    input_student_subjects_2: InputStudentSubjects2 = prepare_input_student_subjects_2(input_data)
-    input_student_subjects_with_average: InputStudentSubjectsWithAverage = \
-        prepare_input_student_subjects_with_average(input_data)
 
-    input_student_groups: InputStudentGroups = prepare_input_student_groups(input_data)
+    # Prepare input for minizinc solvers
+    input_student_subjects_1 = prepare_input_student_subjects_1(input_data)
+    input_student_subjects_2 = prepare_input_student_subjects_2(input_data)
+    input_student_subjects_with_average = prepare_input_student_subjects_with_average(input_data)
+
+    input_student_groups = prepare_input_student_groups(input_data)
     input_student_groups_with_friends: InputStudentGroupsWithFriends | None = None
 
     if input_data.preferences.friends_info is not None:
         input_student_groups_with_friends = prepare_input_student_groups_with_friends(input_data)
 
-    # Run minizinc solver
-    solver: StudentAssignmentSolver = StudentAssignmentSolver(
+    # Run minizinc solvers
+    solver = StudentAssignmentSolver(
         input_student_subjects_1,
         input_student_subjects_2,
         input_student_subjects_with_average,
@@ -30,7 +29,7 @@ def start_process(input_data: InputData) -> Solution:
         input_student_groups_with_friends
     )
 
-    minizinc_solution: Solution = solver.solve()
+    minizinc_solution = solver.solve()
 
     # TODO - Verify the solution
     # Verify the solution

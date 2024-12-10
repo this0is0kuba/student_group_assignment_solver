@@ -15,7 +15,7 @@ class StudentAssignmentSolver:
                  input_student_subjects_2: InputStudentSubjects2,
                  input_student_subjects_with_average: InputStudentSubjectsWithAverage,
                  input_student_groups: InputStudentGroups,
-                 input_student_groups_with_friends: InputStudentGroupsWithFriends):
+                 input_student_groups_with_friends: InputStudentGroupsWithFriends | None):
 
         self.input_student_subjects_1 = input_student_subjects_1
         self.input_student_subjects_2 = input_student_subjects_2
