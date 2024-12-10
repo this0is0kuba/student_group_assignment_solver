@@ -60,7 +60,7 @@ class StudentAssignmentSolver:
 
     def _solve_subjects_1(self, solver: Solver) -> SolutionSubjects1:
 
-        model = Model(r"./app/solver/minizinc/solvers/student_subjects_1.mzn")
+        model = Model(r"./app/solver/minizinc/solvers/subjects_1.mzn")
         instance = Instance(solver, model)
 
         for field, value in self.input_subjects_1.__dict__.items():
@@ -75,14 +75,14 @@ class StudentAssignmentSolver:
     def _solve_subjects_2(
             self,
             solver: Solver,
-            solution_student_subjects_1: SolutionSubjects1
+            solution_subjects_1: SolutionSubjects1
     ) -> SolutionSubjects2:
 
-        model = Model(r"./app/solver/minizinc/solvers/student_subjects_2.mzn")
+        model = Model(r"./app/solver/minizinc/solvers/subjects_2.mzn")
         instance = Instance(solver, model)
 
         self.input_subjects_2.the_saddest_student_happiness = \
-            solution_student_subjects_1.the_saddest_student_happiness
+            solution_subjects_1.the_saddest_student_happiness
 
         for field, value in self.input_subjects_2.__dict__.items():
             instance[field] = value
@@ -101,15 +101,15 @@ class StudentAssignmentSolver:
     def _solve_subjects_with_average(
             self,
             solver: Solver,
-            solution_student_subjects: SolutionSubjects2
+            solution_subjects: SolutionSubjects2
     ) -> SolutionSubjects2:
 
-        model = Model(r"./app/solver/minizinc/solvers/student_subjects_with_average.mzn")
+        model = Model(r"./app/solver/minizinc/solvers/subjects_with_average.mzn")
         instance = Instance(solver, model)
 
-        self.input_subjects_with_average.students_happiness = solution_student_subjects.students_happiness
+        self.input_subjects_with_average.students_happiness = solution_subjects.students_happiness
         self.input_subjects_with_average.the_saddest_student_happiness = \
-            solution_student_subjects.the_saddest_student_happiness
+            solution_subjects.the_saddest_student_happiness
 
         for field, value in self.input_subjects_with_average.__dict__.items():
             instance[field] = value
@@ -126,11 +126,11 @@ class StudentAssignmentSolver:
     def _solve_groups(
             self,
             solver: Solver,
-            solution_student_subjects: SolutionSubjects2
+            solution_subjects: SolutionSubjects2
     ) -> SolutionGroups:
 
-        model = Model(r"./app/solver/minizinc/solvers/student_groups.mzn")
-        instance: Instance = self._create_instance_groups(solver, model, solution_student_subjects)
+        model = Model(r"./app/solver/minizinc/solvers/groups.mzn")
+        instance: Instance = self._create_instance_groups(solver, model, solution_subjects)
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
         print("groups_with_common_students: ", result["groups_with_common_students"])
@@ -143,16 +143,16 @@ class StudentAssignmentSolver:
     def _solve_groups_with_friends(
             self,
             solver: Solver,
-            solution_student_subjects: SolutionSubjects2,
-            solution_student_groups: SolutionGroups
+            solution_subjects2: SolutionSubjects2,
+            solution_groups: SolutionGroups
     ) -> SolutionGroups:
 
-        model: Model = Model(r"./app/solver/minizinc/solvers/student_groups_with_friends.mzn")
+        model: Model = Model(r"./app/solver/minizinc/solvers/groups_with_friends.mzn")
         instance: Instance = self._create_instance_groups_with_friends(
             solver,
             model,
-            solution_student_subjects,
-            solution_student_groups
+            solution_subjects2,
+            solution_groups
         )
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20*3))
@@ -167,15 +167,15 @@ class StudentAssignmentSolver:
             self,
             solver: Solver,
             model: Model,
-            solution_student_subjects: SolutionSubjects2
+            solution_subjects: SolutionSubjects2
     ) -> Instance:
 
         instance = Instance(solver, model)
 
         # We use the info from the first solver
-        self.input_groups.student_subject = solution_student_subjects.student_subjects
+        self.input_groups.student_subject = solution_subjects.student_subjects
         self.input_groups.min_number_of_groups_in_class = get_number_of_groups_in_each_class(
-            solution_student_subjects.number_of_students_in_subject,
+            solution_subjects.number_of_students_in_subject,
             self.input_groups.class_subject,
             self.input_groups.class_type,
             self.input_groups.class_type_max_students
@@ -191,16 +191,16 @@ class StudentAssignmentSolver:
             self,
             solver: Solver,
             model: Model,
-            solution_student_subjects: SolutionSubjects2,
-            solution_student_groups: SolutionGroups
+            solution_subjects: SolutionSubjects2,
+            solution_groups: SolutionGroups
     ) -> Instance:
 
         instance = Instance(solver, model)
 
         # We use the info from the first solver
-        self.input_groups_with_friends.student_subject = solution_student_subjects.student_subjects
+        self.input_groups_with_friends.student_subject = solution_subjects.student_subjects
         self.input_groups_with_friends.min_number_of_groups_in_class = get_number_of_groups_in_each_class(
-            solution_student_subjects.number_of_students_in_subject,
+            solution_subjects.number_of_students_in_subject,
             self.input_groups_with_friends.class_subject,
             self.input_groups_with_friends.class_type,
             self.input_groups_with_friends.class_type_max_students
@@ -210,7 +210,7 @@ class StudentAssignmentSolver:
             max(self.input_groups.min_number_of_groups_in_class)
 
         self.input_groups_with_friends.groups_with_common_students = \
-            solution_student_groups.groups_with_common_students
+            solution_groups.groups_with_common_students
 
         for field, value in self.input_groups_with_friends.__dict__.items():
             instance[field] = value
