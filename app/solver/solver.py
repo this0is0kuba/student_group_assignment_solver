@@ -64,7 +64,7 @@ class StudentAssignmentSolver:
         model: Model = Model(r"./app/solver/minizinc/solvers/student_subjects_1.mzn")
         instance = Instance(solver, model)
 
-        for field, value in self.input_student_subjects_1.dict().items():
+        for field, value in self.input_student_subjects_1.__dict__.items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
@@ -81,7 +81,7 @@ class StudentAssignmentSolver:
 
         self.input_student_subjects_2.the_saddest_student_happiness = solution_student_subjects_1.the_saddest_student_happiness
 
-        for field, value in self.input_student_subjects_2.dict().items():
+        for field, value in self.input_student_subjects_2.__dict__.items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
@@ -107,7 +107,7 @@ class StudentAssignmentSolver:
         self.input_student_subjects_with_average.students_happiness = solution_student_subjects.students_happiness
         self.input_student_subjects_with_average.the_saddest_student_happiness = solution_student_subjects.the_saddest_student_happiness
 
-        for field, value in self.input_student_subjects_with_average.dict().items():
+        for field, value in self.input_student_subjects_with_average.__dict__.items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
@@ -164,7 +164,7 @@ class StudentAssignmentSolver:
         )
         self.input_student_groups.max_number_of_groups = max(self.input_student_groups.min_number_of_groups_in_class)
 
-        for field, value in self.input_student_groups.dict().items():
+        for field, value in self.input_student_groups.__dict__.items():
             instance[field] = value
 
         return instance
@@ -190,7 +190,7 @@ class StudentAssignmentSolver:
         self.input_student_groups_with_friends.max_number_of_groups = max(self.input_student_groups.min_number_of_groups_in_class)
         self.input_student_groups_with_friends.groups_with_common_students = solution_student_groups.groups_with_common_students
 
-        for field, value in self.input_student_groups_with_friends.dict().items():
+        for field, value in self.input_student_groups_with_friends.__dict__.items():
             instance[field] = value
 
         return instance

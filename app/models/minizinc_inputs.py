@@ -1,7 +1,8 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
 
-class InputStudentSubjects1(BaseModel):
+@dataclass
+class InputStudentSubjects1:
 
     # Basic info about classes
     # --------------------------------------------------
@@ -49,7 +50,8 @@ class InputStudentSubjects1(BaseModel):
     # --------------------------------------------------
 
 
-class InputStudentSubjects2(BaseModel):
+@dataclass
+class InputStudentSubjects2:
 
     # Basic info about classes
     # --------------------------------------------------
@@ -102,7 +104,8 @@ class InputStudentSubjects2(BaseModel):
     # --------------------------------------------------
 
 
-class InputStudentSubjectsWithAverage(BaseModel):
+@dataclass
+class InputStudentSubjectsWithAverage:
 
     # Basic info about classes
     # --------------------------------------------------
@@ -158,7 +161,8 @@ class InputStudentSubjectsWithAverage(BaseModel):
     # --------------------------------------------------
 
 
-class InputStudentGroups(BaseModel):
+@dataclass
+class InputStudentGroups:
 
     # Basic info about classes
     # --------------------------------------------------
@@ -201,7 +205,8 @@ class InputStudentGroups(BaseModel):
     # --------------------------------------------------
 
 
-class InputStudentGroupsWithFriends(BaseModel):
+@dataclass
+class InputStudentGroupsWithFriends:
 
     # Basic info about classes
     # --------------------------------------------------
