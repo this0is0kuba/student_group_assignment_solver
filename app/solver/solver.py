@@ -125,7 +125,11 @@ class StudentAssignmentSolver:
             number_of_students_in_subject=result["number_of_students_in_subject"]
         )
 
-    def _solve_student_groups(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2) -> SolutionStudentGroups:
+    def _solve_student_groups(
+            self,
+            solver: Solver,
+            solution_student_subjects: SolutionStudentSubjects2
+    ) -> SolutionStudentGroups:
 
         model = Model(r"./app/solver/minizinc/solvers/student_groups.mzn")
         instance: Instance = self._create_instance_student_groups(solver, model, solution_student_subjects)
@@ -138,10 +142,20 @@ class StudentAssignmentSolver:
             groups_with_common_students=result["groups_with_common_students"]
         )
 
-    def _solve_student_groups_with_friends(self, solver: Solver, solution_student_subjects: SolutionStudentSubjects2, solution_student_groups: SolutionStudentGroups) -> SolutionStudentGroups:
+    def _solve_student_groups_with_friends(
+            self,
+            solver: Solver,
+            solution_student_subjects: SolutionStudentSubjects2,
+            solution_student_groups: SolutionStudentGroups
+    ) -> SolutionStudentGroups:
 
         model: Model = Model(r"./app/solver/minizinc/solvers/student_groups_with_friends.mzn")
-        instance: Instance = self._create_instance_student_groups_with_friends(solver, model, solution_student_subjects, solution_student_groups)
+        instance: Instance = self._create_instance_student_groups_with_friends(
+            solver,
+            model,
+            solution_student_subjects,
+            solution_student_groups
+        )
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20*3))
         print("groups_with_common_students: ", result["groups_with_common_students_var"])
@@ -193,8 +207,12 @@ class StudentAssignmentSolver:
             self.input_student_groups_with_friends.class_type,
             self.input_student_groups_with_friends.class_type_max_students
         )
-        self.input_student_groups_with_friends.max_number_of_groups = max(self.input_student_groups.min_number_of_groups_in_class)
-        self.input_student_groups_with_friends.groups_with_common_students = solution_student_groups.groups_with_common_students
+
+        self.input_student_groups_with_friends.max_number_of_groups = \
+            max(self.input_student_groups.min_number_of_groups_in_class)
+
+        self.input_student_groups_with_friends.groups_with_common_students = \
+            solution_student_groups.groups_with_common_students
 
         for field, value in self.input_student_groups_with_friends.__dict__.items():
             instance[field] = value

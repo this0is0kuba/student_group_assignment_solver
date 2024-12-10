@@ -1,7 +1,7 @@
 import math
 
 from models import InputStudentSubjects1, InputStudentSubjects2, InputStudentGroups, InputData, \
-    InputStudentSubjectsWithAverage, InputStudentGroupsWithFriends, InputMinizincBase
+    InputStudentSubjectsWithAverage, InputStudentGroupsWithFriends
 from models.input.input_data_elements.custom_constraints import PredeterminedSubjectsForStudent, CustomConstraints, \
     PredeterminedGroupsForStudent
 
