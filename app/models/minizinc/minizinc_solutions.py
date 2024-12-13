@@ -1,17 +1,20 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
 
-class SolutionStudentSubjects1(BaseModel):
+@dataclass
+class SolutionStudentSubjects1:
     the_saddest_student_happiness: int
 
 
+@dataclass
 class SolutionStudentSubjects2(SolutionStudentSubjects1):
     students_happiness: int
     student_subjects: list[list[bool]]
     number_of_students_in_subject: list[int]
 
 
-class SolutionStudentGroups(BaseModel):
+@dataclass
+class SolutionStudentGroups:
 
     # 2 dimensional array about students' groups.
     # Example:

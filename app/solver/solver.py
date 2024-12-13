@@ -4,7 +4,7 @@ from minizinc import Model, Instance, Solver
 
 from models import InputStudentGroups, InputStudentSubjectsWithAverage, SolutionStudentSubjects1, \
     SolutionStudentSubjects2, InputStudentSubjects1, InputStudentSubjects2, InputStudentGroupsWithFriends, \
-    SolutionStudentGroups
+    SolutionStudentGroups, Solution
 from tools.data_processing import get_number_of_groups_in_each_class
 
 
@@ -15,7 +15,7 @@ class StudentAssignmentSolver:
                  input_student_subjects_2: InputStudentSubjects2,
                  input_student_subjects_with_average: InputStudentSubjectsWithAverage,
                  input_student_groups: InputStudentGroups,
-                 input_student_groups_with_friends: InputStudentGroupsWithFriends):
+                 input_student_groups_with_friends: InputStudentGroupsWithFriends | None):
 
         self.input_student_subjects_1 = input_student_subjects_1
         self.input_student_subjects_2 = input_student_subjects_2
@@ -23,7 +23,7 @@ class StudentAssignmentSolver:
         self.input_student_groups = input_student_groups
         self.input_student_groups_with_friends = input_student_groups_with_friends
 
-    def solve(self) -> SolutionStudentGroups:
+    def solve(self) -> Solution:
 
         solver: Solver = Solver.lookup("com.google.ortools.sat")
 
@@ -36,32 +36,35 @@ class StudentAssignmentSolver:
         )
         print("found student_subjects_2")
 
-        solution_student_subjects: SolutionStudentSubjects2 = self._solve_student_subjects_with_average(
+        solution_student_subjects_2 = self._solve_student_subjects_with_average(
                 solver,
                 solution_student_subjects_2
         )
         print("found student_subjects_with_average")
 
-        solution_student_groups: SolutionStudentGroups = self._solve_student_groups(solver, solution_student_subjects)
+        solution_student_groups: SolutionStudentGroups = self._solve_student_groups(solver, solution_student_subjects_2)
         print("found student_groups")
 
         if self.input_student_groups_with_friends:
             solution_student_groups_with_average = self._solve_student_groups_with_friends(
                 solver,
-                solution_student_subjects,
+                solution_student_subjects_2,
                 solution_student_groups
             )
             solution_student_groups = solution_student_groups_with_average
             print("found student_groups_with_friends")
 
-        return solution_student_groups
+        return Solution(
+            student_subjects=solution_student_subjects_2.student_subjects,
+            student_groups=solution_student_groups.student_group
+        )
 
     def _solve_student_subjects_1(self, solver: Solver) -> SolutionStudentSubjects1:
 
         model: Model = Model(r"./app/solver/minizinc/solvers/student_subjects_1.mzn")
         instance = Instance(solver, model)
 
-        for field, value in self.input_student_subjects_1.dict().items():
+        for field, value in self.input_student_subjects_1.__dict__.items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
@@ -78,7 +81,7 @@ class StudentAssignmentSolver:
 
         self.input_student_subjects_2.the_saddest_student_happiness = solution_student_subjects_1.the_saddest_student_happiness
 
-        for field, value in self.input_student_subjects_2.dict().items():
+        for field, value in self.input_student_subjects_2.__dict__.items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
@@ -104,7 +107,7 @@ class StudentAssignmentSolver:
         self.input_student_subjects_with_average.students_happiness = solution_student_subjects.students_happiness
         self.input_student_subjects_with_average.the_saddest_student_happiness = solution_student_subjects.the_saddest_student_happiness
 
-        for field, value in self.input_student_subjects_with_average.dict().items():
+        for field, value in self.input_student_subjects_with_average.__dict__.items():
             instance[field] = value
 
         result = instance.solve(processes=8, timeout=timedelta(seconds=20))
@@ -161,7 +164,7 @@ class StudentAssignmentSolver:
         )
         self.input_student_groups.max_number_of_groups = max(self.input_student_groups.min_number_of_groups_in_class)
 
-        for field, value in self.input_student_groups.dict().items():
+        for field, value in self.input_student_groups.__dict__.items():
             instance[field] = value
 
         return instance
@@ -187,7 +190,7 @@ class StudentAssignmentSolver:
         self.input_student_groups_with_friends.max_number_of_groups = max(self.input_student_groups.min_number_of_groups_in_class)
         self.input_student_groups_with_friends.groups_with_common_students = solution_student_groups.groups_with_common_students
 
-        for field, value in self.input_student_groups_with_friends.dict().items():
+        for field, value in self.input_student_groups_with_friends.__dict__.items():
             instance[field] = value
 
         return instance
