@@ -28,7 +28,7 @@ class BasicInfo(BaseModel):
 
 # Single 'class' is a pair: (subject, class_type).
 class ClassInfo(BaseModel):
-    number_of_classes: int = Field(gr=0)
+    number_of_classes: int = Field(ge=1)
     class_type: list[int] = Field(min_length=1)
     class_subject: list[int] = Field(min_length=1)
     class_instructor: list[int] = Field(min_length=1)
