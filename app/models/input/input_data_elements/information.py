@@ -25,6 +25,24 @@ class BasicInfo(BaseModel):
 
         return self
 
+    @model_validator(mode="after")
+    def check_students_average_grade(self) -> Self:
+
+        for avg in self.student_average:
+            if avg < 3 or avg > 5:
+                raise InvalidInputError(detail="Each average grade should be between 3 and 5.")
+
+        return self
+
+    @model_validator(mode="after")
+    def check_subject_sections(self) -> Self:
+
+        for section in self.subject_section:
+            if section < 1 or section > self.number_of_sections:
+                raise InvalidInputError(detail="Each value in subjectSection should be between 1 and numberOfSections.")
+
+        return self
+
 
 # Single 'class' is a pair: (subject, class_type).
 class ClassInfo(BaseModel):
@@ -102,5 +120,25 @@ class Information(BaseModel):
                 raise InvalidInputError(
                     detail="Each length of list in studentSubjectsInSection should be equal to the numberOfSection."
                 )
+
+        return self
+
+    @model_validator(mode="after")
+    def check_classes(self) -> Self:
+
+        c = self.class_info
+        b = self.basic_info
+
+        for class_type in c.class_type:
+            if class_type < 1 or class_type > b.number_of_class_types:
+                raise InvalidInputError("Each value in classType should be between 1 and numberOfClassTypes.")
+
+        for subject in c.class_subject:
+            if subject < 1 or subject > b.number_of_subjects:
+                raise InvalidInputError("Each value in classSubject should be between 1 and numberOfSubjects.")
+
+        for instructor in c.class_instructor:
+            if instructor < 1 or instructor > b.number_of_instructors:
+                raise InvalidInputError("Each value in classType should be between 1 and numberOfInstructors.")
 
         return self
