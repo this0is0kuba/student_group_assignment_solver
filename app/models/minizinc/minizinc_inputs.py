@@ -21,7 +21,7 @@ class InputMinizincBase:
 
 
 @dataclass
-class InputStudentSubjects1(InputMinizincBase):
+class InputSubjects1(InputMinizincBase):
 
     number_section: int
     subject_section: list[int]
@@ -35,14 +35,14 @@ class InputStudentSubjects1(InputMinizincBase):
 
 
 @dataclass
-class InputStudentSubjects2(InputStudentSubjects1):
+class InputSubjects2(InputSubjects1):
 
     # Info about the saddest student from student_subjects_1 solver
     the_saddest_student_happiness: int | None
 
 
 @dataclass
-class InputStudentSubjectsWithAverage(InputStudentSubjects2):
+class InputSubjectsWithAverage(InputSubjects2):
 
     student_average: list[int]
 
@@ -53,7 +53,7 @@ class InputStudentSubjectsWithAverage(InputStudentSubjects2):
 
 
 @dataclass
-class InputStudentGroups(InputMinizincBase):
+class InputGroups(InputMinizincBase):
 
     number_predetermined_students: int
     predetermined_students: list[int]
@@ -65,7 +65,7 @@ class InputStudentGroups(InputMinizincBase):
 
 
 @dataclass
-class InputStudentGroupsWithFriends(InputStudentGroups):
+class InputGroupsWithFriends(InputGroups):
 
     # Info about students' friends
     friends_array: list[list[int]]
