@@ -1,7 +1,6 @@
 from typing import Self
 
 from pydantic import BaseModel, Field, model_validator
-
 from models.errors.errors import InvalidInputError
 
 
@@ -30,7 +29,7 @@ class BasicInfo(BaseModel):
 
         for avg in self.student_average:
             if avg < 3 or avg > 5:
-                raise InvalidInputError(detail="Each average grade should be between 3 and 5.")
+                raise InvalidInputError(detail="Each average grade should be between 3.0 and 5.0")
 
         return self
 

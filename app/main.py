@@ -1,9 +1,8 @@
 from threading import Lock
 
 from fastapi import FastAPI, HTTPException
-from app.models import InputData
+from models import InputData, Solution
 from controllers.solver_starter import start_process
-from models import Solution
 
 app = FastAPI()
 solver_lock = Lock()

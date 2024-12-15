@@ -3,7 +3,7 @@ from minizinc import Model, Instance, Solver
 from models import InputGroups, InputSubjectsWithAverage, SolutionSubjects1, SolutionSubjects2, \
     InputSubjects1, InputSubjects2, InputGroupsWithFriends, SolutionGroups, Solution
 
-from utils.data_processing import get_number_of_groups_in_each_class
+from utils.data_operations import get_number_of_groups_in_each_class
 from utils.minizinc_solver import solve_using_minizinc
 
 

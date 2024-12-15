@@ -1,7 +1,7 @@
 from datetime import timedelta
 from minizinc import MiniZincError, Instance, Result, Status
 
-from models.errors.errors import MinizincSolverError, InvalidInputError, UnsatisfiableError
+from models.errors.errors import MinizincSolverError, UnsatisfiableError
 
 
 def solve_using_minizinc(instance: Instance, seconds) -> Result:
