@@ -2,7 +2,7 @@ from app.models import InputData
 from app.solver.solver import StudentAssignmentSolver
 from models import InputStudentGroupsWithFriends, Solution
 
-from tools.data_processing import prepare_input_student_groups, \
+from utils.data_processing import prepare_input_student_groups, \
     prepare_input_student_subjects_with_average, prepare_input_student_subjects_1, prepare_input_student_subjects_2, \
     prepare_input_student_groups_with_friends
 

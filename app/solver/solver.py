@@ -5,7 +5,7 @@ from minizinc import Model, Instance, Solver
 from models import InputStudentGroups, InputStudentSubjectsWithAverage, SolutionStudentSubjects1, \
     SolutionStudentSubjects2, InputStudentSubjects1, InputStudentSubjects2, InputStudentGroupsWithFriends, \
     SolutionStudentGroups, Solution
-from tools.data_processing import get_number_of_groups_in_each_class
+from utils.data_processing import get_number_of_groups_in_each_class
 
 
 class StudentAssignmentSolver:
