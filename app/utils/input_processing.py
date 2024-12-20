@@ -1,12 +1,8 @@
-import math
-
-from models import InputStudentSubjects1, InputStudentSubjects2, InputStudentGroups, InputData, \
-    InputStudentSubjectsWithAverage, InputStudentGroupsWithFriends, InputMinizincBase
-from models.input.input_data_elements.custom_constraints import PredeterminedSubjectsForStudent, CustomConstraints, \
-    PredeterminedGroupsForStudent
+from models import InputSubjects1, InputSubjects2, InputGroups, InputData, InputSubjectsWithAverage, \
+    InputGroupsWithFriends, PredeterminedSubjectsForStudent, CustomConstraints, PredeterminedGroupsForStudent
 
 
-def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubjects1:
+def prepare_for_subjects_1(input_data: InputData) -> InputSubjects1:
 
     basic_info = input_data.information.basic_info
     class_info = input_data.information.class_info
@@ -27,7 +23,7 @@ def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubje
             conditional_students=[]
         )
 
-    return InputStudentSubjects1(
+    return InputSubjects1(
         number_students=basic_info.number_of_students,
         number_instructors=basic_info.number_of_instructors,
         number_subjects=basic_info.number_of_subjects,
@@ -59,25 +55,25 @@ def prepare_input_student_subjects_1(input_data: InputData) -> InputStudentSubje
     )
 
 
-def prepare_input_student_subjects_2(input_data: InputData) -> InputStudentSubjects2:
+def prepare_for_subjects_2(input_data: InputData) -> InputSubjects2:
 
-    input_student_subjects_1 = prepare_input_student_subjects_1(input_data)
+    input_subjects_1 = prepare_for_subjects_1(input_data)
 
-    return InputStudentSubjects2(
-        **input_student_subjects_1.__dict__,
+    return InputSubjects2(
+        **input_subjects_1.__dict__,
 
         # We will set this parameter after receiving it from student_subjects_1 solver
         the_saddest_student_happiness=None
     )
 
 
-def prepare_input_student_subjects_with_average(input_data: InputData) -> InputStudentSubjectsWithAverage:
+def prepare_for_subjects_with_average(input_data: InputData) -> InputSubjectsWithAverage:
 
-    input_student_subjects_2 = prepare_input_student_subjects_2(input_data)
+    input_subjects_2 = prepare_for_subjects_2(input_data)
     student_average = _prepare_student_average(input_data.information.basic_info.student_average)
 
-    return InputStudentSubjectsWithAverage(
-        **input_student_subjects_2.__dict__,
+    return InputSubjectsWithAverage(
+        **input_subjects_2.__dict__,
         student_average=student_average,
 
         # We will set this parameter after receiving it from student_subjects_2 solver
@@ -85,7 +81,7 @@ def prepare_input_student_subjects_with_average(input_data: InputData) -> InputS
     )
 
 
-def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
+def prepare_for_groups(input_data: InputData) -> InputGroups:
 
     basic_info = input_data.information.basic_info
     class_info = input_data.information.class_info
@@ -100,7 +96,7 @@ def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
             conditional_students=[]
         )
 
-    return InputStudentGroups(
+    return InputGroups(
         number_students=basic_info.number_of_students,
         number_instructors=basic_info.number_of_instructors,
         number_subjects=basic_info.number_of_subjects,
@@ -134,37 +130,19 @@ def prepare_input_student_groups(input_data: InputData) -> InputStudentGroups:
     )
 
 
-def prepare_input_student_groups_with_friends(input_data: InputData) -> InputStudentGroupsWithFriends:
+def prepare_for_groups_with_friends(input_data: InputData) -> InputGroupsWithFriends:
 
-    input_student_groups = prepare_input_student_groups(input_data)
+    input_groups = prepare_for_groups(input_data)
     friends_info = input_data.preferences.friends_info
 
-    return InputStudentGroupsWithFriends(
-        **input_student_groups.__dict__,
+    return InputGroupsWithFriends(
+        **input_groups.__dict__,
         friends_max_number=friends_info.max_number_friends,
         friends_array=friends_info.friends_array,
 
         # We will set this parameter after receiving it from student_groups solver
         groups_with_common_students=None
     )
-
-
-def get_number_of_groups_in_each_class(
-        number_of_students_in_subject: list[int],
-        class_subject: list[int],
-        class_type: list[int],
-        class_type_max_students: list[int]
-) -> list[int]:
-
-    number_of_groups_in_class = []
-
-    for i in range(len(class_subject)):
-        n = number_of_students_in_subject[class_subject[i] - 1]
-        max_n_in_class = class_type_max_students[class_type[i] - 1]
-
-        number_of_groups_in_class.append(math.ceil(n / max_n_in_class))
-
-    return number_of_groups_in_class
 
 
 def _prepare_predetermined_students(

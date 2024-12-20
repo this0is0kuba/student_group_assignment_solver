@@ -2,19 +2,19 @@ from dataclasses import dataclass
 
 
 @dataclass
-class SolutionStudentSubjects1:
+class SolutionSubjects1:
     the_saddest_student_happiness: int
 
 
 @dataclass
-class SolutionStudentSubjects2(SolutionStudentSubjects1):
+class SolutionSubjects2(SolutionSubjects1):
     students_happiness: int
     student_subjects: list[list[bool]]
     number_of_students_in_subject: list[int]
 
 
 @dataclass
-class SolutionStudentGroups:
+class SolutionGroups:
 
     # 2 dimensional array about students' groups.
     # Example:
