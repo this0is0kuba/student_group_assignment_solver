@@ -28,9 +28,4 @@ def start_process(input_data: InputData) -> Solution:
 
     minizinc_solution = solver.solve()
 
-    # TODO - Verify the solution
-    # Verify the solution
-
-    print(minizinc_solution)
-
     return minizinc_solution

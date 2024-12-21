@@ -1,5 +1,6 @@
 from minizinc import Model, Instance, Solver
 
+from dependecies.logger import logger
 from models import InputGroups, InputSubjectsWithAverage, SolutionSubjects1, SolutionSubjects2, \
     InputSubjects1, InputSubjects2, InputGroupsWithFriends, SolutionGroups, Solution
 
@@ -27,22 +28,18 @@ class StudentAssignmentSolver:
         solver = Solver.lookup("com.google.ortools.sat")
 
         solution_subjects_1 = self._solve_subjects_1(solver)
-        print("found student_subjects_1")
 
         solution_subjects_2 = self._solve_subjects_2(
             solver,
             solution_subjects_1
         )
-        print("found student_subjects_2")
 
         solution_subjects_2 = self._solve_subjects_with_average(
                 solver,
                 solution_subjects_2
         )
-        print("found student_subjects_with_average")
 
         solution_groups = self._solve_groups(solver, solution_subjects_2)
-        print("found student_groups")
 
         if self.input_groups_with_friends:
 
@@ -51,7 +48,12 @@ class StudentAssignmentSolver:
                 solution_subjects_2,
                 solution_groups
             )
-            print("found student_groups_with_friends")
+
+        logger.info(
+            "found solution with student_subjects: %s, student_groups: %s",
+            solution_subjects_2.student_subjects,
+            solution_groups.student_group
+        )
 
         return Solution(
             student_subjects=solution_subjects_2.student_subjects,
@@ -64,6 +66,11 @@ class StudentAssignmentSolver:
         instance = self._create_instance_subjects_1(solver, model)
 
         result = solve_using_minizinc(instance, seconds=20)
+
+        logger.info(
+            "found subjects_1 with the_saddest_student_happiness: %s",
+            result["the_saddest_student_happiness"]
+        )
 
         return SolutionSubjects1(
             the_saddest_student_happiness=result["the_saddest_student_happiness"]
@@ -80,7 +87,10 @@ class StudentAssignmentSolver:
 
         result = solve_using_minizinc(instance, seconds=20)
 
-        print("students_happiness: ", result["students_happiness"])
+        logger.info(
+            "found subjects_2 with students_happiness: %s",
+            result["students_happiness"]
+        )
 
         return SolutionSubjects2(
             the_saddest_student_happiness=result["the_saddest_student_happiness_var"],
@@ -100,6 +110,11 @@ class StudentAssignmentSolver:
 
         result = solve_using_minizinc(instance, seconds=20)
 
+        logger.info(
+            "found subjects_with_average with students_happiness_with_average: %s",
+            result["students_happiness_with_average"]
+        )
+
         return SolutionSubjects2(
             the_saddest_student_happiness=result["the_saddest_student_happiness_var"],
             students_happiness=result["students_happiness_var"],
@@ -118,7 +133,10 @@ class StudentAssignmentSolver:
 
         result = solve_using_minizinc(instance, seconds=20)
 
-        print("groups_with_common_students: ", result["groups_with_common_students"])
+        logger.info(
+            "found groups with groups_with_common_students: %s",
+            result["groups_with_common_students"],
+        )
 
         return SolutionGroups(
             student_group=result["student_group"],
@@ -142,7 +160,10 @@ class StudentAssignmentSolver:
 
         result = solve_using_minizinc(instance, seconds=20*2)
 
-        print("groups_with_common_students: ", result["groups_with_common_students_var"])
+        logger.info(
+            "found groups with number_of_friends: %s",
+            result["number_of_friends"],
+        )
 
         return SolutionGroups(
             student_group=result["student_group"],
