@@ -10,13 +10,13 @@ class BasicInfo(BaseModel):
     number_of_subjects: int = Field(ge=1)
     number_of_class_types: int = Field(ge=1)
     number_of_sections: int = Field(ge=1)
-    student_average: list[float] = Field(min_length=1)
+    student_average: list[float] | None = Field(min_length=1)
     subject_section: list[int] = Field(min_length=1)
 
     @model_validator(mode="after")
     def check_lengths(self) -> Self:
 
-        if self.number_of_students != len(self.student_average):
+        if self.student_average and self.number_of_students != len(self.student_average):
             raise InvalidInputError(detail="The numberOfStudents should be equal to length of the studentAverage.")
 
         if self.number_of_subjects != len(self.subject_section):
@@ -26,6 +26,9 @@ class BasicInfo(BaseModel):
 
     @model_validator(mode="after")
     def check_students_average_grade(self) -> Self:
+
+        if not self.student_average:
+            return self
 
         for avg in self.student_average:
             if avg < 3 or avg > 5:

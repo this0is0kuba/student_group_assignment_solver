@@ -34,15 +34,15 @@ class StudentAssignmentSolver:
             solution_subjects_1
         )
 
-        solution_subjects_2 = self._solve_subjects_with_average(
-                solver,
-                solution_subjects_2
-        )
+        if self.input_subjects_with_average:
+            solution_subjects_2 = self._solve_subjects_with_average(
+                    solver,
+                    solution_subjects_2
+            )
 
         solution_groups = self._solve_groups(solver, solution_subjects_2)
 
         if self.input_groups_with_friends:
-
             solution_groups = self._solve_groups_with_friends(
                 solver,
                 solution_subjects_2,
