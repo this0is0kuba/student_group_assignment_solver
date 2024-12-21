@@ -50,13 +50,11 @@ class StudentAssignmentSolver:
             )
 
         logger.info(
-            "found solution with student_subjects: %s, student_groups: %s",
-            solution_subjects_2.student_subjects,
+            "found solution with student_groups: %s",
             solution_groups.student_group
         )
 
         return Solution(
-            student_subjects=solution_subjects_2.student_subjects,
             student_groups=solution_groups.student_group
         )
 
