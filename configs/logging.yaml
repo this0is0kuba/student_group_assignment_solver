@@ -12,8 +12,8 @@ handlers:
     formatter: default
     stream: ext://sys.stdout
   file:
-    class: logging.FileHandler
-    level: DEBUG
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
     formatter: default
     filename: app.log
     maxBytes: 10485760  # 10 MB
