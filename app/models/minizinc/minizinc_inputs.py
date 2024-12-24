@@ -47,9 +47,7 @@ class InputSubjectsWithAverage(InputSubjects2):
     student_average: list[int]
 
     # Info about happiness from student_subjects_2 solver
-    # --------------------------------------------------
     students_happiness: int | None
-    # --------------------------------------------------
 
 
 @dataclass

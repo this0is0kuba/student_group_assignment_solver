@@ -141,6 +141,6 @@ class Information(BaseModel):
 
         for instructor in c.class_instructor:
             if instructor < 1 or instructor > b.number_of_instructors:
-                raise InvalidInputError("Each value in classType should be between 1 and numberOfInstructors.")
+                raise InvalidInputError("Each value in classInstructor should be between 1 and numberOfInstructors.")
 
         return self

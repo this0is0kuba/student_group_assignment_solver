@@ -85,7 +85,7 @@ class InputData(BaseModel):
         if friends_info is None:
             return self
 
-        for friends in friends_info:
+        for friends in friends_info.friends_array:
             for student_number in friends:
 
                 if student_number < 0 or student_number > basic.number_of_students:
