@@ -67,7 +67,7 @@
   },
 
   "custom_constraints": {
-    "predetermined_subjects": [1],
+    "predetermined_subjects": [3, 6],
     "predetermined_subjects_for_students": [
       {
         "student_id": 2,

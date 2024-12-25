@@ -39,7 +39,7 @@ def _prepare_student_average(list_average: list[float]) -> list[int]:
     new_list_average = []
 
     for avg in list_average:
-        new_list_average.append(int(avg * 100))
+        new_list_average.append(round(avg * 100))
 
     return new_list_average
 

@@ -2,7 +2,7 @@ from datetime import timedelta
 from minizinc import MiniZincError, Instance, Result, Status
 
 from dependecies.logger import logger
-from models.errors.errors import MinizincSolverError, UnsatisfiableError
+from models.errors.errors import MinizincSolverError, UnsatisfiableError, InvalidInputError
 
 
 def solve_using_minizinc(instance: Instance, seconds) -> Result:
@@ -15,7 +15,7 @@ def solve_using_minizinc(instance: Instance, seconds) -> Result:
             logger.warning("Solution unsatisfiable. Status: UNSATISFIABLE.")
 
             raise UnsatisfiableError(
-                detail="It's impossible to create groups from the provided data." +
+                detail="It's impossible to create groups from the provided data. " +
                        "Please reconsider your model and make changes."
             )
 

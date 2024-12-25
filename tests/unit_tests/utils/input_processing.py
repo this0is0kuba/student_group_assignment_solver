@@ -4,7 +4,9 @@ import pytest
 
 from models import InputData, InputSubjects1, InputMinizincBase, InputSubjects2, InputSubjectsWithAverage, InputGroups, \
     InputGroupsWithFriends
-from utils.input_processing import prepare_for_subjects_1
+from utils.input_processing import prepare_for_subjects_1, prepare_for_subjects_2, prepare_for_subjects_with_average, \
+    prepare_for_groups, prepare_for_groups_with_friends
+
 
 inputMinizincBaseBasic = InputMinizincBase(
     number_students=4,
@@ -47,7 +49,7 @@ inputSubjectsWithAverageBasic = InputSubjectsWithAverage(
     students_happiness=None
 )
 
-inputGroups = InputGroups(
+inputGroupsBasic = InputGroups(
     **inputMinizincBaseBasic.__dict__,
     number_predetermined_students=0,
     predetermined_students=[],
@@ -58,12 +60,6 @@ inputGroups = InputGroups(
     min_number_of_groups_in_class=None,
 )
 
-inputGroupsWithFriends = InputGroupsWithFriends(
-    **inputGroups.__dict__,
-    friends_array=[],
-    friends_max_number=0,
-    groups_with_common_students=None,
-)
 
 inputMinizincBaseReal = InputMinizincBase(
     number_students=92,
@@ -222,13 +218,6 @@ inputGroupsReal = InputGroups(
     min_number_of_groups_in_class=None
 )
 
-inputGroupsWithFriendsReal = InputGroupsWithFriends(
-    **inputGroupsReal.__dict__,
-    friends_array=[],
-    friends_max_number=0,
-    groups_with_common_students=None,
-)
-
 
 inputMinizincBaseFriends = InputMinizincBase(
     number_students=30,
@@ -298,7 +287,7 @@ inputSubjects2Friends = InputSubjects2(
     the_saddest_student_happiness=None
 )
 
-inputSubjectsMediumWithAverage = InputSubjectsWithAverage(
+inputSubjectsWithAverageFriends = InputSubjectsWithAverage(
     **inputSubjects2Friends.__dict__,
     student_average=[300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
                      500, 500, 500, 500, 500, 500, 500, 500, 500, 500],
@@ -316,7 +305,7 @@ inputGroupsFriends = InputGroups(
     min_number_of_groups_in_class=None
 )
 
-inputGroupsFriendsFriends = InputGroupsWithFriends(
+inputGroupsWithFriendsFriends = InputGroupsWithFriends(
     **inputGroupsFriends.__dict__,
     friends_array=[
         [2, 3, 0], [1, 3, 0], [1, 2, 4], [5, 0, 0], [4, 0, 0], [7, 6, 0], [6, 8, 0], [6, 7, 0], [8, 0, 0], [0, 0, 0],
@@ -326,6 +315,93 @@ inputGroupsFriendsFriends = InputGroupsWithFriends(
     ],
     friends_max_number=3,
     groups_with_common_students=None,
+)
+
+
+inputMinizincBaseCustomConstraints = InputMinizincBase(
+    number_students=30,
+    number_instructors=8,
+    number_subjects=6,
+    number_class_types=4,
+    number_classes=13,
+    class_type=[1, 2, 4, 1, 2, 1, 3, 1, 2, 1, 3, 1, 2],
+    class_subject=[1, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6],
+    class_instructor=[1, 2, 2, 3, 4, 3, 4, 5, 6, 7, 7, 8, 8],
+    class_time_h=[28, 14, 14, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28],
+    instructor_max_h=[336, 140, 336, 336, 336, 336, 336, 336],
+    class_type_min_students=[1, 2, 5, 5],
+    class_type_max_students=[30, 5, 10, 10],
+    number_conditional_students=7,
+    conditional_students=[1, 2, 3, 4, 5, 6, 7]
+)
+
+inputSubjects1CustomConstraints = InputSubjects1(
+    **inputMinizincBaseCustomConstraints.__dict__,
+    number_section=2,
+    subject_section=[1, 1, 1, 2, 2, 2],
+    student_subjects_in_section=[[0, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [1, 2],
+                                 [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [1, 2], [2, 2],
+                                 [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2], [2, 1]],
+    student_preferences=[
+        [2, 3, 1, 3, 2, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [1, 3, 2, 1, 3, 2],
+        [1, 3, 2, 1, 3, 2],
+        [2, 3, 1, 1, 3, 2],
+        [2, 3, 1, 1, 3, 2],
+        [2, 3, 1, 3, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [1, 3, 2, 1, 3, 2],
+        [1, 3, 2, 1, 3, 2],
+        [2, 3, 1, 1, 3, 2],
+        [2, 3, 1, 1, 3, 2],
+        [2, 3, 1, 3, 2, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [2, 3, 1, 2, 3, 1],
+        [1, 3, 2, 1, 3, 2],
+        [1, 3, 2, 1, 3, 2],
+        [2, 3, 1, 1, 3, 2],
+        [2, 3, 1, 1, 3, 2]
+    ],
+    number_predetermined_subjects=2,
+    predetermined_subjects=[3, 6],
+    number_predetermined_students=1,
+    predetermined_students=[2],
+    predetermined_subjects_for_students=[[3, 6, 0, 0, 0, 0]]
+)
+
+inputSubjects2CustomConstraints = InputSubjects2(
+    **inputSubjects1CustomConstraints.__dict__,
+    the_saddest_student_happiness=None
+)
+
+inputSubjectsWithAverageCustomConstraints = InputSubjectsWithAverage(
+    **inputSubjects2CustomConstraints.__dict__,
+    student_average=[300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 400, 400, 400, 400, 400, 400, 400, 400, 400, 400,
+                     500, 500, 500, 500, 500, 500, 500, 500, 500, 500],
+    students_happiness=None
+)
+
+inputGroupsCustomConstraints = InputGroups(
+    **inputMinizincBaseCustomConstraints.__dict__,
+    number_predetermined_students=1,
+    predetermined_students=[2],
+    predetermined_classes_for_students=[[7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+    predetermined_groups_for_students=[[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+    student_subject=None,
+    max_number_of_groups=None,
+    min_number_of_groups_in_class=None
 )
 
 
@@ -339,15 +415,82 @@ def load_json_file(file_path: str):
     [
         ("unit_tests/resources/basic.json", inputSubjects1Basic),
         ("unit_tests/resources/real.json", inputSubjects1Real),
-        ("unit_tests/resources/medium_friends.json", inputSubjects1Friends)
+        ("unit_tests/resources/medium_friends.json", inputSubjects1Friends),
+        ("unit_tests/resources/medium_custom_constraints.json", inputSubjects1CustomConstraints)
     ]
 )
 def test_prepare_for_subjects_1(path, expected):
 
     json_data = load_json_file(path)
-    print(json_data)
     input_data = InputData(**json_data)
 
     minizinc_input = prepare_for_subjects_1(input_data)
 
     assert minizinc_input == expected
+
+
+@pytest.mark.parametrize(
+    "path, expected",
+    [
+        ("unit_tests/resources/basic.json", inputSubjects2Basic),
+        ("unit_tests/resources/real.json", inputSubjects2Real),
+        ("unit_tests/resources/medium_friends.json", inputSubjects2Friends),
+        ("unit_tests/resources/medium_custom_constraints.json", inputSubjects2CustomConstraints)
+    ]
+)
+def test_prepare_for_subjects_2(path, expected):
+
+    json_data = load_json_file(path)
+    input_data = InputData(**json_data)
+
+    minizinc_input = prepare_for_subjects_2(input_data)
+
+    assert minizinc_input == expected
+
+
+@pytest.mark.parametrize(
+    "path, expected",
+    [
+        ("unit_tests/resources/basic.json", inputSubjectsWithAverageBasic),
+        ("unit_tests/resources/real.json", inputSubjectsWithAverageReal),
+        ("unit_tests/resources/medium_friends.json", inputSubjectsWithAverageFriends),
+        ("unit_tests/resources/medium_custom_constraints.json", inputSubjectsWithAverageCustomConstraints)
+    ]
+)
+def test_prepare_for_subjects_with_average(path, expected):
+
+    json_data = load_json_file(path)
+    input_data = InputData(**json_data)
+
+    minizinc_input = prepare_for_subjects_with_average(input_data)
+
+    assert minizinc_input == expected
+
+
+@pytest.mark.parametrize(
+    "path, expected",
+    [
+        ("unit_tests/resources/basic.json", inputGroupsBasic),
+        ("unit_tests/resources/real.json", inputGroupsReal),
+        ("unit_tests/resources/medium_friends.json", inputGroupsFriends),
+        ("unit_tests/resources/medium_custom_constraints.json", inputGroupsCustomConstraints)
+    ]
+)
+def test_prepare_for_groups(path, expected):
+
+    json_data = load_json_file(path)
+    input_data = InputData(**json_data)
+
+    minizinc_input = prepare_for_groups(input_data)
+
+    assert minizinc_input == expected
+
+
+def test_prepare_for_groups_with_friends():
+
+    json_data = load_json_file("unit_tests/resources/medium_friends.json")
+    input_data = InputData(**json_data)
+
+    minizinc_input = prepare_for_groups_with_friends(input_data)
+
+    assert minizinc_input == inputGroupsWithFriendsFriends

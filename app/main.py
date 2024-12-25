@@ -18,9 +18,5 @@ def run_solver(input_data: InputData) -> Solution:
     try:
         return start_process(input_data)
 
-    except Exception as e:
-        logger.exception("An error occurred while running the solver process: %s", e)
-        raise HTTPException(status_code=500, detail="Internal server error.")
-
     finally:
         solver_lock.release()

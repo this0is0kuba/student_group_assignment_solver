@@ -206,7 +206,7 @@ class InputData(BaseModel):
         for pre_subject in pre_subjects:
             all_pre_subjects.update(pre_subject.predetermined_subjects_for_student)
 
-        missing_subjects = set(self.custom_constraints.predetermined_subjects).difference(all_pre_subjects)
+        missing_subjects = all_pre_subjects.difference(set(self.custom_constraints.predetermined_subjects))
 
         if missing_subjects:
             raise InvalidInputError("There are predetermined subjects for students which are not defined in " +
@@ -229,9 +229,9 @@ class InputData(BaseModel):
         for pre_group in pre_groups:
             all_pre_classes.update(pre_group.predetermined_classes_for_student)
 
-        all_pre_subjects = set([class_info.class_subject[c] for c in all_pre_classes])
+        all_pre_subjects = set([class_info.class_subject[c - 1] for c in all_pre_classes])
 
-        missing_subjects = set(self.custom_constraints.predetermined_subjects).difference(all_pre_subjects)
+        missing_subjects = all_pre_subjects.difference(set(self.custom_constraints.predetermined_subjects))
 
         if missing_subjects:
             raise InvalidInputError("There are predetermined classes for students which are not defined in " +
