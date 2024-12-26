@@ -1,7 +1,7 @@
 from models import PredeterminedSubjectsForStudent, PredeterminedGroupsForStudent
 
 
-def _prepare_predetermined_students(
+def prepare_predetermined_students(
     predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent],
 ) -> list[int]:
 
@@ -15,7 +15,7 @@ def _prepare_predetermined_students(
     return prepared_list
 
 
-def _prepare_predetermined_subjects_for_students(
+def prepare_predetermined_subjects_for_students(
         predetermined_subjects_for_students: list[PredeterminedSubjectsForStudent],
         number_of_subjects: int
 ) -> list[list[int]]:
@@ -34,7 +34,7 @@ def _prepare_predetermined_subjects_for_students(
     return prepared_list
 
 
-def _prepare_student_average(list_average: list[float]) -> list[int]:
+def prepare_student_average(list_average: list[float]) -> list[int]:
 
     new_list_average = []
 
@@ -44,10 +44,11 @@ def _prepare_student_average(list_average: list[float]) -> list[int]:
     return new_list_average
 
 
-def _prepare_list_preferences(
+def prepare_list_preferences(
         list_preferences: list[list[int]], section_number: int,
         subject_section: list[int]
-):
+) -> list[list[int]]:
+
     # how much subjects is in each section
     section_subject_amount = [0 for _ in range(section_number)]
 
@@ -64,25 +65,26 @@ def _prepare_list_preferences(
 
         list_student_preferences = []
         for j in range(len(list_preferences[0])):
-            reverted_value = section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1
-            new_value = round(
-                reverted_value * (max_number_of_subjects / section_subject_amount[subject_section[j] - 1]))
 
-            list_student_preferences.append(
-                new_value
+            reverted_value = section_subject_amount[subject_section[j] - 1] - list_preferences[i][j] + 1
+
+            new_value = round(
+                reverted_value * (max_number_of_subjects / section_subject_amount[subject_section[j] - 1])
             )
+
+            list_student_preferences.append(new_value)
 
         new_list_preferences.append(list_student_preferences)
 
     return new_list_preferences
 
 
-def _prepare_predetermined_classes(
+def prepare_predetermined_classes(
         predetermined_groups_for_students: list[PredeterminedGroupsForStudent],
         number_of_classes: int
-):
+) -> list[list[int]]:
 
-    prepared_list: list[list[int]] = []
+    prepared_list = []
 
     for group_info in predetermined_groups_for_students:
 
@@ -96,12 +98,12 @@ def _prepare_predetermined_classes(
     return prepared_list
 
 
-def _prepare_predetermined_groups(
+def prepare_predetermined_groups(
         predetermined_groups_for_students: list[PredeterminedGroupsForStudent],
         number_of_classes: int
-):
+) -> list[list[int]]:
 
-    prepared_list: list[list[int]] = []
+    prepared_list = []
 
     for group_info in predetermined_groups_for_students:
 

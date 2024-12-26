@@ -18,11 +18,11 @@ from app.utils.data_operations import get_number_of_groups_in_each_class
     ]
 )
 def test_number_of_groups(
-        number_of_students_in_subject: list[int],
-        class_subject: list[int],
-        class_type: list[int],
-        class_type_max_students: list[int],
-        expected: list[int]
+        number_of_students_in_subject,
+        class_subject,
+        class_type,
+        class_type_max_students,
+        expected
 ):
 
     assert get_number_of_groups_in_each_class(
