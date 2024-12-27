@@ -31,8 +31,8 @@ class BasicInfo(BaseModel):
             return self
 
         for avg in self.student_average:
-            if avg < 3 or avg > 5:
-                raise InvalidInputError(detail="Each average grade should be between 3.0 and 5.0")
+            if avg < 2 or avg > 5:
+                raise InvalidInputError(detail="Each average grade should be between 2.0 and 5.0")
 
         return self
 
