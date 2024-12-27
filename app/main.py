@@ -1,7 +1,6 @@
 from threading import Lock
 from fastapi import FastAPI, HTTPException
 
-from dependecies.logger import logger
 from models import InputData, Solution
 from controllers.solver_starter import start_process
 

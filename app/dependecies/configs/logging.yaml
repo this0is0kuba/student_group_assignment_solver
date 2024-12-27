@@ -24,3 +24,7 @@ loggers:
     level: INFO
     handlers: [console, file]
     propagate: no
+  student_group_assignment_solver_test:
+    level: INFO
+    handlers: [ console ]
+    propagate: no
