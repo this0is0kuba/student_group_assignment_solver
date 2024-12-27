@@ -10,12 +10,14 @@ from utils.minizinc_helper import solve_using_minizinc
 
 class StudentAssignmentSolver:
 
-    def __init__(self,
-                 input_subjects_1: InputSubjects1,
-                 input_subjects_2: InputSubjects2,
-                 input_subjects_with_average: InputSubjectsWithAverage,
-                 input_groups: InputGroups,
-                 input_groups_with_friends: InputGroupsWithFriends | None):
+    def __init__(
+            self,
+             input_subjects_1: InputSubjects1,
+             input_subjects_2: InputSubjects2,
+             input_subjects_with_average: InputSubjectsWithAverage,
+             input_groups: InputGroups,
+             input_groups_with_friends: InputGroupsWithFriends | None
+    ):
 
         self.input_subjects_1 = input_subjects_1
         self.input_subjects_2 = input_subjects_2
