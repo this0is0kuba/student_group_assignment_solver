@@ -11,9 +11,8 @@ class TestSolveUsingMinizinc(unittest.TestCase):
 
     @patch('utils.minizinc_helper.logger')
     @patch('minizinc.Instance')
-    def test_unsatisfiable(self, MockInstance, MockLogger):
+    def test_unsatisfiable(self, mock_instance, mock_logger):
 
-        mock_instance = MockInstance()
         mock_result = MagicMock()
         mock_result.status = Status.UNSATISFIABLE
         mock_instance.solve.return_value = mock_result
@@ -21,13 +20,12 @@ class TestSolveUsingMinizinc(unittest.TestCase):
         with self.assertRaises(UnsatisfiableError) as _:
             solve_using_minizinc(mock_instance, 1)
 
-        MockLogger.info.assert_called()
+        mock_logger.info.assert_called()
 
     @patch('utils.minizinc_helper.logger')
     @patch('minizinc.Instance')
-    def test_unknown_status(self, MockInstance, MockLogger):
+    def test_unknown_status(self, mock_instance, mock_logger):
 
-        mock_instance = MockInstance()
         mock_result = MagicMock()
         mock_result.status = Status.UNKNOWN
         mock_instance.solve.return_value = mock_result
@@ -35,12 +33,11 @@ class TestSolveUsingMinizinc(unittest.TestCase):
         with self.assertRaises(MinizincSolverError) as _:
             solve_using_minizinc(mock_instance, 1)
 
-        MockLogger.info.assert_called()
+        mock_logger.info.assert_called()
 
     @patch('minizinc.Instance')
-    def test_successful_result(self, MockInstance):
+    def test_successful_result(self, mock_instance):
 
-        mock_instance = MockInstance()
         mock_result = MagicMock()
         mock_result.status = Status.SATISFIED
         mock_instance.solve.return_value = mock_result
@@ -50,15 +47,14 @@ class TestSolveUsingMinizinc(unittest.TestCase):
 
     @patch('utils.minizinc_helper.logger')
     @patch('minizinc.Instance')
-    def test_minizinc_error(self, MockInstance, MockLogger):
+    def test_minizinc_error(self, mock_instance, mock_logger):
 
-        mock_instance = MockInstance()
         mock_instance.solve.side_effect = MiniZincError()
 
         with self.assertRaises(MinizincSolverError) as _:
             solve_using_minizinc(mock_instance, 1)
 
-        MockLogger.exception.assert_called()
+        mock_logger.exception.assert_called()
 
 
 if __name__ == "__main__":
