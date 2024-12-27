@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 
@@ -7,6 +8,7 @@ from models import InputData, InputSubjects1, InputMinizincBase, InputSubjects2,
 from utils.input_processing import prepare_for_subjects_1, prepare_for_subjects_2, prepare_for_subjects_with_average, \
     prepare_for_groups, prepare_for_groups_with_friends
 
+TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
 inputMinizincBaseBasic = InputMinizincBase(
     number_students=4,
@@ -413,10 +415,10 @@ def load_json_file(file_path: str):
 @pytest.mark.parametrize(
     "path, expected",
     [
-        ("unit_tests/resources/basic.json", inputSubjects1Basic),
-        ("unit_tests/resources/real.json", inputSubjects1Real),
-        ("unit_tests/resources/medium_friends.json", inputSubjects1Friends),
-        ("unit_tests/resources/medium_custom_constraints.json", inputSubjects1CustomConstraints)
+        (os.path.join(TEST_DIR, "resources/basic.json"), inputSubjects1Basic),
+        (os.path.join(TEST_DIR, "resources/real.json"), inputSubjects1Real),
+        (os.path.join(TEST_DIR, "resources/medium_friends.json"), inputSubjects1Friends),
+        (os.path.join(TEST_DIR, "resources/medium_custom_constraints.json"), inputSubjects1CustomConstraints)
     ]
 )
 def test_prepare_for_subjects_1(path, expected):
@@ -425,6 +427,7 @@ def test_prepare_for_subjects_1(path, expected):
     input_data = InputData(**json_data)
 
     minizinc_input = prepare_for_subjects_1(input_data)
+    print(TEST_DIR)
 
     assert minizinc_input == expected
 
@@ -432,10 +435,10 @@ def test_prepare_for_subjects_1(path, expected):
 @pytest.mark.parametrize(
     "path, expected",
     [
-        ("unit_tests/resources/basic.json", inputSubjects2Basic),
-        ("unit_tests/resources/real.json", inputSubjects2Real),
-        ("unit_tests/resources/medium_friends.json", inputSubjects2Friends),
-        ("unit_tests/resources/medium_custom_constraints.json", inputSubjects2CustomConstraints)
+        (os.path.join(TEST_DIR, "resources/basic.json"), inputSubjects2Basic),
+        (os.path.join(TEST_DIR, "resources/real.json"), inputSubjects2Real),
+        (os.path.join(TEST_DIR, "resources/medium_friends.json"), inputSubjects2Friends),
+        (os.path.join(TEST_DIR, "resources/medium_custom_constraints.json"), inputSubjects2CustomConstraints)
     ]
 )
 def test_prepare_for_subjects_2(path, expected):
@@ -451,10 +454,10 @@ def test_prepare_for_subjects_2(path, expected):
 @pytest.mark.parametrize(
     "path, expected",
     [
-        ("unit_tests/resources/basic.json", inputSubjectsWithAverageBasic),
-        ("unit_tests/resources/real.json", inputSubjectsWithAverageReal),
-        ("unit_tests/resources/medium_friends.json", inputSubjectsWithAverageFriends),
-        ("unit_tests/resources/medium_custom_constraints.json", inputSubjectsWithAverageCustomConstraints)
+        (os.path.join(TEST_DIR, "resources/basic.json"), inputSubjectsWithAverageBasic),
+        (os.path.join(TEST_DIR, "resources/real.json"), inputSubjectsWithAverageReal),
+        (os.path.join(TEST_DIR, "resources/medium_friends.json"), inputSubjectsWithAverageFriends),
+        (os.path.join(TEST_DIR, "resources/medium_custom_constraints.json"), inputSubjectsWithAverageCustomConstraints)
     ]
 )
 def test_prepare_for_subjects_with_average(path, expected):
@@ -470,10 +473,10 @@ def test_prepare_for_subjects_with_average(path, expected):
 @pytest.mark.parametrize(
     "path, expected",
     [
-        ("unit_tests/resources/basic.json", inputGroupsBasic),
-        ("unit_tests/resources/real.json", inputGroupsReal),
-        ("unit_tests/resources/medium_friends.json", inputGroupsFriends),
-        ("unit_tests/resources/medium_custom_constraints.json", inputGroupsCustomConstraints)
+        (os.path.join(TEST_DIR, "resources/basic.json"), inputGroupsBasic),
+        (os.path.join(TEST_DIR, "resources/real.json"), inputGroupsReal),
+        (os.path.join(TEST_DIR, "resources/medium_friends.json"), inputGroupsFriends),
+        (os.path.join(TEST_DIR, "resources/medium_custom_constraints.json"), inputGroupsCustomConstraints)
     ]
 )
 def test_prepare_for_groups(path, expected):
@@ -488,7 +491,7 @@ def test_prepare_for_groups(path, expected):
 
 def test_prepare_for_groups_with_friends():
 
-    json_data = load_json_file("unit_tests/resources/medium_friends.json")
+    json_data = load_json_file(os.path.join(TEST_DIR, "resources/medium_friends.json"))
     input_data = InputData(**json_data)
 
     minizinc_input = prepare_for_groups_with_friends(input_data)
