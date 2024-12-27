@@ -2,7 +2,7 @@ from datetime import timedelta
 from minizinc import MiniZincError, Instance, Result, Status
 
 from dependecies.logger import logger
-from models.errors.errors import MinizincSolverError, UnsatisfiableError, InvalidInputError
+from models.errors.errors import MinizincSolverError, UnsatisfiableError
 
 
 def solve_using_minizinc(instance: Instance, seconds) -> Result:
@@ -12,7 +12,7 @@ def solve_using_minizinc(instance: Instance, seconds) -> Result:
 
         if result.status == Status.UNSATISFIABLE:
 
-            logger.warning("Solution unsatisfiable. Status: UNSATISFIABLE.")
+            logger.info("Solution unsatisfiable. Status: UNSATISFIABLE.")
 
             raise UnsatisfiableError(
                 detail="It's impossible to create groups from the provided data. " +
@@ -20,12 +20,13 @@ def solve_using_minizinc(instance: Instance, seconds) -> Result:
             )
 
         if result.status == Status.UNKNOWN:
-            logger.warning("Solution not found. Status: UNKNOWN.")
+
+            logger.info("Solution not found. Status: UNKNOWN.")
             raise MinizincSolverError(detail="Solution not found. Consider increasing the time limit.")
 
         return result
 
     except MiniZincError as e:
-        logger.exception("An unexpected MiniZincError occurred: %s", e.message)
+        logger.exception("An unexpected MiniZincError occurred: %s", str(e))
         raise MinizincSolverError(detail="Some unexpected error occurred. Contact your administrator.")
 
