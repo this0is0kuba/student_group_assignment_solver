@@ -60,7 +60,7 @@ def prepare_for_subjects_2(input_data: InputData) -> InputSubjects2:
     return InputSubjects2(
         **input_subjects_1.__dict__,
 
-        # We will set this parameter after receiving it from student_subjects_1 solver
+        # We will set this parameter after receiving it from subjects_1 solver
         the_saddest_student_happiness=None
     )
 
@@ -74,7 +74,7 @@ def prepare_for_subjects_with_average(input_data: InputData) -> InputSubjectsWit
         **input_subjects_2.__dict__,
         student_average=student_average,
 
-        # We will set this parameter after receiving it from student_subjects_2 solver
+        # We will set this parameter after receiving it from subjects_2 solver
         students_happiness=None
     )
 
@@ -117,10 +117,10 @@ def prepare_for_groups(input_data: InputData) -> InputGroups:
             custom_constraints.predetermined_groups_for_students, class_info.number_of_classes),
         number_conditional_students=len(custom_constraints.conditional_students),
         conditional_students=custom_constraints.conditional_students,
-        student_subject=None,  # We will set this parameter after receiving it from student_subjects solver
-        max_number_of_groups=None,  # We will set this parameter after receiving more info from student_subjects solver
+        student_subject=None,  # We will set this parameter after receiving it from subjects solver
+        max_number_of_groups=None,  # We will set this parameter after receiving more info from subjects solver
         min_number_of_groups_in_class=None,  # We will set this parameter after receiving more info from
-                                             # student_subjects solver
+                                             # subjects solver
     )
 
 
@@ -134,6 +134,6 @@ def prepare_for_groups_with_friends(input_data: InputData) -> InputGroupsWithFri
         friends_max_number=friends_info.max_number_friends,
         friends_array=friends_info.friends_array,
 
-        # We will set this parameter after receiving it from student_groups solver
+        # We will set this parameter after receiving it from groups solver
         groups_with_common_students=None
     )
