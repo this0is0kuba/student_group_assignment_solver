@@ -159,6 +159,14 @@ class TestInputData(unittest.TestCase):
         with self.assertRaises(InvalidInputError):
             InputData(**data)
 
+    def test_preferences_2(self):
+
+        data = copy.deepcopy(self.valid_data)
+        data["preferences"]["preferences_subjects"][0][0] = 4
+
+        with self.assertRaises(InvalidInputError):
+            InputData(**data)
+
     def test_friends(self):
 
         data = copy.deepcopy(self.valid_data)
@@ -209,4 +217,31 @@ class TestInputData(unittest.TestCase):
 
         with self.assertRaises(InvalidInputError):
             InputData(**data)
+
+    def test_missing_groups_with_0_numbers(self):
+
+        data = copy.deepcopy(self.valid_data)
+
+        data["custom_constraints"] = {  # type: ignore
+            "predetermined_subjects": [6],
+            "predetermined_subjects_for_students": [
+                {
+                    "student_id": 2,
+                    "predetermined_subjects_for_student": [6]
+                }
+            ],
+
+            "predetermined_groups_for_students": [
+                {
+                    "student_id": 2,
+                    "predetermined_classes_for_student": [7],
+                    "predetermined_groups_for_student": [0]  # The group is 0 so there is no need to rise exception that
+                                                             # there subjects which should be in predetermined subjects.
+                }
+            ],
+
+            "conditional_students": []
+        }
+
+        InputData(**data)
 
