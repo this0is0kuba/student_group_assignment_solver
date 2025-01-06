@@ -199,7 +199,7 @@ class InputData(BaseModel):
 
                 if group_number < 0 or group_number > number_of_groups_list[class_number]:
                     raise InvalidInputError(
-                        detail=f"The value for group: {group_number} in predeterminedGroupsForStudent should be" +
+                        detail=f"The value for group: {group_number} in predeterminedGroupsForStudent should be " +
                                f"between 0 and {number_of_groups_list[class_number]}."
                     )
 
