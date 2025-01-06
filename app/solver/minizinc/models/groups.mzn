@@ -92,7 +92,7 @@ constraint forall(c in Class) (
 % --------------------------------------------------
 
 
-% Number of groups in class equals sum of distinct groups for that class.
+% Number of groups in class equals sum of distinct groups for that class. (Redundant Constraint)
 % --------------------------------------------------
 array[Class] of var Group: number_of_groups_in_class;
 
@@ -147,24 +147,6 @@ constraint forall(c in Class, g in Group where g != 0 /\ g <= number_of_groups_i
   /\
   (number_of_students_in_group[c, g] - number_of_conditional_students_in_group[c, g])
     >= class_type_min_students[class_type[c]]
-);
-% --------------------------------------------------
-
-
-% Instructor hours.
-% --------------------------------------------------
-array[Instructor] of var 0..max(instructor_max_h): instructor_h;
-
-constraint forall(i in Instructor) (
-  instructor_h[i] = sum(c in Class where class_instructor[c] == i) (class_time_h[c] * number_of_groups_in_class[c])
-);
-% --------------------------------------------------
-
-
-% No instructor can have more hours than allowed to him.
-% --------------------------------------------------
-constraint forall(i in Instructor) (
-  instructor_h[i] <= instructor_max_h[i]
 );
 % --------------------------------------------------
 
