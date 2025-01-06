@@ -1,6 +1,6 @@
 from minizinc import Model, Instance, Solver
 
-from dependecies.logger import logger
+from dependencies.logger import logger
 from models import InputGroups, InputSubjectsWithAverage, SolutionSubjects1, SolutionSubjects2, \
     InputSubjects1, InputSubjects2, InputGroupsWithFriends, SolutionGroups, Solution
 
@@ -62,7 +62,7 @@ class StudentAssignmentSolver:
 
     def _solve_subjects_1(self, solver: Solver) -> SolutionSubjects1:
 
-        model = Model(r"./app/solver/minizinc/solvers/subjects_1.mzn")
+        model = Model(r"./app/solver/minizinc/models/subjects_1.mzn")
         instance = self._create_instance_subjects_1(solver, model)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -82,7 +82,7 @@ class StudentAssignmentSolver:
             solution_subjects_1: SolutionSubjects1
     ) -> SolutionSubjects2:
 
-        model = Model(r"./app/solver/minizinc/solvers/subjects_2.mzn")
+        model = Model(r"./app/solver/minizinc/models/subjects_2.mzn")
         instance = self._create_instance_subjects_2(solver, model, solution_subjects_1)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -105,7 +105,7 @@ class StudentAssignmentSolver:
             solution_subjects_2: SolutionSubjects2
     ) -> SolutionSubjects2:
 
-        model = Model(r"./app/solver/minizinc/solvers/subjects_with_average.mzn")
+        model = Model(r"./app/solver/minizinc/models/subjects_with_average.mzn")
         instance = self._create_instance_subjects_with_average(solver, model, solution_subjects_2)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -128,7 +128,7 @@ class StudentAssignmentSolver:
             solution_subjects: SolutionSubjects2
     ) -> SolutionGroups:
 
-        model = Model(r"./app/solver/minizinc/solvers/groups.mzn")
+        model = Model(r"./app/solver/minizinc/models/groups.mzn")
         instance: Instance = self._create_instance_groups(solver, model, solution_subjects)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -150,7 +150,7 @@ class StudentAssignmentSolver:
             solution_groups: SolutionGroups
     ) -> SolutionGroups:
 
-        model: Model = Model(r"./app/solver/minizinc/solvers/groups_with_friends.mzn")
+        model: Model = Model(r"./app/solver/minizinc/models/groups_with_friends.mzn")
         instance: Instance = self._create_instance_groups_with_friends(
             solver,
             model,

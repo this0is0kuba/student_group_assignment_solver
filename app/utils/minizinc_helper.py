@@ -1,7 +1,7 @@
 from datetime import timedelta
 from minizinc import MiniZincError, Instance, Result, Status
 
-from dependecies.logger import logger
+from dependencies.logger import logger
 from models.errors.errors import MinizincSolverError, UnsatisfiableError, MinizincTimeoutError
 
 
