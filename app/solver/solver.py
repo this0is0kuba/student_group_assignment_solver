@@ -12,11 +12,11 @@ class StudentAssignmentSolver:
 
     def __init__(
             self,
-             input_subjects_1: InputSubjects1,
-             input_subjects_2: InputSubjects2,
-             input_subjects_with_average: InputSubjectsWithAverage,
-             input_groups: InputGroups,
-             input_groups_with_friends: InputGroupsWithFriends | None
+            input_subjects_1: InputSubjects1,
+            input_subjects_2: InputSubjects2,
+            input_subjects_with_average: InputSubjectsWithAverage,
+            input_groups: InputGroups,
+            input_groups_with_friends: InputGroupsWithFriends | None
     ):
 
         self.input_subjects_1 = input_subjects_1
@@ -38,8 +38,8 @@ class StudentAssignmentSolver:
 
         if self.input_subjects_with_average:
             solution_subjects_2 = self._solve_subjects_with_average(
-                    solver,
-                    solution_subjects_2
+                solver,
+                solution_subjects_2
             )
 
         solution_groups = self._solve_groups(solver, solution_subjects_2)
@@ -158,7 +158,7 @@ class StudentAssignmentSolver:
             solution_groups
         )
 
-        result = solve_using_minizinc(instance, seconds=20*2)
+        result = solve_using_minizinc(instance, seconds=20 * 2)
 
         logger.info(
             "found groups with number_of_friends: %s",
