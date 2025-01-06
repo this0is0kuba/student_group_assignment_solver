@@ -66,12 +66,24 @@ class InputData(BaseModel):
         preferences = self.preferences.preferences_subjects
         basic = self.information.basic_info
 
-        for student_preferences in preferences:
-            for subject_number in student_preferences:
+        map_section_to_number_of_subjects = {}
 
-                if subject_number < 1 or subject_number > basic.number_of_subjects:
+        for section in range(1, basic.number_of_sections + 1):
+            map_section_to_number_of_subjects.update({section: 0})
+
+        for section in basic.subject_section:
+            number_of_subjects = map_section_to_number_of_subjects.get(section) + 1
+            map_section_to_number_of_subjects.update({section: number_of_subjects})
+
+        for student_preferences in preferences:
+            for i, subject_number in enumerate(student_preferences):
+
+                section = basic.subject_section[i]
+
+                if subject_number < 1 or subject_number > map_section_to_number_of_subjects.get(section):
                     raise InvalidInputError(
-                        detail="Each value in studentPreferences should be between 1 and numberOfSubjects."
+                        detail="Each value in studentPreferences should be between 1 and number of subjects in the" +
+                               "section to which this item belongs."
                     )
 
         return self
@@ -232,6 +244,35 @@ class InputData(BaseModel):
         all_pre_subjects = set([class_info.class_subject[c - 1] for c in all_pre_classes])
 
         missing_subjects = all_pre_subjects.difference(set(self.custom_constraints.predetermined_subjects))
+
+        # there is no need to put some subject to predeterminedSubjects if only groups with number "0" belong to it.
+        missing_subjects_with_only_0 = set()
+
+        groups_and_classes = [
+            (group, class_number)
+            for pre_group in pre_groups
+            for group, class_number in
+            zip(pre_group.predetermined_groups_for_student, pre_group.predetermined_classes_for_student)
+        ]
+
+        for subject in missing_subjects:
+
+            classes_in_subject = []
+
+            for c, sub in enumerate(class_info.class_subject):
+                if sub == subject:
+                    classes_in_subject.append(c + 1)
+
+            filtered_groups = [
+                group_and_class[0]
+                for group_and_class in groups_and_classes
+                if group_and_class[1] in classes_in_subject
+            ]
+
+            if len([group for group in filtered_groups if group > 0]) == 0:
+                missing_subjects_with_only_0.add(subject)
+
+        missing_subjects = missing_subjects.difference(missing_subjects_with_only_0)
 
         if missing_subjects:
             raise InvalidInputError("There are predetermined classes for students which are not defined in " +
