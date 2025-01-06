@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 
 from minizinc import MiniZincError, Status
 
-from models.errors.errors import UnsatisfiableError, MinizincSolverError
+from models.errors.errors import UnsatisfiableError, MinizincSolverError, MinizincTimeoutError
 from utils.minizinc_helper import solve_using_minizinc
 
 
@@ -30,7 +30,7 @@ class TestSolveUsingMinizinc(unittest.TestCase):
         mock_result.status = Status.UNKNOWN
         mock_instance.solve.return_value = mock_result
 
-        with self.assertRaises(MinizincSolverError) as _:
+        with self.assertRaises(MinizincTimeoutError) as _:
             solve_using_minizinc(mock_instance, 1)
 
         mock_logger.info.assert_called()

@@ -2,7 +2,7 @@ from datetime import timedelta
 from minizinc import MiniZincError, Instance, Result, Status
 
 from dependecies.logger import logger
-from models.errors.errors import MinizincSolverError, UnsatisfiableError
+from models.errors.errors import MinizincSolverError, UnsatisfiableError, MinizincTimeoutError
 
 
 def solve_using_minizinc(instance: Instance, seconds) -> Result:
@@ -22,7 +22,8 @@ def solve_using_minizinc(instance: Instance, seconds) -> Result:
         if result.status == Status.UNKNOWN:
 
             logger.info("Solution not found. Status: UNKNOWN.")
-            raise MinizincSolverError(detail="Solution not found. Consider increasing the time limit.")
+            raise MinizincTimeoutError(detail="Solution not found. Too much data for the server to find a solution " +
+                                              " in a timely manner.")
 
         return result
 
