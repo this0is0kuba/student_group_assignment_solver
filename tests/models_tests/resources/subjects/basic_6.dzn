@@ -2,7 +2,7 @@
 % There are three student and two subjects. The first subject is predetermined and the first student is assigned to the
 % the first subject. Additionally the first subject is more preferred by all students. In the result, one
 % of the remaining two students (the one with higher grade average) should be assigned to the first subject and the
-% second one to second subject because there is no more place.
+% second one to the second subject because there is no more place in the first one.
 
 % Basic info about classes
 % --------------------------------------------------
