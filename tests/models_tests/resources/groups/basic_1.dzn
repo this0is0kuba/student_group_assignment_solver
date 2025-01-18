@@ -1,5 +1,6 @@
 % Description
-% There is only one student and one subject. The result should be that the student is assigned to this subject
+% There is only one student and one subject to which the student is assigned. The student should be in the first group
+% of this subject (there is only one class).
 
 % Basic info about classes
 % --------------------------------------------------
@@ -40,7 +41,7 @@ conditional_students = [];
 % Main array of variables - students' subjects.
 % --------------------------------------------------
 student_subject = array2d(1..number_students, 1..number_subjects,
-  [ false, true, true, false, true, false, false, true ]
+  [ true ]
 );
 % --------------------------------------------------
 
@@ -48,5 +49,5 @@ student_subject = array2d(1..number_students, 1..number_subjects,
 % Info about groups
 % --------------------------------------------------
 max_number_of_groups = 1;
-min_number_of_groups_in_class = [1, 1, 1, 1, 1];
+min_number_of_groups_in_class = [1];
 % --------------------------------------------------

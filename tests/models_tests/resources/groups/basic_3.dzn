@@ -1,55 +1,52 @@
 % Description
-% There are two students and two subjects. Both students should be assigned to the same more preferred subject.
+% There are four students and one subject.
 
 % Basic info about classes
 % --------------------------------------------------
-number_students = 2;
-number_instructors = 2;
-number_subjects = 2;
+number_students = 4;
+number_instructors = 1;
+number_subjects = 1;
 number_class_types = 1;
-number_section = 1;
-number_classes = 2;
+number_classes = 1;
 
-subject_section = [1, 1];
-
-class_type = [1, 1];
-class_subject = [1, 2];
-class_instructor = [1, 2];
-class_time_h = [1, 1];
+class_type = [1];
+class_subject = [1];
+class_instructor = [1];
+class_time_h = [1];
 
 
 % Constraints
 % --------------------------------------------------
-instructor_max_h = [2, 2];
-
-student_subjects_in_section = array2d(1..number_students, 1..number_section,
-  [1, 1]
-);
+instructor_max_h = [4];
 
 class_type_min_students = [1];
-class_type_max_students = [1];
-% --------------------------------------------------
-
-
-% Preferences
-% --------------------------------------------------
-student_preferences = array2d(1..number_students, 1..number_subjects,
-  [ 2, 1, 2, 1 ]
-);
+class_type_max_students = [3];
 % --------------------------------------------------
 
 
 % Custom Constraints
 % --------------------------------------------------
-number_predetermined_subjects = 0;
-predetermined_subjects = [];
-
 number_predetermined_students = 0;
 predetermined_students = [];
-predetermined_subjects_for_students = array2d(1..number_predetermined_students, 1..number_subjects,
-  []
-);
+
+predetermined_classes_for_students = [];
+predetermined_groups_for_students = [];
 
 number_conditional_students = 0;
 conditional_students = [];
+% --------------------------------------------------
+
+
+% Main array of variables - students' subjects.
+% --------------------------------------------------
+student_subject = array2d(1..number_students, 1..number_subjects,
+  [ true, true, true, true ]
+);
+% --------------------------------------------------
+
+
+% Info about groups
+% --------------------------------------------------
+max_number_of_groups = 2;
+min_number_of_groups_in_class = [2];
 % --------------------------------------------------

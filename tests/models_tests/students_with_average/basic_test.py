@@ -11,7 +11,7 @@ TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 class TestBasicCases:
 
     # path to model
-    path_subjects_2 = os.path.join(TEST_DIR, "../../../app/solver/minizinc/models/subjects_with_average.mzn")
+    path_to_model = os.path.join(TEST_DIR, "../../../app/solver/minizinc/models/subjects_with_average.mzn")
 
     # model's parameters
     processes = 8
@@ -158,7 +158,7 @@ class TestBasicCases:
     def run_solver(self, path_to_input_data, the_saddest_student, happiness, test_data_number) -> tuple[int, int, int, list[list[int]]]:
 
         model = minizinc.Model()
-        model.add_file(self.path_subjects_2)
+        model.add_file(self.path_to_model)
         model.add_file(path_to_input_data)
 
         instance = minizinc.Instance(self.solver, model)
