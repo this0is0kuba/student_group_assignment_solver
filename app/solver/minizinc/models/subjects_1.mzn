@@ -196,6 +196,7 @@ solve maximize the_saddest_student_happiness;
 
 output
 ["the_saddest_student_happiness: ", show(the_saddest_student_happiness), ";\n"] ++
+["student_subject: ", show(student_subject), ";\n"] ++ 
 [];
 
 

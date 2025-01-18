@@ -1,0 +1,55 @@
+% Description
+% There is only one student and two subjects. The student should be assigned to the first one (the preferred one).
+
+% Basic info about classes
+% --------------------------------------------------
+number_students = 1;
+number_instructors = 1;
+number_subjects = 2;
+number_class_types = 1;
+number_section = 1;
+number_classes = 2;
+
+subject_section = [1, 1];
+
+class_type = [1, 1];
+class_subject = [1, 2];
+class_instructor = [1, 1];
+class_time_h = [1, 1];
+
+
+% Constraints
+% --------------------------------------------------
+instructor_max_h = [2];
+
+student_subjects_in_section = array2d(1..number_students, 1..number_section,
+  [1]
+);
+
+class_type_min_students = [1];
+class_type_max_students = [1];
+% --------------------------------------------------
+
+
+% Preferences
+% --------------------------------------------------
+student_preferences = array2d(1..number_students, 1..number_subjects,
+  [ 2, 1 ]
+);
+% --------------------------------------------------
+
+
+% Custom Constraints
+% --------------------------------------------------
+number_predetermined_subjects = 0;
+predetermined_subjects = [];
+
+number_predetermined_students = 0;
+predetermined_students = [];
+predetermined_subjects_for_students = array2d(1..number_predetermined_students, 1..number_subjects,
+  []
+);
+
+number_conditional_students = 0;
+conditional_students = [];
+% --------------------------------------------------
