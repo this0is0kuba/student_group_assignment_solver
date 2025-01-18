@@ -25,7 +25,8 @@ class TestBasicCases:
         [350, 400, 500],
         [500, 400, 300],
         [300, 450, 400],
-        [400, 400, 500]
+        [400, 400, 500],
+        [400, 500, 300, 300]
     ]
 
     def test_basic_1(self):
@@ -154,6 +155,18 @@ class TestBasicCases:
 
         assert happiness == 4
         assert happiness_with_average == 400 * 1 + 400 * 1 + 500 * 2
+
+    def test_basic_8(self):
+
+        path = os.path.join(TEST_DIR, "../resources/subjects/basic_8.dzn")
+        the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 3, 14, 8)
+
+        assert the_saddest_student == 3
+        assert happiness == 4 + 4 + 3 + 3
+        assert happiness_with_average == 400 * 4 + 500 * 4 + 300 * 3 + 300 * 3
+
+        # As student 3 has the lowest grade average should be in one of the less preferred subjects.
+        assert subjects[2][0] or subjects[2][2]
 
     def run_solver(self, path_to_input_data, the_saddest_student, happiness, test_data_number) -> tuple[int, int, int, list[list[int]]]:
 

@@ -1,0 +1,56 @@
+% Description
+% There are four students and two subjects. Both subjects are in separate sections. The preferences doesn't matter
+% because there is only one subject.
+
+% Basic info about classes
+% --------------------------------------------------
+number_students = 4;
+number_instructors = 4;
+number_subjects = 4;
+number_class_types = 1;
+number_section = 2;
+number_classes = 4;
+
+subject_section = [1, 1, 2, 2];
+
+class_type = [1, 1, 1, 1];
+class_subject = [1, 2, 3, 4];
+class_instructor = [1, 2, 3, 4];
+class_time_h = [1, 1, 1, 1];
+
+
+% Constraints
+% --------------------------------------------------
+instructor_max_h = [6, 6, 6, 6];
+
+student_subjects_in_section = array2d(1..number_students, 1..number_section,
+  [1, 1, 1, 1, 1, 1, 1, 1]
+);
+
+class_type_min_students = [2];
+class_type_max_students = [4];
+% --------------------------------------------------
+
+
+% Preferences
+% --------------------------------------------------
+student_preferences = array2d(1..number_students, 1..number_subjects,
+  [ 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1]
+);
+% --------------------------------------------------
+
+
+% Custom Constraints
+% --------------------------------------------------
+number_predetermined_subjects = 0;
+predetermined_subjects = [];
+
+number_predetermined_students = 0;
+predetermined_students = [];
+predetermined_subjects_for_students = array2d(1..number_predetermined_students, 1..number_subjects,
+  []
+);
+
+number_conditional_students = 0;
+conditional_students = [];
+% --------------------------------------------------

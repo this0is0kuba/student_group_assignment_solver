@@ -108,6 +108,14 @@ class TestBasicCases:
 
         assert happiness == 4
 
+    def test_basic_8(self):
+
+        path = os.path.join(TEST_DIR, "../resources/subjects/basic_8.dzn")
+        the_saddest_student, happiness, subjects = self.run_solver(path, 3)
+
+        assert the_saddest_student == 3
+        assert happiness == 4 + 4 + 3 + 3
+
     def run_solver(self, path_to_input_data, the_saddest_student) -> tuple[int, int, list[list[int]]]:
 
         model = minizinc.Model()

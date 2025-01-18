@@ -93,6 +93,13 @@ class TestBasicCases:
         # The last one student should be assigned to the first subject
         assert len([student[0] for student in subjects if student[0]]) == 1
 
+    def test_basic_8(self):
+
+        path = os.path.join(TEST_DIR, "../resources/subjects/basic_8.dzn")
+        the_saddest_student, subjects = self.run_solver(path)
+
+        assert the_saddest_student == 3
+
     def run_solver(self, path_to_input_data) -> tuple[int, list[list[int]]]:
 
         model = minizinc.Model()
