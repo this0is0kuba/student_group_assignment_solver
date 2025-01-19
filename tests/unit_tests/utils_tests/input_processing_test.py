@@ -3,17 +3,13 @@ import os
 
 import pytest
 
+from dependencies.definitions import APP_DIR, UNIT_TESTS_DIR
 from models import InputData, InputSubjects1, InputMinizincBase, InputSubjects2, InputSubjectsWithAverage, InputGroups, \
     InputGroupsWithFriends
 from utils.input_processing import prepare_for_subjects_1, prepare_for_subjects_2, prepare_for_subjects_with_average, \
     prepare_for_groups, prepare_for_groups_with_friends
 
-TEST_DIR = os.path.dirname(os.path.abspath(__file__))
-
-
-def load_json_file(file_path: str):
-    with open(file_path, "r") as file:
-        return json.load(file)
+RESOURCES_DIR = os.path.join(UNIT_TESTS_DIR, "utils_tests", "resources")
 
 
 class TestProcessingBase:
@@ -81,7 +77,7 @@ class TestProcessingBase:
     )
     def test_processing(self, function, expected):
 
-        path = os.path.join(TEST_DIR, "resources/basic.json")
+        path = get_path_to_data("basic")
 
         json_data = load_json_file(path)
         input_data = InputData(**json_data)
@@ -260,7 +256,8 @@ class TestProcessingReal:
         ]
     )
     def test_processing(self, function, expected):
-        path = os.path.join(TEST_DIR, "resources/real.json")
+
+        path = get_path_to_data("real")
 
         json_data = load_json_file(path)
         input_data = InputData(**json_data)
@@ -381,7 +378,8 @@ class TestProcessingFriends:
         ]
     )
     def test_processing(self, function, expected):
-        path = os.path.join(TEST_DIR, "resources/medium_friends.json")
+
+        path = get_path_to_data("medium_friends")
 
         json_data = load_json_file(path)
         input_data = InputData(**json_data)
@@ -489,7 +487,7 @@ class TestProcessingCustomConstraints:
         ]
     )
     def test_processing(self, function, expected):
-        path = os.path.join(TEST_DIR, "resources/medium_custom_constraints.json")
+        path = get_path_to_data("medium_custom_constraints")
 
         json_data = load_json_file(path)
         input_data = InputData(**json_data)
@@ -497,4 +495,13 @@ class TestProcessingCustomConstraints:
         minizinc_input = function(input_data)
 
         assert minizinc_input == expected
+
+
+def load_json_file(file_path: str):
+    with open(file_path, "r") as file:
+        return json.load(file)
+
+
+def get_path_to_data(name: str) -> str:
+    return os.path.join(RESOURCES_DIR, name + ".json")
 

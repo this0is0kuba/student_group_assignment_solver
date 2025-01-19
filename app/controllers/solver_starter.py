@@ -1,5 +1,5 @@
 from app.solver.solver import StudentAssignmentSolver
-from models import InputGroupsWithFriends, Solution, InputData
+from models import Solution, InputData
 from utils.input_processing import prepare_for_subjects_1, prepare_for_subjects_2, prepare_for_subjects_with_average, \
     prepare_for_groups, prepare_for_groups_with_friends
 

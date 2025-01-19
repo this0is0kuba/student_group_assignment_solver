@@ -1,11 +1,14 @@
+import os
+
 from minizinc import Model, Instance, Solver
 
+from dependencies.definitions import APP_DIR
 from dependencies.logger import logger
 from models import InputGroups, InputSubjectsWithAverage, SolutionSubjects1, SolutionSubjects2, \
     InputSubjects1, InputSubjects2, InputGroupsWithFriends, SolutionGroups, Solution
 
 from utils.data_operations import get_number_of_groups_in_each_class
-from utils.minizinc_helper import solve_using_minizinc
+from utils.minizinc_helper import solve_using_minizinc, get_path_to_model
 
 
 class StudentAssignmentSolver:
@@ -62,7 +65,9 @@ class StudentAssignmentSolver:
 
     def _solve_subjects_1(self, solver: Solver) -> SolutionSubjects1:
 
-        model = Model(r"./app/solver/minizinc/models/subjects_1.mzn")
+        path_to_model = get_path_to_model("subjects_1")
+        model = Model(path_to_model)
+
         instance = self._create_instance_subjects_1(solver, model)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -82,7 +87,9 @@ class StudentAssignmentSolver:
             solution_subjects_1: SolutionSubjects1
     ) -> SolutionSubjects2:
 
-        model = Model(r"./app/solver/minizinc/models/subjects_2.mzn")
+        path_to_model = get_path_to_model("subjects_2")
+        model = Model(path_to_model)
+
         instance = self._create_instance_subjects_2(solver, model, solution_subjects_1)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -105,7 +112,9 @@ class StudentAssignmentSolver:
             solution_subjects_2: SolutionSubjects2
     ) -> SolutionSubjects2:
 
-        model = Model(r"./app/solver/minizinc/models/subjects_with_average.mzn")
+        path_to_model = get_path_to_model("subjects_with_average")
+        model = Model(path_to_model)
+
         instance = self._create_instance_subjects_with_average(solver, model, solution_subjects_2)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -128,7 +137,9 @@ class StudentAssignmentSolver:
             solution_subjects: SolutionSubjects2
     ) -> SolutionGroups:
 
-        model = Model(r"./app/solver/minizinc/models/groups.mzn")
+        path_to_model = get_path_to_model("groups")
+        model = Model(path_to_model)
+
         instance: Instance = self._create_instance_groups(solver, model, solution_subjects)
 
         result = solve_using_minizinc(instance, seconds=20)
@@ -150,7 +161,9 @@ class StudentAssignmentSolver:
             solution_groups: SolutionGroups
     ) -> SolutionGroups:
 
-        model: Model = Model(r"./app/solver/minizinc/models/groups_with_friends.mzn")
+        path_to_model = get_path_to_model("groups_with_friends")
+        model = Model(path_to_model)
+
         instance: Instance = self._create_instance_groups_with_friends(
             solver,
             model,

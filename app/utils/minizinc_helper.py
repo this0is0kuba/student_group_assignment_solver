@@ -1,6 +1,8 @@
+import os
 from datetime import timedelta
 from minizinc import MiniZincError, Instance, Result, Status
 
+from dependencies.definitions import APP_DIR
 from dependencies.logger import logger
 from models.errors.errors import MinizincSolverError, UnsatisfiableError, MinizincTimeoutError
 
@@ -31,3 +33,6 @@ def solve_using_minizinc(instance: Instance, seconds) -> Result:
         logger.exception("An unexpected MiniZincError occurred: %s", str(e))
         raise MinizincSolverError(detail="Some unexpected error occurred. Contact your administrator.")
 
+
+def get_path_to_model(model_name: str) -> str:
+    return os.path.join(APP_DIR, "solver", "minizinc", "models", model_name + ".mzn")
