@@ -128,9 +128,9 @@ class TestBasicCases:
 
         result = instance.solve(processes=self.processes, timeout=self.timeout)
 
-        the_saddest_student = result["the_saddest_student_happiness_var"]
+        the_saddest_student_result = result["the_saddest_student_happiness_var"]
         subjects = result["student_subject"]
         happiness = result["students_happiness"]
 
-        return the_saddest_student, happiness, subjects
+        return the_saddest_student_result, happiness, subjects
 

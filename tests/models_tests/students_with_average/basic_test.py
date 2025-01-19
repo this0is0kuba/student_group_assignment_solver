@@ -168,7 +168,13 @@ class TestBasicCases:
         # As student 3 has the lowest grade average should be in one of the less preferred subjects.
         assert subjects[2][0] or subjects[2][2]
 
-    def run_solver(self, path_to_input_data, the_saddest_student, happiness, test_data_number) -> tuple[int, int, int, list[list[int]]]:
+    def run_solver(
+            self,
+            path_to_input_data,
+            the_saddest_student,
+            happiness,
+            test_data_number
+    ) -> tuple[int, int, int, list[list[int]]]:
 
         model = minizinc.Model()
         model.add_file(self.path_to_model)
@@ -182,10 +188,9 @@ class TestBasicCases:
 
         result = instance.solve(processes=self.processes, timeout=self.timeout)
 
-        the_saddest_student = result["the_saddest_student_happiness_var"]
+        the_saddest_student_result = result["the_saddest_student_happiness_var"]
         subjects = result["student_subject"]
-        happiness = result["students_happiness_var"]
+        happiness_result = result["students_happiness_var"]
         happiness_with_average = result["students_happiness_with_average"]
 
-        return the_saddest_student, happiness, happiness_with_average,  subjects
-
+        return the_saddest_student_result, happiness_result, happiness_with_average,  subjects
