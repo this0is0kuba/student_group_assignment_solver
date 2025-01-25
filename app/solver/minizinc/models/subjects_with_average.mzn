@@ -62,7 +62,7 @@ array[ConditionalStudent] of Student: conditional_students;
 % --------------------------------------------------
 
 
-% Info about students' hapiness
+% Info about students' happiness
 % --------------------------------------------------
 int: students_happiness;
 int: the_saddest_student_happiness;
@@ -97,7 +97,7 @@ constraint forall(sb in Subject) (
 % --------------------------------------------------
 
 
-% Instructor hours. We assume the most optymistic situation. We check if it's possible to create grous. Should be a situation in which instructor is able to handle all the groups for his classes.
+% Instructor hours. We assume the most optimistic situation. We check if it's possible to create groups. Should be a situation in which instructor is able to handle all the groups for his classes.
 % --------------------------------------------------
 array[Instructor] of var 0..max(instructor_max_h): instructor_h;
 
@@ -125,7 +125,7 @@ constraint forall(i in Instructor) (
 % --------------------------------------------------
 
 
-% Check if it's possible to create groups. Check if there is no too little students in class. We need to remember about the condtional students. It's neccessary to consider a situation without them and check if the condition is still met.
+% Check if it's possible to create groups. Check if there is no too little students in class. We need to remember about the conditional students. It's necessary to consider a situation without them and check if the condition is still met.
 % --------------------------------------------------
 constraint forall(c in Class) (
 
@@ -220,7 +220,7 @@ constraint the_saddest_student_happiness_var >= the_saddest_student_happiness;
 % --------------------------------------------------
 
 
-% Current students_happiness can not be lower than students_hapiness (the one calculated without taking into account the average)
+% Current students_happiness can not be lower than students_happiness (the one calculated without taking into account the average)
 % --------------------------------------------------
 constraint students_happiness_var >= students_happiness;
 % --------------------------------------------------
