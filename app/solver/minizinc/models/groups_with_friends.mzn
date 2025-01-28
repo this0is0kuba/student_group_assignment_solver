@@ -191,7 +191,7 @@ constraint forall(p in PredeterminedStudent, c in Class where
 
 % We cannot reduce the number of groups that have students in common. We check each pair
 % --------------------------------------------------
-function var bool: are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
+predicate are_groups_have_students_in_common(var Class: c1, var Group: g1, var Class: c2, var Group: g2) =
     sum(s in Student where student_group[s, c1] == g1 /\ student_group[s, c2] == g2) (1) > 0;
 
 var int: groups_with_common_students_var;
