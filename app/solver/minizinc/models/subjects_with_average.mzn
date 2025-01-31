@@ -107,11 +107,13 @@ function var int: my_ceil(var int: a, var int: b) =
     else
         a div b + 1
     endif;
+    
+function var int: get_number_of_groups(var int: c) = 
+  my_ceil(number_of_students_in_subject[class_subject[c]], class_type_max_students[class_type[c]]);
 
 constraint forall(i in Instructor) (
   instructor_h[i] = sum(c in Class where class_instructor[c] == i) (
-      class_time_h[c] * 
-      my_ceil(number_of_students_in_subject[class_subject[c]], class_type_max_students[class_type[c]])
+      class_time_h[c] * get_number_of_groups(c)
   )
 );
 % --------------------------------------------------
@@ -132,7 +134,7 @@ constraint forall(c in Class) (
   (
    number_of_students_in_subject[class_subject[c]] - 
    number_of_conditional_students_in_subject[class_subject[c]]
-  )  
+  ) div get_number_of_groups(c)
     >= class_type_min_students[class_type[c]]
     
    \/
