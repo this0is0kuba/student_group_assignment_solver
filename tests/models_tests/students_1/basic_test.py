@@ -3,7 +3,10 @@ from datetime import timedelta
 import minizinc
 import os
 
-from minizinc import Solver
+import pytest
+from minizinc import Solver, Status
+
+from models.errors.errors import UnsatisfiableError
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -100,6 +103,12 @@ class TestBasicCases:
 
         assert the_saddest_student == 3
 
+    def test_basic_9(self):
+        path = os.path.join(TEST_DIR, "../resources/subjects/basic_9.dzn")
+
+        with pytest.raises(UnsatisfiableError):
+            self.run_solver(path)
+
     def run_solver(self, path_to_input_data) -> tuple[int, list[list[int]]]:
 
         model = minizinc.Model()
@@ -108,6 +117,9 @@ class TestBasicCases:
 
         instance = minizinc.Instance(self.solver, model)
         result = instance.solve(processes=self.processes, timeout=self.timeout)
+
+        if result.status == Status.UNSATISFIABLE:
+            raise UnsatisfiableError
 
         return result["the_saddest_student_happiness"], result["student_subject"]
 
