@@ -1,0 +1,46 @@
+{
+  "information": {
+
+    "basic_info": {
+      "number_of_students": 10,
+      "number_of_instructors": 8,
+      "number_of_subjects": 4,
+      "number_of_class_types": 2,
+      "number_of_sections": 2,
+      "student_average": [3.00, 3.50, 5.00, 4.50, 3.00, 3.50, 5.00, 4.50, 3.00, 3.00],
+      "subject_section": [1, 1, 2, 2]
+    },
+
+    "class_info": {
+      "number_of_classes": 8,
+      "class_type": [1, 2, 1, 2, 1, 2, 1, 2],
+      "class_subject": [1, 1, 2, 2, 3, 3, 4, 4],
+      "class_instructor": [1, 2, 3, 4, 5, 6, 7, 8],
+      "class_time_hours": [28, 28, 28, 28, 28, 28, 28, 28]
+    },
+
+    "constraints": {
+      "instructor_max_hours": [100, 100, 100, 100, 100, 100, 100, 100],
+      "student_subjects_in_section": [[0, 1], [0, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1]],
+      "class_type_min_students": [1, 2],
+      "class_type_max_students": [8, 3]
+    }
+
+  },
+
+  "preferences": {
+    "preferences_subjects":  [  [1, 2, 1, 2],
+                                [1, 2, 1, 2],
+                                [1, 2, 1, 2],
+                                [1, 2, 1, 2],
+                                [1, 2, 1, 2],
+                                [1, 2, 1, 2],
+                                [2, 1, 2, 1],
+                                [2, 1, 2, 1],
+                                [1, 2, 2, 1],
+                                [1, 2, 2, 1]  ],
+    "friends_info": null
+  },
+
+  "custom_constraints": null
+}
