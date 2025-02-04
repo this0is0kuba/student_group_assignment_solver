@@ -59,6 +59,6 @@ conditional_students = [];
 
 % Info about student_happiness
 % --------------------------------------------------
-students_happiness = 7;
-the_saddest_student_happiness = 1;
+students_happiness = 700;
+the_saddest_student_happiness = 100;
 % --------------------------------------------------

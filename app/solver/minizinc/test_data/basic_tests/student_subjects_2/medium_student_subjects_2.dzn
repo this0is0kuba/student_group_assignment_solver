@@ -114,5 +114,5 @@ conditional_students = [];
 
 % The happiness of the saddest student
 % --------------------------------------------------
-the_saddest_student_happiness = 5;
+the_saddest_student_happiness = 250;
 % --------------------------------------------------

@@ -38,16 +38,7 @@ conditional_students = [];
 % Main array of variables - students' subjects.
 % --------------------------------------------------
 student_subject = array2d(1..number_students, 1..number_subjects,
-  [ false, false, true, false,
-    false, false, true, false, 
-    true, false, true, false, 
-    true, false, true, false, 
-    true, false, true, false, 
-    true, false, true, false, 
-    false, true, false, true, 
-    false, true, false, true, 
-    true, false, false, true, 
-    true, false, false, true ]
+  [false, false, true, false, false, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, false, true, false, true, false, true, false, true, true, false, false, true, true, false, false, true]
 );
 % --------------------------------------------------
 
