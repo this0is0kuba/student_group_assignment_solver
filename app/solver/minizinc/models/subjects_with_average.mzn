@@ -189,7 +189,11 @@ constraint forall(st in PredeterminedStudent, sb in Subject where
 array[Student] of var int: student_happiness_array;
 
 constraint student_happiness_array == 
-  [ sum(sb in Subject) (student_subject[st, sb] * student_preferences[st, sb]) | st in Student ];
+  [ sum(sb in Subject) (
+      student_subject[st, sb] * student_preferences[st, sb] * 100
+    ) div sum(student_subjects_in_section[st, ..])
+    
+    | st in Student ];
 % --------------------------------------------------
 
 
@@ -197,9 +201,7 @@ constraint student_happiness_array ==
 % --------------------------------------------------
 var int: students_happiness_var;
 
-constraint students_happiness_var = sum(st in Student, sb in Subject) (
-  student_subject[st, sb] * student_preferences[st, sb]
-);
+constraint students_happiness_var = sum(student_happiness_array);
 % --------------------------------------------------
 
 
@@ -208,7 +210,8 @@ constraint students_happiness_var = sum(st in Student, sb in Subject) (
 var int: students_happiness_with_average;
 
 students_happiness_with_average = sum(st in Student, sb in Subject) (
- (student_subject[st, sb] * student_preferences[st, sb] * student_average[st])
+ student_subject[st, sb] * student_preferences[st, sb] * student_average[st] div  
+  sum(student_subjects_in_section[st, ..])
 );
 % --------------------------------------------------
 
@@ -233,6 +236,7 @@ solve maximize students_happiness_with_average;
 output
 ["students_happiness_var: ", show(students_happiness_var), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"] ++ 
+% ["number of groups in classes: ", show([ my_ceil(number_of_students_in_subject[class_subject[c]], class_type_max_students[class_type[c]]) | c in Class]), ";\n"] ++
 ["number_of_students_in_subject", show(number_of_students_in_subject)];
 
 

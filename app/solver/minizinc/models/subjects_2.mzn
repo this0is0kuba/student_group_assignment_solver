@@ -187,7 +187,11 @@ constraint forall(st in PredeterminedStudent, sb in Subject where
 array[Student] of var int: student_happiness_array;
 
 constraint student_happiness_array == 
-  [ sum(sb in Subject) (student_subject[st, sb] * student_preferences[st, sb]) | st in Student ];
+  [ sum(sb in Subject) (
+      student_subject[st, sb] * student_preferences[st, sb] * 100
+    ) div sum(student_subjects_in_section[st, ..])
+    
+    | st in Student ];
 % --------------------------------------------------
   
 
@@ -204,9 +208,7 @@ constraint the_saddest_student_happiness_var >= the_saddest_student_happiness;
 % --------------------------------------------------
 var int: students_happiness; 
 
-constraint students_happiness = sum(st in Student, sb in Subject) (
-  student_subject[st, sb] * student_preferences[st, sb]
-);
+constraint students_happiness = sum(student_happiness_array);
 % --------------------------------------------------
 
 solve maximize students_happiness;

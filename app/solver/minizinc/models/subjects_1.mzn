@@ -178,12 +178,16 @@ constraint forall(st in PredeterminedStudent, sb in Subject where
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% OBJECTIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% We count happiness for each student
+% We count happiness for each student.
 % --------------------------------------------------
 array[Student] of var int: student_happiness_array;
 
 constraint student_happiness_array == 
-  [ sum(sb in Subject) (student_subject[st, sb] * student_preferences[st, sb]) | st in Student ];
+  [ sum(sb in Subject) (
+      student_subject[st, sb] * student_preferences[st, sb] * 100
+    ) div sum(student_subjects_in_section[st, ..])
+    
+    | st in Student ];
 % --------------------------------------------------
   
 
@@ -199,6 +203,7 @@ solve maximize the_saddest_student_happiness;
 output
 ["the_saddest_student_happiness: ", show(the_saddest_student_happiness), ";\n"] ++
 ["student_subject: ", show(student_subject), ";\n"] ++ 
+["number of groups in classes: ", show([ my_ceil(number_of_students_in_subject[class_subject[c]], class_type_max_students[class_type[c]]) | c in Class]), ";\n"] ++
 [];
 
 
