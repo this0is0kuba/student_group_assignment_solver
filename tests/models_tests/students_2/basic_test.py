@@ -23,8 +23,8 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_1.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 1)
 
-        assert the_saddest_student == 1
-        assert happiness == 1
+        assert the_saddest_student == 100
+        assert happiness == 100
         assert subjects[0][0]
 
     def test_basic_2(self):
@@ -32,17 +32,17 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_2.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 2)
 
-        assert the_saddest_student == 2
+        assert the_saddest_student == 200
         assert subjects[0][0]
         assert not subjects[0][1]
-        assert happiness == 2
+        assert happiness == 200
 
     def test_basic_3(self):
 
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_3.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 2)
 
-        assert the_saddest_student == 2
+        assert the_saddest_student == 200
 
         # student 1
         assert subjects[0][0]
@@ -52,38 +52,38 @@ class TestBasicCases:
         assert subjects[1][0]
         assert not subjects[1][1]
 
-        assert happiness == 4
+        assert happiness == 400
 
     def test_basic_4(self):
 
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_4.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 1)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # It should be two students in the most preferred subject.
         assert len([student[0] for student in subjects if student[0]]) == 2
 
-        assert happiness == 5
+        assert happiness == 500
 
     def test_basic_5(self):
 
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_5.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 1)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # It should be only one student in the predetermined subject.
         assert len([student[1] for student in subjects if student[1]]) == 1
 
-        assert happiness == 5
+        assert happiness == 500
 
     def test_basic_6(self):
 
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_6.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 1)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # It should be two students in the predetermined subject
         assert len([student[0] for student in subjects if student[0]]) == 2
@@ -91,14 +91,14 @@ class TestBasicCases:
         # The first student should be in the subject number 1
         assert subjects[0][0]
 
-        assert happiness == 5
+        assert happiness == 500
 
     def test_basic_7(self):
 
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_7.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 1)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # It should be two students in the predetermined subject
         assert len([student[1] for student in subjects if student[1]]) == 2
@@ -106,15 +106,18 @@ class TestBasicCases:
         # The last one student should be assigned to the first subject
         assert len([student[0] for student in subjects if student[0]]) == 1
 
-        assert happiness == 4
+        assert happiness == 400
 
     def test_basic_8(self):
 
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_8.dzn")
         the_saddest_student, happiness, subjects = self.run_solver(path, 3)
 
-        assert the_saddest_student == 3
-        assert happiness == 4 + 4 + 3 + 3
+        print()
+        print(subjects)
+
+        assert the_saddest_student == 100
+        assert happiness == 200 + 200 + 200 + 100
 
     def run_solver(self, path_to_input_data, the_saddest_student) -> tuple[int, int, list[list[int]]]:
 

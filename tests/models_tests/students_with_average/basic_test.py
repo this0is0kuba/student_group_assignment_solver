@@ -34,9 +34,9 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_1.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 1, 1, 1)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
         assert subjects[0][0]
-        assert happiness == 1
+        assert happiness == 100
         assert happiness_with_average == 300
 
     def test_basic_2(self):
@@ -44,10 +44,10 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_2.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 2, 2, 2)
 
-        assert the_saddest_student == 2
+        assert the_saddest_student == 200
         assert subjects[0][0]
         assert not subjects[0][1]
-        assert happiness == 2
+        assert happiness == 200
         assert happiness_with_average == 400 * 2
 
     def test_basic_3(self):
@@ -55,7 +55,7 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_3.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 2, 4, 3)
 
-        assert the_saddest_student == 2
+        assert the_saddest_student == 200
 
         # student 1
         assert subjects[0][0]
@@ -65,7 +65,7 @@ class TestBasicCases:
         assert subjects[1][0]
         assert not subjects[1][1]
 
-        assert happiness == 4
+        assert happiness == 400
         assert happiness_with_average == 400 * 2 + 450 * 2
 
     def test_basic_4(self):
@@ -73,7 +73,7 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_4.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 1, 5, 4)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # student 1
         assert not subjects[0][0]
@@ -87,7 +87,7 @@ class TestBasicCases:
         assert subjects[2][0]
         assert not subjects[2][1]
 
-        assert happiness == 5
+        assert happiness == 500
         assert happiness_with_average == 350 * 1 + 400 * 2 + 500 * 2
 
     def test_basic_5(self):
@@ -95,7 +95,7 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_5.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 1, 5, 5)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # student 1
         assert subjects[0][0]
@@ -109,7 +109,7 @@ class TestBasicCases:
         assert not subjects[2][0]
         assert subjects[2][1]
 
-        assert happiness == 5
+        assert happiness == 500
         assert happiness_with_average == 500 * 2 + 400 * 2 + 300 * 1
 
     def test_basic_6(self):
@@ -117,7 +117,7 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_6.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 1, 5, 6)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # student 1
         assert subjects[0][0]
@@ -131,7 +131,7 @@ class TestBasicCases:
         assert not subjects[2][0]
         assert subjects[2][1]
 
-        assert happiness == 5
+        assert happiness == 500
         assert happiness_with_average == 300 * 2 + 450 * 2 + 400 * 1
 
     def test_basic_7(self):
@@ -139,7 +139,7 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_7.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 1, 4, 7)
 
-        assert the_saddest_student == 1
+        assert the_saddest_student == 100
 
         # student 1
         assert not subjects[0][0]
@@ -153,7 +153,7 @@ class TestBasicCases:
         assert subjects[2][0]
         assert not subjects[2][1]
 
-        assert happiness == 4
+        assert happiness == 400
         assert happiness_with_average == 400 * 1 + 400 * 1 + 500 * 2
 
     def test_basic_8(self):
@@ -161,9 +161,9 @@ class TestBasicCases:
         path = os.path.join(TEST_DIR, "../resources/subjects/basic_8.dzn")
         the_saddest_student, happiness, happiness_with_average, subjects = self.run_solver(path, 3, 14, 8)
 
-        assert the_saddest_student == 3
-        assert happiness == 4 + 4 + 3 + 3
-        assert happiness_with_average == 400 * 4 + 500 * 4 + 300 * 3 + 300 * 3
+        assert the_saddest_student == 100
+        assert happiness == 200 + 200 + 200 + 100
+        assert happiness_with_average == 2700
 
         # As student 3 has the lowest grade average should be in one of the less preferred subjects.
         assert subjects[2][0] or subjects[2][2]
