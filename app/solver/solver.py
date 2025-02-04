@@ -1,8 +1,5 @@
-import os
-
 from minizinc import Model, Instance, Solver
 
-from dependencies.definitions import APP_DIR
 from dependencies.logger import logger
 from models import InputGroups, InputSubjectsWithAverage, SolutionSubjects1, SolutionSubjects2, \
     InputSubjects1, InputSubjects2, InputGroupsWithFriends, SolutionGroups, Solution
@@ -92,7 +89,7 @@ class StudentAssignmentSolver:
 
         instance = self._create_instance_subjects_2(solver, model, solution_subjects_1)
 
-        result = solve_using_minizinc(instance, seconds=20)
+        result = solve_using_minizinc(instance, seconds=30)
 
         logger.info(
             "found subjects_2 with students_happiness: %s",
@@ -117,7 +114,7 @@ class StudentAssignmentSolver:
 
         instance = self._create_instance_subjects_with_average(solver, model, solution_subjects_2)
 
-        result = solve_using_minizinc(instance, seconds=20)
+        result = solve_using_minizinc(instance, seconds=40)
 
         logger.info(
             "found subjects_with_average with students_happiness_with_average: %s",
@@ -142,7 +139,7 @@ class StudentAssignmentSolver:
 
         instance: Instance = self._create_instance_groups(solver, model, solution_subjects)
 
-        result = solve_using_minizinc(instance, seconds=20)
+        result = solve_using_minizinc(instance, seconds=60 * 2)
 
         logger.info(
             "found groups with groups_with_common_students: %s",
@@ -171,7 +168,7 @@ class StudentAssignmentSolver:
             solution_groups
         )
 
-        result = solve_using_minizinc(instance, seconds=20 * 2)
+        result = solve_using_minizinc(instance, seconds=60 * 4)
 
         logger.info(
             "found groups with number_of_friends: %s",
