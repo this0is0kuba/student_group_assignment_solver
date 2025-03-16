@@ -11,7 +11,7 @@ The Student Group Assignment Solver is a system designed to optimally assign stu
 * ✒️ **Manual Overrides**: Enables assigning specific students to particular subjects/groups.
 * ✈️ **Student Exchange Consideration**: Takes into account students going on exchange programs (they may not appear next term).
 * 📅 **Schedule Optimization**: Minimizes scheduling conflicts for future timetable creation.
-* 📌 **Clustered Electives**: Ensures students enroll in the required number of subjects per elective cluster.
+* 📌 **Division Into Clusters**: Ensures students enroll in the required number of subjects per cluster.
 * 🤝 **Friend Preferences**: Allows students to request being grouped with specific peers.
 
 ## Tech Stack  
