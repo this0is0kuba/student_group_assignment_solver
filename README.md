@@ -33,8 +33,7 @@ cd your-repo
 pip install -r requirements.txt
 ```
 
-**Install MiniZinc 2.8.5:**  
-Download from: https://github.com/MiniZinc/MiniZincIDE/releases/tag/2.8.5
+**Install MiniZinc 2.8.5:** https://github.com/MiniZinc/MiniZincIDE/releases/tag/2.8.5
 
 **Run the FastAPI server:**  
 ```bash
@@ -42,6 +41,4 @@ uvicorn main:app --reload
 ```
 
 **Access the API documentation at:**
-```bash
 http://127.0.0.1:8000/docs
-```
